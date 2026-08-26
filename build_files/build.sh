@@ -63,7 +63,7 @@ rum install -y \
   mesa-dri-drivers mesa-vulkan-drivers libva-utils vdpauinfo clinfo
 
 ## Remove unnecessary packages
-dnf5 remove -y wofi hyprpicker grimblast || true
+dnf5 remove -y wofi hyprpicker || true
 
 ## Remove fedora wallpapers
 rm -r /usr/share/backgrounds/fedora-workstation/
