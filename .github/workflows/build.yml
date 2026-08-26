@@ -12,7 +12,7 @@ on:
       rakuos_staging:
         description: 'Enable staging (1 or 0)'
         required: false
-        default: '0'
+        default: '1'
 
 env:
   REGISTRY: ghcr.io
