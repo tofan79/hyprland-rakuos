@@ -200,5 +200,8 @@ fi
 echo "Generating base file manifest..."
 /usr/libexec/rakuos/generate-base-manifest
 
+# Gaming packages (wine, steam) have RPM scriptlets needing /bin/sh
+ln -sf /usr/bin/bash /bin/sh || true
+
 echo "Prebaking hyprland overlay payload..."
 prebake_overlay_from_installroot
