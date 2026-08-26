@@ -67,10 +67,9 @@ prebake_overlay_from_installroot() {
     mkdir -p "$(dirname "$FACTORY_RUM_RPMDB")"
     cp -a "$installroot/var/lib/rakuos/rum-rpmdb" "$FACTORY_RUM_RPMDB"
 
-    if [[ -d "$installroot/etc" ]] && [[ -n "$(ls -A "$installroot/etc" 2>/dev/null)" ]]; then
-        echo "[rakuos] Copying prebaked /etc payload into image..."
-        cp -a "$installroot/etc/." /etc/
-    fi
+    # Skip /etc copy — gaming packages (wine, steam) pull samba-winbind which
+    # creates wbpriv group (GID 964) and tmpfiles.d entries that fail bootc lint.
+    # These packages are installed at runtime via overlay, so /etc is handled then.
 
     echo "prebaked-installroot" > "$STATE_FILE"
     rm -f "$DIRTY_FILE"
