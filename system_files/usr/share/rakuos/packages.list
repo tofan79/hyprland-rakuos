@@ -14,3 +14,5 @@ xorg-x11-drv-libinput
 joystick-support
 jstest-gtk
 bluez-hid2hci
+noctalia-git
+hyprfm

@@ -35,7 +35,7 @@ dnf5 clean all
 ## Install packages — Pure Hyprland edition
 rum install -y \
   hyprland cliphist xdg-desktop-portal-hyprland \
-  hyprland-qt-support \
+  hyprland-qt-support hyprland-guiutils \
   hyprsysteminfo hyprtoolkit gpu-screen-recorder nwg-look matugen \
   sddm-x11 \
   grim slurp tesseract tesseract-langpack-eng zbar \
@@ -51,7 +51,7 @@ rum install -y \
   dbus-tools logrotate gnome-keyring \
   NetworkManager-wifi NetworkManager-bluetooth NetworkManager-openvpn NetworkManager-config-connectivity-fedora NetworkManager-wwan \
   bluez bluez-tools \
-  hyprfm pipewire wireplumber gvfs-nfs gvfs-fuse gvfs-smb gvfs gvfs-mtp gnome-disk-utility gnome-calculator fprintd-pam ibus-mozc ibus-unikey \
+  pipewire wireplumber gvfs-nfs gvfs-fuse gvfs-smb gvfs gvfs-mtp gnome-disk-utility gnome-calculator fprintd-pam ibus-mozc ibus-unikey \
   xorg-x11-server-Xwayland \
   ${RAKUOS_RELEASE_PKG} rakuos-software-qt rakuos-welcome-qt \
   systemd-oomd-defaults xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs-gtk

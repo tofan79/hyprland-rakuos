@@ -139,7 +139,6 @@ sudo reboot
 | Filesystem | `exfatprogs`, `ntfs-3g`, `btrfs-progs`, `cifs-utils`, `dosfstools` |
 | Fonts | `jetbrains-mono-fonts`, `google-noto-color-emoji-fonts` |
 | System | `dbus-tools`, `logrotate`, `gnome-keyring`, `xdg-desktop-portal(-gtk)`, `xdg-user-dirs-gtk` |
-| RakuOS | `rakuos-release-niri`, `rakuos-software-qt`, `rakuos-welcome-gtk` |
 | System tweaks | `vm.max_map_count=2147483642` (Proton gaming), `user.max_user_namespaces=28633` (rootless containers) |
 
 </details>

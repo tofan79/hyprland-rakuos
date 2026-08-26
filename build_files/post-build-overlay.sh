@@ -112,6 +112,7 @@ cat >> /usr/share/rakuos/protected-packages.txt << 'EOF'
   cliphist
   xdg-desktop-portal-hyprland
   hyprland-qt-support
+  hyprland-guiutils
   hyprsysteminfo
   hyprtoolkit
   gpu-screen-recorder
@@ -157,7 +158,6 @@ cat >> /usr/share/rakuos/protected-packages.txt << 'EOF'
   NetworkManager-wwan
   bluez
   bluez-tools
-  hyprfm
   pipewire
   wireplumber
   gvfs-nfs
