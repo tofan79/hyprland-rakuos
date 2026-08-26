@@ -53,7 +53,7 @@ prebake_overlay_from_installroot() {
     trap 'rm -rf "$installroot"' RETURN
 
     echo "[rakuos] Prebaking overlay packages into installroot via rum..."
-    rum install --installroot "$installroot" -y --refresh "${prebake_packages[@]}"
+    rum install --installroot "$installroot" --setopt=tsflags=noscripts -y --refresh "${prebake_packages[@]}"
 
     rm -f "$installroot/usr/share/icons/default/index.theme"
 
