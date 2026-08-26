@@ -51,7 +51,7 @@ rum install -y \
   dbus-tools logrotate gnome-keyring \
   NetworkManager-wifi NetworkManager-bluetooth NetworkManager-openvpn NetworkManager-config-connectivity-fedora NetworkManager-wwan \
   bluez bluez-tools \
-  nautilus pipewire wireplumber gvfs-nfs gvfs-fuse gvfs-smb gvfs gvfs-mtp gnome-disk-utility gnome-calculator fprintd-pam ibus-mozc ibus-unikey \
+  hyprfm pipewire wireplumber gvfs-nfs gvfs-fuse gvfs-smb gvfs gvfs-mtp gnome-disk-utility gnome-calculator fprintd-pam ibus-mozc ibus-unikey \
   xorg-x11-server-Xwayland \
   ${RAKUOS_RELEASE_PKG} rakuos-software-qt rakuos-welcome-qt \
   systemd-oomd-defaults xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs-gtk

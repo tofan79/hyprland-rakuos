@@ -157,7 +157,7 @@ cat >> /usr/share/rakuos/protected-packages.txt << 'EOF'
   NetworkManager-wwan
   bluez
   bluez-tools
-  nautilus
+  hyprfm
   pipewire
   wireplumber
   gvfs-nfs

@@ -133,7 +133,7 @@ sudo reboot
 | Bluetooth | `bluez`, `bluez-tools` |
 | Network | `NetworkManager-wifi`, `NetworkManager-bluetooth`, `NetworkManager-openvpn`, `NetworkManager-wwan` |
 | Hardware/Power | `switcheroo-control`, `brightnessctl`, `ddcutil`, `power-profiles-daemon`, `fprintd-pam` |
-| File Manager | `nautilus`, `gvfs` (+nfs/fuse/smb/mtp), `gnome-disk-utility`, `gnome-calculator` |
+| File Manager | `hyprfm`, `gvfs` (+nfs/fuse/smb/mtp), `gnome-disk-utility`, `gnome-calculator` |
 | Input Methods | `ibus-mozc`, `ibus-unikey` |
 | Theming | `qt5ct`, `qt6ct`, `qt6-qtwayland`, `papirus-icon-theme` |
 | Filesystem | `exfatprogs`, `ntfs-3g`, `btrfs-progs`, `cifs-utils`, `dosfstools` |
