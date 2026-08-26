@@ -19,8 +19,9 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
     --mount=type=tmpfs,dst=/tmp \
-    chmod +x /ctx/build.sh /ctx/post-build.sh /ctx/post-build-overlay.sh && \
-    /ctx/build.sh && /ctx/post-build.sh && /ctx/post-build-overlay.sh
+    cp /ctx/build.sh /ctx/post-build.sh /ctx/post-build-overlay.sh /tmp/ && \
+    chmod +x /tmp/build.sh /tmp/post-build.sh /tmp/post-build-overlay.sh && \
+    /tmp/build.sh && /tmp/post-build.sh && /tmp/post-build-overlay.sh
 
 COPY system_files /
 
