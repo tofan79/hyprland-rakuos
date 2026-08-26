@@ -174,7 +174,7 @@ cat >> /usr/share/rakuos/protected-packages.txt << 'EOF'
   xorg-x11-server-Xwayland
   rakuos-release-niri
   rakuos-software-qt
-  rakuos-welcome-gtk
+  rakuos-welcome-qt
   systemd-oomd-defaults
   xdg-desktop-portal
   xdg-desktop-portal-gtk
