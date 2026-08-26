@@ -23,6 +23,8 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 
 COPY system_files /
 
-RUN bootc container lint
+RUN rm -rf /run/* /tmp/* && \
+    sed -i '/^wbpriv:/d' /etc/group 2>/dev/null || true && \
+    bootc container lint
 
 LABEL containers.bootc=1
