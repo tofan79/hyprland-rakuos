@@ -25,6 +25,7 @@ COPY system_files /
 
 RUN rm -rf /run/* /tmp/* && \
     sed -i '/^wbpriv:/d' /etc/group 2>/dev/null || true && \
+    grep -q '^root:' /etc/group || echo 'root:x:0:' >> /etc/group && \
     bootc container lint
 
 LABEL containers.bootc=1
