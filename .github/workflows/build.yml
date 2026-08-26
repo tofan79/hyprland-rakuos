@@ -1,0 +1,87 @@
+name: Build RakuOS Hyprland Image
+
+on:
+  push:
+    branches: [main, staging]
+  workflow_dispatch:
+    inputs:
+      base_image_tag:
+        description: 'Base image tag'
+        required: false
+        default: 'staging'
+      rakuos_staging:
+        description: 'Enable staging (1 or 0)'
+        required: false
+        default: '1'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Buildah
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y buildah
+
+      - name: Determine build args
+        id: build_args
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/staging" ]; then
+            echo "base_image_tag=staging" >> $GITHUB_OUTPUT
+            echo "rakuos_staging=1" >> $GITHUB_OUTPUT
+            echo "image_tag=staging" >> $GITHUB_OUTPUT
+          else
+            echo "base_image_tag=${{ github.event.inputs.base_image_tag || 'staging' }}" >> $GITHUB_OUTPUT
+            echo "rakuos_staging=${{ github.event.inputs.rakuos_staging || '1' }}" >> $GITHUB_OUTPUT
+            echo "image_tag=latest" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        run: |
+          buildah build \
+            --file Containerfile \
+            --build-arg BASE_IMAGE_TAG=${{ steps.build_args.outputs.base_image_tag }} \
+            --build-arg RAKUOS_STAGING=${{ steps.build_args.outputs.rakuos_staging }} \
+            --label "org.opencontainers.image.created=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --label "org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}" \
+            --label "org.opencontainers.image.revision=${{ github.sha }}" \
+            --label "org.opencontainers.image.vendor=RakuOS" \
+            --label "org.opencontainers.image.description=RakuOS Hyprland" \
+            --label "containers.bootc=1" \
+            --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.build_args.outputs.image_tag }} \
+            .
+
+      - name: Push image
+        run: |
+          buildah push \
+            --compression-format zstd:chunked \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.build_args.outputs.image_tag }}
+
+      - name: Generate date tag
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
+        run: |
+          DATE_TAG=$(date -u +%Y%m%d)
+          buildah tag \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.build_args.outputs.image_tag }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.build_args.outputs.image_tag }}.${DATE_TAG}
+          buildah push \
+            --compression-format zstd:chunked \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.build_args.outputs.image_tag }}.${DATE_TAG}

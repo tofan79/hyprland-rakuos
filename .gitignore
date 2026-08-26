@@ -1,0 +1,5 @@
+*.ociarchive
+*.oci
+*.img
+*.iso
+out/

@@ -1,0 +1,14 @@
+[Unit]
+Description=RakuOS-Hyprland: Add first user to hardware groups (video/render/input)
+ConditionPathExists=!/var/lib/rakuos/firstboot-hwgroups.done
+After=systemd-tmpfiles-setup-dev.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/rakuos/firstboot-hwgroups.sh
+ExecStartPost=/usr/bin/mkdir -p /var/lib/rakuos
+ExecStartPost=/usr/bin/touch /var/lib/rakuos/firstboot-hwgroups.done
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
