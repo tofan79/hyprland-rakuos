@@ -1,8 +1,9 @@
 name: Build RakuOS Hyprland Image
 
 on:
-  push:
-    branches: [main, staging]
+  schedule:
+    # Every Friday at 00:00 WIB (UTC+7) = Thursday 17:00 UTC
+    - cron: '0 17 * * 4'
   workflow_dispatch:
     inputs:
       base_image_tag:
@@ -37,7 +38,7 @@ jobs:
       - name: Determine build args
         id: build_args
         run: |
-          if [ "${{ github.ref }}" = "refs/heads/staging" ]; then
+          if [ "${{ github.event_name }}" = "schedule" ]; then
             echo "base_image_tag=staging" >> $GITHUB_OUTPUT
             echo "rakuos_staging=1" >> $GITHUB_OUTPUT
             echo "image_tag=staging" >> $GITHUB_OUTPUT
@@ -77,7 +78,6 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.build_args.outputs.image_tag }}
 
       - name: Generate date tag
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
         run: |
           DATE_TAG=$(date -u +%Y%m%d)
           buildah tag \
