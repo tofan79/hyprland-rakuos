@@ -23,9 +23,10 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 
 COPY system_files /
 
-RUN rm -rf /run/* /tmp/* && \
-    sed -i '/^wbpriv:/d' /etc/group 2>/dev/null || true && \
-    grep -q '^root:' /etc/group || echo 'root:x:0:' >> /etc/group && \
+RUN rm -rf /run/* /tmp/* 2>/dev/null || true; \
+    sed -i '/^wbpriv:/d' /etc/group 2>/dev/null || true; \
+    sed -i '/^.*:x:964:/d' /etc/group 2>/dev/null || true; \
+    grep -q '^root:' /etc/group || echo 'root:x:0:' >> /etc/group; \
     bootc container lint
 
 LABEL containers.bootc=1
