@@ -172,7 +172,7 @@ cat >> /usr/share/rakuos/protected-packages.txt << 'EOF'
   ibus-mozc
   ibus-unikey
   xorg-x11-server-Xwayland
-  rakuos-release-hyprland
+  rakuos-release-niri
   rakuos-software-qt
   rakuos-welcome-qt
   systemd-oomd-defaults

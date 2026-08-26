@@ -7,9 +7,9 @@ FEDORA_VERSION=$(rpm -E %fedora)
 # On the staging branch (RAKUOS_STAGING=1, set via --build-arg from CI)
 # install the staging os-release identity instead of the stable one, so
 # staging images identify themselves as "RakuOS Hyprland Staging".
-RAKUOS_RELEASE_PKG="rakuos-release-hyprland"
+RAKUOS_RELEASE_PKG="rakuos-release-niri"
 if [ "${RAKUOS_STAGING:-0}" = "1" ]; then
-    RAKUOS_RELEASE_PKG="rakuos-release-hyprland-staging"
+    RAKUOS_RELEASE_PKG="rakuos-release-niri-staging"
 fi
 
 ## Enable COPR repos
