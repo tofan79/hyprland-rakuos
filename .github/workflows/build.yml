@@ -2,7 +2,6 @@ name: Build RakuOS Hyprland Image
 
 on:
   schedule:
-    # Every Friday at 00:00 WIB (UTC+7) = Thursday 17:00 UTC
     - cron: '0 17 * * 4'
   workflow_dispatch:
     inputs:
@@ -30,10 +29,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Set up Buildah
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y buildah
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Determine build args
         id: build_args
@@ -48,15 +49,12 @@ jobs:
             echo "image_tag=latest" >> $GITHUB_OUTPUT
           fi
 
-      - name: Login to GHCR
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build image
+      - name: Build and push
         run: |
+          DATE_TAG=$(date -u +%Y%m%d)
+          IMAGE_TAG=${{ steps.build_args.outputs.image_tag }}
+          FULL_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
           buildah build \
             --file Containerfile \
             --layers \
@@ -68,21 +66,9 @@ jobs:
             --label "org.opencontainers.image.vendor=RakuOS" \
             --label "org.opencontainers.image.description=RakuOS Hyprland" \
             --label "containers.bootc=1" \
-            --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.build_args.outputs.image_tag }} \
+            --tag ${FULL_IMAGE}:${IMAGE_TAG} \
+            --tag ${FULL_IMAGE}:${IMAGE_TAG}.${DATE_TAG} \
             .
 
-      - name: Push image
-        run: |
-          buildah push \
-            --compression-format zstd:chunked \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.build_args.outputs.image_tag }}
-
-      - name: Generate date tag
-        run: |
-          DATE_TAG=$(date -u +%Y%m%d)
-          buildah tag \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.build_args.outputs.image_tag }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.build_args.outputs.image_tag }}.${DATE_TAG}
-          buildah push \
-            --compression-format zstd:chunked \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.build_args.outputs.image_tag }}.${DATE_TAG}
+          buildah push --compression-format zstd:chunked ${FULL_IMAGE}:${IMAGE_TAG}
+          buildah push --compression-format zstd:chunked ${FULL_IMAGE}:${IMAGE_TAG}.${DATE_TAG}
