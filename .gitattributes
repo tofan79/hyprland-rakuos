@@ -1,0 +1,5 @@
+# Ensure build scripts keep execute permission on all platforms
+build_files/*.sh -merge
+build_files/*.sh filter= diff
+*.sh -merge
+*.sh filter= diff
