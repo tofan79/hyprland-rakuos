@@ -1,15 +1,9 @@
-# Ensure build scripts keep execute permission on all platforms
-build_files/*.sh -merge
-build_files/*.sh filter= diff
-*.sh -merge
-*.sh filter= diff
+# Force LF line endings for shell scripts
+*.sh text eol=lf
 
 # Hyprland scripts without .sh extension
-system_files/etc/skel/.config/hypr/scripts/google-lens -merge
-system_files/etc/skel/.config/hypr/scripts/google-lens filter= diff
-system_files/etc/skel/.config/hypr/scripts/ocr -merge
-system_files/etc/skel/.config/hypr/scripts/ocr filter= diff
-system_files/etc/skel/.config/hypr/scripts/qr-scan -merge
-system_files/etc/skel/.config/hypr/scripts/qr-scan filter= diff
-system_files/etc/skel/.config/hypr/scripts/screenshot -merge
-system_files/etc/skel/.config/hypr/scripts/screenshot filter= diff
+system_files/etc/skel/.config/hypr/scripts/google-lens text eol=lf
+system_files/etc/skel/.config/hypr/scripts/ocr text eol=lf
+system_files/etc/skel/.config/hypr/scripts/qr-scan text eol=lf
+system_files/etc/skel/.config/hypr/scripts/screenshot text eol=lf
+system_files/etc/skel/.config/hypr/scripts/ocr-clip text eol=lf
