@@ -5,4 +5,7 @@ return {
     Wayland = {
         CompositorCommand = "Hyprland",
     },
+    Users = {
+        DefaultSession = "Hyprland-uwsm.desktop",
+    },
 }
