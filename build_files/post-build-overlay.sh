@@ -123,6 +123,9 @@ cat >> /usr/share/rakuos/protected-packages.txt << 'EOF'
   slurp
   tesseract
   tesseract-langpack-eng
+  tesseract-langpack-ind
+  tesseract-langpack-jpn
+  tesseract-langpack-chi-sim
   zbar
   switcheroo-control
   brightnessctl

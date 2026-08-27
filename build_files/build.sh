@@ -38,7 +38,7 @@ rum install -y \
   hyprland-qt-support hyprland-guiutils \
   hyprsysteminfo hyprtoolkit gpu-screen-recorder nwg-look matugen \
   sddm-x11 \
-  grim slurp tesseract tesseract-langpack-eng zbar \
+  grim slurp tesseract tesseract-langpack-eng tesseract-langpack-ind tesseract-langpack-jpn tesseract-langpack-chi-sim zbar \
   switcheroo-control \
   brightnessctl ddcutil power-profiles-daemon \
   playerctl alsa-utils pavucontrol \
