@@ -71,7 +71,7 @@ RakuOS-Hyprland uses a **three-layer architecture** so that gaming packages, dev
 
 ```bash
 # Install via bootc
-sudo bootc switch ghcr.io/tofan79/rakuos-hyperland:staging
+sudo bootc switch ghcr.io/tofan79/hyprland-rakuos:staging
 
 # Reboot
 sudo reboot
@@ -231,8 +231,8 @@ sudo reboot
 
 ```bash
 # Clone repository
-git clone https://github.com/tofan79/rakuos-hyperland.git
-cd rakuos-hyperland
+git clone https://github.com/tofan79/hyprland-rakuos.git
+cd hyprland-rakuos
 
 # Build (NVIDIA base, staging)
 sudo buildah build \
