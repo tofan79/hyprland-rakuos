@@ -113,6 +113,7 @@ sudo reboot
 | `nwg-look`, `matugen` | GTK theming & Material You color generation |
 | `sddm-x11` | Display manager |
 | `grim`, `slurp`, `tesseract`, `zbar` | Screenshot, region-select, OCR, QR/barcode reading |
+| `tesseract-langpack-eng/ind/jpn/sun/chi_sim/chi_tra/jav` | OCR language support |
 
 ### Graphics & GPU
 
@@ -168,26 +169,24 @@ sudo rakuos remove <package>
 
 ## NVIDIA Environment Variables
 
-Add these to your `~/.config/hypr/hyprland.conf` for NVIDIA/hybrid GPU:
+NVIDIA env vars are pre-configured in `~/.config/uwsm/env-hyprland`. For manual overrides, add to `~/.config/uwsm/env-hyprland`:
 
-```conf
-env = LIBVA_DRIVER_NAME,nvidia
-env = __GLX_VENDOR_LIBRARY_NAME,nvidia
-env = GBM_BACKEND,nvidia-drm
-env = NVD_BACKEND,direct
-env = __NV_PRIME_RENDER_OFFLOAD,1
-env = __VK_LAYER_NV_optimus,NVIDIA_only
-env = MOZ_ENABLE_WAYLAND,1
-env = QT_QPA_PLATFORM,wayland;xcb
-env = GDK_BACKEND,wayland,x11,*
-env = WLR_RENDERER,vulkan
-env = AQ_FORCE_LINEAR_BLIT,0
-env = DXVK_ASYNC,1
-env = VKD3D_CONFIG,dxr
-env = WINE_FULLSCREEN_FSR,1
 ```
-
-> AMD/Intel users: skip the NVIDIA blocks, keep the Wayland compatibility vars.
+LIBVA_DRIVER_NAME=nvidia
+__GLX_VENDOR_LIBRARY_NAME=nvidia
+GBM_BACKEND=nvidia-drm
+NVD_BACKEND=direct
+__NV_PRIME_RENDER_OFFLOAD=1
+__VK_LAYER_NV_optimus=NVIDIA_only
+MOZ_ENABLE_WAYLAND=1
+QT_QPA_PLATFORM=wayland;xcb
+GDK_BACKEND=wayland,x11,*
+WLR_RENDERER=vulkan
+AQ_FORCE_LINEAR_BLIT=0
+DXVK_ASYNC=1
+VKD3D_CONFIG=dxr
+WINE_FULLSCREEN_FSR=1
+```
 
 ---
 
@@ -272,7 +271,7 @@ A: Wait for first-boot overlay provisioning to complete. It needs network access
 
 **Q: My NVIDIA hybrid GPU isn't offloading correctly?**
 
-A: Add the NVIDIA environment variables to your `~/.config/hypr/hyprland.conf` (see [NVIDIA Environment Variables](#nvidia-environment-variables)). Run `hyprctl systeminfo` to verify.
+A: Add the NVIDIA environment variables to your `~/.config/uwsm/env-hyprland` (see [NVIDIA Environment Variables](#nvidia-environment-variables)). Run `hyprctl systeminfo` to verify.
 
 **Q: Can I install `.i686` packages?**
 
