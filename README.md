@@ -71,7 +71,7 @@ RakuOS-Hyprland uses a **three-layer architecture** so that gaming packages, dev
 
 ```bash
 # Install via bootc
-sudo bootc switch ghcr.io/tofan79/hyprland-rakuos:staging
+sudo bootc switch ghcr.io/tofan79/hyprland-rakuos:latest
 
 # Reboot
 sudo reboot
