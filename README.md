@@ -111,7 +111,7 @@ sudo reboot
 | `hyprland-qt-support`, `hyprsysteminfo`, `hyprtoolkit` | Hyprland ecosystem integration |
 | `gpu-screen-recorder` | GPU-accelerated screen recorder |
 | `nwg-look`, `matugen` | GTK theming & Material You color generation |
-| `sddm-x11` | Display manager |
+| `sddm sddm-wayland-generic uwsm` | Display manager |
 | `grim`, `slurp`, `tesseract`, `zbar` | Screenshot, region-select, OCR, QR/barcode reading |
 | `tesseract-langpack-eng/ind/jpn/sun/chi_sim/chi_tra/jav` | OCR language support |
 
