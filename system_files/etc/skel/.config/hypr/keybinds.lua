@@ -19,6 +19,7 @@ hl.bind(
 )
 hl.bind(M .. " + Q", hl.dsp.window.close(), { description = "Close active window" })
 hl.bind(M .. " + Escape", hl.dsp.exec_cmd("noctalia msg panel-toggle session"), { description = "Session menu" })
+hl.bind(M .. " + SHIFT + Escape", hl.dsp.exec_cmd("uwsm stop"), { description = "Exit Hyprland (UWSM)" })
 hl.bind(M .. " + CTRL + L", hl.dsp.exec_cmd("noctalia msg session lock"), { description = "Lock screen" })
 hl.bind(
 	M .. " + slash",
@@ -321,7 +322,7 @@ hl.bind(
 -- App Launchers
 -- ───────────────────────────────────────────
 hl.bind(M .. " + Return", hl.dsp.exec_cmd("ghostty"), { description = "Terminal" })
-hl.bind(M .. " + E", hl.dsp.exec_cmd("nautilus"), { description = "File manager" })
+hl.bind(M .. " + E", hl.dsp.exec_cmd("hyprfm"), { description = "File manager" })
 hl.bind(M .. " + B", hl.dsp.exec_cmd("helium-browser-bin"), { description = "Browser (Helium)" })
 hl.bind(M .. " + N", hl.dsp.exec_cmd("zed"), { description = "Editor (Zed)" })
 hl.bind(M .. " + T", hl.dsp.exec_cmd("Telegram"), { description = "Telegram" })

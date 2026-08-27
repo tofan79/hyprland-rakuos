@@ -3,3 +3,13 @@ build_files/*.sh -merge
 build_files/*.sh filter= diff
 *.sh -merge
 *.sh filter= diff
+
+# Hyprland scripts without .sh extension
+system_files/etc/skel/.config/hypr/scripts/google-lens -merge
+system_files/etc/skel/.config/hypr/scripts/google-lens filter= diff
+system_files/etc/skel/.config/hypr/scripts/ocr -merge
+system_files/etc/skel/.config/hypr/scripts/ocr filter= diff
+system_files/etc/skel/.config/hypr/scripts/qr-scan -merge
+system_files/etc/skel/.config/hypr/scripts/qr-scan filter= diff
+system_files/etc/skel/.config/hypr/scripts/screenshot -merge
+system_files/etc/skel/.config/hypr/scripts/screenshot filter= diff
