@@ -118,7 +118,8 @@ cat >> /usr/share/rakuos/protected-packages.txt << 'EOF'
   gpu-screen-recorder
   nwg-look
   matugen
-  sddm-x11
+  sddm
+  sddm-wayland-generic
   uwsm
   grim
   slurp

@@ -37,7 +37,7 @@ rum install -y \
   hyprland cliphist xdg-desktop-portal-hyprland \
   hyprland-qt-support hyprland-guiutils \
   hyprsysteminfo hyprtoolkit gpu-screen-recorder nwg-look matugen \
-  sddm-x11 uwsm\
+  sddm sddm-wayland-generic uwsm\
   grim slurp tesseract tesseract-langpack-eng tesseract-langpack-ind tesseract-langpack-sun tesseract-langpack-jpn tesseract-langpack-chi_sim tesseract-langpack-chi_tra tesseract-langpack-jav tesseract-script-japanese zbar \
   switcheroo-control \
   brightnessctl ddcutil power-profiles-daemon \
