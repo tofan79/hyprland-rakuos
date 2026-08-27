@@ -42,12 +42,11 @@ jobs:
           if [ "${{ github.event_name }}" = "schedule" ]; then
             echo "base_image_tag=staging" >> $GITHUB_OUTPUT
             echo "rakuos_staging=1" >> $GITHUB_OUTPUT
-            echo "image_tag=staging" >> $GITHUB_OUTPUT
           else
             echo "base_image_tag=${{ github.event.inputs.base_image_tag || 'staging' }}" >> $GITHUB_OUTPUT
             echo "rakuos_staging=${{ github.event.inputs.rakuos_staging || '1' }}" >> $GITHUB_OUTPUT
-            echo "image_tag=latest" >> $GITHUB_OUTPUT
           fi
+          echo "image_tag=latest" >> $GITHUB_OUTPUT
 
       - name: Build and push
         run: |
