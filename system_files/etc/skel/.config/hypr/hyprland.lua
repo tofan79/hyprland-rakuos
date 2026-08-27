@@ -10,7 +10,6 @@ package.path = os.getenv("HOME")
 	.. package.path
 
 require("monitor")
-require("env")
 require("noctalia").apply_theme()
 dofile(os.getenv("HOME") .. "/.config/hypr/colors.lua")
 require("decoration")
