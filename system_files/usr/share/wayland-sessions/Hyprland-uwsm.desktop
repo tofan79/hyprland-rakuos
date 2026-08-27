@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=Hyprland (UWSM)
-Comment=Dynamic tiling Wayland compositor, UWSM session
-Exec=uwsm start -- Hyprland.desktop
-TryExec=uwsm
-Type=Application
-DesktopNames=Hyprland
