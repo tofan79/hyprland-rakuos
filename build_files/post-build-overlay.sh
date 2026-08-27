@@ -119,6 +119,7 @@ cat >> /usr/share/rakuos/protected-packages.txt << 'EOF'
   nwg-look
   matugen
   sddm-x11
+  uwsm
   grim
   slurp
   tesseract
