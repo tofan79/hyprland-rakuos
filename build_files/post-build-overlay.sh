@@ -124,6 +124,7 @@ cat >> /usr/share/rakuos/protected-packages.txt << 'EOF'
   tesseract
   tesseract-langpack-eng
   tesseract-langpack-ind
+  tesseract-langpack-sun
   tesseract-langpack-jpn
   tesseract-langpack-chi_sim
   tesseract-langpack-chi_tra
