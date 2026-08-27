@@ -1,18 +1,36 @@
-AQ_DRM_DEVICES=/dev/dri/card0
-LIBVA_DRIVER_NAME=radeonsi
-WLR_RENDERER=vulkan
-AQ_FORCE_LINEAR_BLIT=0
-__GLX_VENDOR_LIBRARY_NAME=nvidia
-GBM_BACKEND=nvidia-drm
-NVD_BACKEND=direct
-__NV_PRIME_RENDER_OFFLOAD=1
-__VK_LAYER_NV_optimus=NVIDIA_only
-PROTON_ENABLE_NGX_UPDATER=1
-DXVK_NVAPI_VKREFLEX=1
-NVPRESENT_ENABLE_SMOOTH_MOTION=1
-STEAM_ALLOW_DRIVE_UNMOUNT=1
-SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
-VKD3D_CONFIG=dxr
-WINE_FULLSCREEN_FSR=1
-__GL_SHADER_DISK_CACHE=1
-__GL_SHADER_DISK_CACHE_SIZE=12000000000
+# Auto-detect the NVIDIA DRM card (card0/card1 numbering varies across
+# hardware/boots and is not reliable to hardcode on hybrid laptops). Falls
+# back to Aquamarine auto-detection when no NVIDIA card is found.
+_nv_card=""
+for _drv in /sys/class/drm/card*/device/driver; do
+    [ -e "$_drv" ] || continue
+    _driver="$(basename "$(readlink -f "$_drv")")"
+    if [ "$_driver" = "nvidia" ] || [ "$_driver" = "nvidia-drm" ]; then
+        _card="$(basename "$(dirname "$(dirname "$_drv")")")"
+        _nv_card="/dev/dri/$_card"
+        break
+    fi
+done
+unset _drv _driver _card
+if [ -n "$_nv_card" ]; then
+    export AQ_DRM_DEVICES="$_nv_card"
+fi
+unset _nv_card
+
+export LIBVA_DRIVER_NAME=nvidia
+export WLR_RENDERER=vulkan
+export AQ_FORCE_LINEAR_BLIT=0
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+export GBM_BACKEND=nvidia-drm
+export NVD_BACKEND=direct
+export __NV_PRIME_RENDER_OFFLOAD=1
+export __VK_LAYER_NV_optimus=NVIDIA_only
+export PROTON_ENABLE_NGX_UPDATER=1
+export DXVK_NVAPI_VKREFLEX=1
+export NVPRESENT_ENABLE_SMOOTH_MOTION=1
+export STEAM_ALLOW_DRIVE_UNMOUNT=1
+export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
+export VKD3D_CONFIG=dxr
+export WINE_FULLSCREEN_FSR=1
+export __GL_SHADER_DISK_CACHE=1
+export __GL_SHADER_DISK_CACHE_SIZE=12000000000
