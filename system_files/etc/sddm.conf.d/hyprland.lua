@@ -3,9 +3,6 @@ return {
         DisplayServer = "wayland",
     },
     Wayland = {
-        CompositorCommand = "Hyprland",
-    },
-    Users = {
-        DefaultSession = "Hyprland-uwsm.desktop",
+        CompositorCommand = "uwsm start -D Hyprland Hyprland.desktop",
     },
 }
