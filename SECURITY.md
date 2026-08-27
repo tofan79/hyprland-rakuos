@@ -46,8 +46,8 @@ git push
 
 ```bash
 cosign verify \
-  --key https://raw.githubusercontent.com/tofan79/RakuOs-Hyprland/main/rakuos-hyprland.pub \
-  ghcr.io/tofan79/rakuos-hyprland:latest
+  --key https://raw.githubusercontent.com/tofan79/hyprland-rakuos/main/rakuos-hyprland.pub \
+  ghcr.io/tofan79/hyprland-rakuos:latest
 ```
 
 ---
@@ -135,6 +135,6 @@ UEFI Secure Boot
 
 ### User verification:
 ```
-podman pull ghcr.io/tofan79/rakuos-hyprland:latest
-cosign verify --key https://raw.githubusercontent.com/tofan79/RakuOs-Hyprland/main/rakuos-hyprland.pub ghcr.io/tofan79/rakuos-hyprland:latest
+podman pull ghcr.io/tofan79/hyprland-rakuos:latest
+cosign verify --key https://raw.githubusercontent.com/tofan79/RakuOs-Hyprland/main/rakuos-hyprland.pub ghcr.io/tofan79/hyprland-rakuos:latest
 ```
