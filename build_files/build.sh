@@ -47,7 +47,6 @@ rum install -y \
   slurp \
   swappy \
   wtype \
-  blueman \
   gnome-keyring \
   gnome-keyring-pam \
   fprintd-pam \
@@ -74,7 +73,7 @@ rum install -y \
   systemd-oomd-defaults
 
 ## Remove conflicting DE packages
-rum remove -y swaylock alacritty fuzzel waybar wofi 2>/dev/null || true
+rum remove -y swaylock alacritty fuzzel waybar wofi blueman 2>/dev/null || true
 
 ## Remove fedora wallpapers
 rm -rf /usr/share/backgrounds/fedora-workstation/

@@ -55,7 +55,6 @@ grim
 slurp
 swappy
 wtype
-blueman
 gnome-keyring
 gnome-keyring-pam
 fprintd-pam
@@ -74,8 +73,8 @@ NetworkManager-wwan
 tuned
 tuned-ppd
 libnotify
-  sddm
-  ibus-mozc
+sddm
+ibus-mozc
 qt6ct
 rakuos-software-qt
 rakuos-welcome-qt
