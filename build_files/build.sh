@@ -101,3 +101,7 @@ fi
 
 ## Enable Services
 systemctl enable greetd
+
+## Disable problematic services on bootc/ostree
+systemctl mask grub-boot-success.timer 2>/dev/null || true
+systemctl mask rakuos-flatpak-watcher.service 2>/dev/null || true
