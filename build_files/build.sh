@@ -69,6 +69,7 @@ rum install -y \
 
 ## Remove conflicting/base packages
 rum remove -y wofi tuned tuned-ppd 2>/dev/null || true
+rm -rf /etc/tuned /usr/lib/tuned 2>/dev/null || true
 
 ## Remove fedora wallpapers
 rm -rf /usr/share/backgrounds/fedora-workstation/
