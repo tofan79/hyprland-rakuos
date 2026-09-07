@@ -63,8 +63,8 @@ rum install -y \
   rakuos-welcome-qt \
   systemd-oomd-defaults
 
-## Remove conflicting DE packages
-rum remove -y wofi 2>/dev/null || true
+## Remove conflicting/base packages
+rum remove -y wofi tuned tuned-ppd 2>/dev/null || true
 
 ## Remove fedora wallpapers
 rm -rf /usr/share/backgrounds/fedora-workstation/
