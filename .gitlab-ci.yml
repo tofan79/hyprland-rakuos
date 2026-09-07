@@ -1,0 +1,147 @@
+# ============================================================
+# RakuOS Hyprland Image — GitLab CI/CD Pipeline
+# ============================================================
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'
+    - if: '$CI_PIPELINE_SOURCE == "pipeline"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - when: never
+
+variables:
+  IMAGE_REGISTRY: "registry.gitlab.com/rakuos/images/rakuos-hyprland"
+  IMAGE_REGISTRY_QUAY: "quay.io/rakuos/rakuos-hyprland"
+  IMAGE_REGISTRY_QUAY_NVIDIA: "quay.io/rakuos/rakuos-hyprland-nvidia"
+  IMAGE_REGISTRY_QUAY_NVIDIA_V3: "quay.io/rakuos/rakuos-hyprland-nvidia-v3"
+  BASE_IMAGE_REPO: "quay.io/rakuos/rakuos-base-nvidia-v3"
+  DEFAULT_TAG: "latest"
+  IMAGE_DESC: "RakuOS Hyprland"
+  IMAGE_KEYWORDS: "bootc,fedora,atomic,hyprland"
+
+stages:
+  - build
+  - push
+  - sign
+  - dispatch
+
+.buildah-job:
+  image: quay.io/buildah/stable:latest
+  tags:
+    - saas-linux-2xlarge-amd64
+  before_script:
+    - |
+      case "${CI_COMMIT_BRANCH}" in
+        "${CI_DEFAULT_BRANCH}")
+          export BRANCH_SLUG="${DEFAULT_TAG}"
+          ;;
+        "staging")
+          export BRANCH_SLUG="staging"
+          ;;
+        "rawhide")
+          export BRANCH_SLUG="rawhide"
+          ;;
+        *)
+          export BRANCH_SLUG="$(printf '%s' "${CI_COMMIT_BRANCH}" | tr '[:upper:]' '[:lower:]' | sed 's#[^a-z0-9._-]#-#g')"
+          ;;
+      esac
+      if [ "${CI_COMMIT_BRANCH}" = "staging" ]; then
+        export RAKUOS_STAGING="1"
+      else
+        export RAKUOS_STAGING="0"
+      fi
+      echo "Building with BRANCH_SLUG=${BRANCH_SLUG}, RAKUOS_STAGING=${RAKUOS_STAGING}"
+
+build-hyprland:
+  extends: .buildah-job
+  stage: build
+  variables:
+    GIT_STRATEGY: clone
+    GIT_DEPTH: 0
+  script:
+    - |
+      buildah bud \
+        --file Containerfile \
+        --layers \
+        --build-arg BASE_IMAGE_TAG=${BRANCH_SLUG} \
+        --build-arg RAKUOS_STAGING=${RAKUOS_STAGING} \
+        --label "org.opencontainers.image.created=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        --label "org.opencontainers.image.source=${CI_REPOSITORY_URL}" \
+        --label "org.opencontainers.image.revision=${CI_COMMIT_SHA}" \
+        --label "org.opencontainers.image.vendor=RakuOS" \
+        --label "org.opencontainers.image.description=${IMAGE_DESC}" \
+        --label "containers.bootc=1" \
+        --tag ${IMAGE_REGISTRY_QUAY_NVIDIA_V3}:${BRANCH_SLUG} \
+        --tag ${IMAGE_REGISTRY_QUAY_NVIDIA_V3}:${BRANCH_SLUG}.$(date -u +%Y%m%d) \
+        --tag ${IMAGE_REGISTRY}:${BRANCH_SLUG} \
+        --tag ${IMAGE_REGISTRY}:${BRANCH_SLUG}.$(date -u +%Y%m%d) \
+        .
+  artifacts:
+    reports:
+      dotenv: build-hyprland.env
+
+build-hyprland-nvidia-v3:
+  extends: .buildah-job
+  stage: build
+  variables:
+    GIT_STRATEGY: clone
+    GIT_DEPTH: 0
+  script:
+    - |
+      buildah bud \
+        --file Containerfile \
+        --layers \
+        --build-arg BASE_IMAGE_TAG=${BRANCH_SLUG} \
+        --build-arg RAKUOS_STAGING=${RAKUOS_STAGING} \
+        --label "org.opencontainers.image.created=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        --label "org.opencontainers.image.source=${CI_REPOSITORY_URL}" \
+        --label "org.opencontainers.image.revision=${CI_COMMIT_SHA}" \
+        --label "org.opencontainers.image.vendor=RakuOS" \
+        --label "org.opencontainers.image.description=${IMAGE_DESC}" \
+        --label "containers.bootc=1" \
+        --tag ${IMAGE_REGISTRY_QUAY_NVIDIA_V3}:${BRANCH_SLUG} \
+        --tag ${IMAGE_REGISTRY_QUAY_NVIDIA_V3}:${BRANCH_SLUG}.$(date -u +%Y%m%d) \
+        --tag ${IMAGE_REGISTRY}:${BRANCH_SLUG} \
+        --tag ${IMAGE_REGISTRY}:${BRANCH_SLUG}.$(date -u +%Y%m%d) \
+        .
+  artifacts:
+    reports:
+      dotenv: build-hyprland-nvidia-v3.env
+
+push-hyprland:
+  extends: .buildah-job
+  stage: push
+  needs:
+    - job: build-hyprland
+      optional: true
+  script:
+    - |
+      IMAGE_TAG="${BRANCH_SLUG:-latest}"
+      buildah push --compression-format zstd:chunked ${IMAGE_REGISTRY_QUAY_NVIDIA_V3}:${IMAGE_TAG}
+      buildah push --compression-format zstd:chunked ${IMAGE_REGISTRY}:${IMAGE_TAG}
+      if [ "${CI_COMMIT_BRANCH}" = "${CI_DEFAULT_BRANCH}" ]; then
+        buildah push --compression-format zstd:chunked ${IMAGE_REGISTRY_QUAY_NVIDIA_V3}:latest
+        buildah push --compression-format zstd:chunked ${IMAGE_REGISTRY}:latest
+      fi
+
+sign-hyprland:
+  extends: .buildah-job
+  stage: sign
+  needs:
+    - job: push-hyprland
+      optional: true
+  script:
+    - |
+      echo "${COSIGN_KEY}" | base64 -d > /tmp/cosign.key
+      IMAGE_TAG="${BRANCH_SLUG:-latest}"
+      cosign sign --key /tmp/cosign.key ${IMAGE_REGISTRY_QUAY_NVIDIA_V3}:${IMAGE_TAG}
+      rm -f /tmp/cosign.key
+  environment:
+    name: production
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
