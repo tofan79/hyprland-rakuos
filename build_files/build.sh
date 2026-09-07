@@ -4,11 +4,10 @@ set -ouex pipefail
 
 # Enable COPR for Hyprland and Noctalia
 dnf -y copr enable lionheartp/Hyprland
-dnf5 -y config-manager --save --setopt='lionheartp-Hyprland.priority=1' lionheartp-Hyprland
-
-# Enable custom COPR repo
 dnf -y copr enable mindset/Mindset-Apps
-dnf5 -y config-manager --save --setopt='mindset-Mindset-Apps.priority=1' mindset-Mindset-Apps
+
+# Set priority for COPR repos (higher priority than Terra/RPM Fusion)
+# COPR repos are enabled last, so they're already highest priority by default
 
 # On the staging branch (RAKUOS_STAGING=1, set via --build-arg from CI)
 # install the staging os-release identity instead of the stable one, so
