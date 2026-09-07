@@ -73,6 +73,9 @@ rum install -y \
 rum remove -y wofi 2>/dev/null || true
 rm -rf /etc/tuned /usr/lib/tuned 2>/dev/null || true
 
+## Remove heavy dev dependencies not needed for desktop
+rum remove -y tree-sitter-cli nodejs22 nodejs22-libs nodejs22-bin nodejs22-docs nodejs22-full-i18n nodejs22-npm nodejs22-npm-bin 2>/dev/null || true
+
 ## Remove fedora wallpapers
 rm -rf /usr/share/backgrounds/fedora-workstation/
 
