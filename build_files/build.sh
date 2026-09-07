@@ -9,11 +9,12 @@ dnf -y copr enable mindset/Mindset-Apps
 # Set priority for COPR repos (higher priority than Terra/RPM Fusion)
 # COPR repos are enabled last, so they're already highest priority by default
 
-# On the staging branch (RAKUOS_STAGING=1), install the staging os-release variant
-RAKUOS_RELEASE_PKG="rakuos-release-hyprland"
-if [ "${RAKUOS_STAGING:-0}" = "1" ]; then
-    RAKUOS_RELEASE_PKG="rakuos-release-hyprland-staging"
-fi
+# NOTE: rakuos-release-hyprland package not available yet in repos
+# When available, uncomment below:
+# RAKUOS_RELEASE_PKG="rakuos-release-hyprland"
+# if [ "${RAKUOS_STAGING:-0}" = "1" ]; then
+#     RAKUOS_RELEASE_PKG="rakuos-release-hyprland-staging"
+# fi
 
 ## Remove tuned first
 rum remove -y tuned tuned-ppd 2>/dev/null || true
