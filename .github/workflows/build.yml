@@ -2,6 +2,9 @@ name: Build RakuOS Hyprland Image
 
 on:
   workflow_dispatch:
+
+  schedule:
+    - cron: '0 17 */2 * *'
     inputs:
       base_image_tag:
         description: 'Base image tag (staging, latest)'
