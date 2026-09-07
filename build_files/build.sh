@@ -78,6 +78,11 @@ rum remove -y wofi 2>/dev/null || true
 ## Remove fedora wallpapers
 rm -rf /usr/share/backgrounds/fedora-workstation/
 
+## Create required system groups (fixes systemd-tmpfiles warnings)
+for group in audio video input disk tty kvm render lp clock kmem sgx utmp; do
+    groupadd -r "$group" 2>/dev/null || true
+done
+
 ## Create greeter user for greetd
 if ! id greeter &>/dev/null; then
     useradd -r -s /sbin/nologin -d /var/lib/noctalia-greeter -M greeter
