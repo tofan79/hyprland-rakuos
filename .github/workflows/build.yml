@@ -63,6 +63,8 @@ jobs:
           echo "Built ghcr.io/${{ env.IMAGE_NAME }}:latest"
 
       - name: Cleanup old container versions
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           KEEP_COUNT=3
           echo "Fetching container versions..."
