@@ -2,9 +2,6 @@ name: Build RakuOS Hyprland Image
 
 on:
   workflow_dispatch:
-
-  schedule:
-    - cron: '0 17 */2 * *'
     inputs:
       base_image_tag:
         description: 'Base image tag (staging, latest)'
@@ -14,6 +11,9 @@ on:
         description: 'Enable staging (1 or 0)'
         required: false
         default: '1'
+
+  schedule:
+    - cron: '0 17 */2 * *'
 
 env:
   REGISTRY: ghcr.io
