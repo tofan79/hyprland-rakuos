@@ -73,8 +73,8 @@ NetworkManager-wwan
 tuned
 tuned-ppd
 libnotify
-sddm
-sddm-themes
+greetd
+noctalia-greeter
 ibus-mozc
 qt6ct
 rakuos-software-qt

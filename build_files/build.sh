@@ -65,8 +65,8 @@ rum install -y \
   tuned \
   tuned-ppd \
   libnotify \
-  sddm \
-  sddm-themes \
+  greetd \
+  noctalia-greeter \
   ibus-mozc \
   qt6ct \
   rakuos-software-qt \
@@ -74,10 +74,10 @@ rum install -y \
   systemd-oomd-defaults
 
 ## Remove conflicting DE packages
-rum remove -y swaylock alacritty fuzzel waybar wofi blueman 2>/dev/null || true
+rum remove -y swaylock alacritty fuzzel waybar wofi blueman sddm sddm-themes 2>/dev/null || true
 
 ## Remove fedora wallpapers
 rm -rf /usr/share/backgrounds/fedora-workstation/
 
 ## Enable Services
-systemctl enable sddm
+systemctl enable greetd
