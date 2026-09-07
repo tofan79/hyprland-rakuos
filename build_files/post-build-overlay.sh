@@ -34,7 +34,6 @@ uwsm
 kitty
 kitty-shell-integration
 kitty-terminfo
-mpv
 neovim
 pipewire
 pipewire-alsa

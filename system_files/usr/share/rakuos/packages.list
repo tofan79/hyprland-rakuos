@@ -5,6 +5,9 @@ satty
 tesseract
 zbarimg
 
+# Media player
+mpv
+
 # GNOME apps (optional - remove if not needed)
 nautilus
 loupe
