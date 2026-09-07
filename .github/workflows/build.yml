@@ -58,3 +58,24 @@ jobs:
       - name: Image digest
         run: |
           echo "Built ghcr.io/${{ env.IMAGE_NAME }}:latest"
+
+      - name: Cleanup old container versions
+        run: |
+          KEEP_COUNT=3
+          echo "Fetching container versions..."
+          VERSIONS=$(gh api /user/packages/container/hyprland-rakuos/versions --paginate -q '.[].id')
+          COUNT=$(echo "$VERSIONS" | wc -l)
+          echo "Total versions: $COUNT"
+          
+          if [ "$COUNT" -le "$KEEP_COUNT" ]; then
+            echo "Versions ($COUNT) <= keep count ($KEEP_COUNT), skipping cleanup"
+            exit 0
+          fi
+          
+          echo "Keeping latest $KEEP_COUNT versions, deleting older ones..."
+          DELETE_IDS=$(echo "$VERSIONS" | tail -n +$((KEEP_COUNT + 1)))
+          for id in $DELETE_IDS; do
+            echo "Deleting version $id..."
+            gh api -X DELETE /user/packages/container/hyprland-rakuos/versions/$id
+          done
+          echo "Cleanup complete"
