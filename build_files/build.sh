@@ -67,7 +67,17 @@ rum install -y \
   ethtool \
   python3-pyudev \
   python3-inotify \
-  virt-what
+  virt-what \
+  ${RAKUOS_RELEASE_PKG}
+
+## Modify os-release to include desktop environment name
+if [ "${RAKUOS_STAGING:-0}" = "1" ]; then
+    sed -i 's/NAME="RakuOS Staging"/NAME="RakuOS Hyprland Staging"/' /etc/os-release
+    sed -i 's/PRETTY_NAME="RakuOS Staging"/PRETTY_NAME="RakuOS Hyprland Staging"/' /etc/os-release
+else
+    sed -i 's/NAME="RakuOS"/NAME="RakuOS Hyprland"/' /etc/os-release
+    sed -i 's/PRETTY_NAME="RakuOS"/PRETTY_NAME="RakuOS Hyprland"/' /etc/os-release
+fi
 
 ## Remove wofi and tuned configs
 rum remove -y wofi 2>/dev/null || true
