@@ -78,9 +78,15 @@ rum remove -y swaylock alacritty fuzzel waybar wofi blueman sddm sddm-themes 2>/
 ## Remove fedora wallpapers
 rm -rf /usr/share/backgrounds/fedora-workstation/
 
-## Setup noctalia-greeter state dir and ownership
+## Setup noctalia-greeter
 if [ -x /usr/share/noctalia-greeter/setup_greeter_system.sh ]; then
     /usr/share/noctalia-greeter/setup_greeter_system.sh
+fi
+
+## Ensure state dir ownership (fallback if setup script didn't run)
+if [ -d /var/lib/noctalia-greeter ]; then
+    chown -R greeter:greeter /var/lib/noctalia-greeter
+    chmod 0750 /var/lib/noctalia-greeter
 fi
 
 ## Enable Services
