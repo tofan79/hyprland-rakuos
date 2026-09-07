@@ -73,7 +73,6 @@ NetworkManager-wwan
 tuned
 tuned-ppd
 libnotify
-greetd
 noctalia-greeter
 ibus-mozc
 qt6ct
