@@ -72,6 +72,7 @@ systemd-oomd-defaults
 ethtool
 python3-pyudev
 python3-inotify
+virt-what
 PKGLIST
 
 if [ -f /usr/share/rpm-ostree/treefile.json ]; then

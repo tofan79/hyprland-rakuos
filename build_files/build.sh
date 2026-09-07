@@ -66,7 +66,8 @@ rum install -y \
   systemd-oomd-defaults \
   ethtool \
   python3-pyudev \
-  python3-inotify
+  python3-inotify \
+  virt-what
 
 ## Remove wofi and tuned configs
 rum remove -y wofi 2>/dev/null || true
