@@ -1,7 +1,0 @@
-[default_session]
-
-command = "uwsm start -- hyprland"
-#command = "dbus-run-session hyprland"
-
-[terminal]
-vt = 1
