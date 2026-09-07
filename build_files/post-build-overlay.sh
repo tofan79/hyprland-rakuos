@@ -69,6 +69,9 @@ qt6ct
 rakuos-software-qt
 rakuos-welcome-qt
 systemd-oomd-defaults
+ethtool
+python3-pyudev
+python3-inotify
 PKGLIST
 
 if [ -f /usr/share/rpm-ostree/treefile.json ]; then

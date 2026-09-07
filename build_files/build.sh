@@ -63,7 +63,10 @@ rum install -y \
   qt6ct \
   rakuos-software-qt \
   rakuos-welcome-qt \
-  systemd-oomd-defaults
+  systemd-oomd-defaults \
+  ethtool \
+  python3-pyudev \
+  python3-inotify
 
 ## Remove wofi and tuned configs
 rum remove -y wofi 2>/dev/null || true
