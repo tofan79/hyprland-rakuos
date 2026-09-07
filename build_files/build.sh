@@ -73,7 +73,7 @@ rum install -y \
   systemd-oomd-defaults
 
 ## Remove conflicting DE packages
-rum remove -y swaylock alacritty fuzzel waybar wofi blueman sddm sddm-themes 2>/dev/null || true
+rum remove -y wofi 2>/dev/null || true
 
 ## Remove fedora wallpapers
 rm -rf /usr/share/backgrounds/fedora-workstation/
