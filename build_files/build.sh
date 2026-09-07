@@ -53,8 +53,8 @@ rum install -y \
   NetworkManager-ppp \
   NetworkManager-wwan \
   nm-connection-editor \
-  tuned \
-  tuned-ppd \
+  power-profiles-daemon \
+  asusctl \
   libnotify \
   noctalia-greeter \
   ibus-mozc \

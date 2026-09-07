@@ -61,8 +61,8 @@ NetworkManager-adsl
 NetworkManager-bluetooth
 NetworkManager-ppp
 NetworkManager-wwan
-tuned
-tuned-ppd
+power-profiles-daemon
+asusctl
 libnotify
 noctalia-greeter
 ibus-mozc
