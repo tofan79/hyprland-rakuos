@@ -68,7 +68,7 @@ jobs:
         run: |
           KEEP_COUNT=3
           echo "Fetching container versions..."
-          VERSIONS=$(gh api /user/packages/container/hyprland-rakuos/versions --paginate -q '.[].id')
+          VERSIONS=$(gh api /user/packages/container/hyprland-rakuos-nvidia-v3/versions --paginate -q '.[].id')
           COUNT=$(echo "$VERSIONS" | wc -l)
           echo "Total versions: $COUNT"
           
@@ -81,6 +81,6 @@ jobs:
           DELETE_IDS=$(echo "$VERSIONS" | tail -n +$((KEEP_COUNT + 1)))
           for id in $DELETE_IDS; do
             echo "Deleting version $id..."
-            gh api -X DELETE /user/packages/container/hyprland-rakuos/versions/$id
+            gh api -X DELETE /user/packages/container/hyprland-rakuos-nvidia-v3/versions/$id
           done
           echo "Cleanup complete"
