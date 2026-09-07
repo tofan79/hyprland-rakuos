@@ -28,8 +28,6 @@ rum install -y \
   kitty-terminfo \
   mpv \
   neovim \
-  nautilus \
-  loupe \
   pipewire \
   pipewire-alsa \
   wireplumber \
@@ -51,8 +49,6 @@ rum install -y \
   gnome-keyring-pam \
   fprintd-pam \
   adw-gtk3-theme \
-  gnome-calculator \
-  gnome-disk-utility \
   gvfs \
   gvfs-mtp \
   gvfs-nfs \

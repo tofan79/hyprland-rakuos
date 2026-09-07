@@ -1,4 +1,12 @@
 # Recommended packages - install via: rum install -y <package>
+
+# Screenshot & OCR tools
 satty
 tesseract
 zbarimg
+
+# GNOME apps (optional - remove if not needed)
+nautilus
+loupe
+gnome-calculator
+gnome-disk-utility

@@ -36,8 +36,6 @@ kitty-shell-integration
 kitty-terminfo
 mpv
 neovim
-nautilus
-loupe
 pipewire
 pipewire-alsa
 wireplumber
@@ -59,8 +57,6 @@ gnome-keyring
 gnome-keyring-pam
 fprintd-pam
 adw-gtk3-theme
-gnome-calculator
-gnome-disk-utility
 gvfs
 gvfs-mtp
 gvfs-nfs
