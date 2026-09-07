@@ -1,1 +1,4 @@
-# No packages prebaked - user installs via rum or Welcome app
+# Recommended packages - install via: rum install -y <package>
+satty
+tesseract
+zbarimg
