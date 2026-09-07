@@ -66,6 +66,7 @@ rum install -y \
   tuned-ppd \
   libnotify \
   sddm \
+  sddm-breeze \
   ibus-mozc \
   qt6ct \
   rakuos-software-qt \
