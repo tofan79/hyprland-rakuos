@@ -17,7 +17,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ghcr.io/tofan79/hyprland-rakuos-nvidia-v3
 
 jobs:
   build:
