@@ -17,6 +17,9 @@ if [ "${RAKUOS_STAGING:-0}" = "1" ]; then
     RAKUOS_RELEASE_PKG="rakuos-release-hyprland-staging"
 fi
 
+## Remove conflicting/base packages
+rum remove -y wofi tuned tuned-ppd 2>/dev/null || true
+
 ## Install packages
 rum install -y \
   hyprland \
@@ -62,9 +65,6 @@ rum install -y \
   rakuos-software-qt \
   rakuos-welcome-qt \
   systemd-oomd-defaults
-
-## Remove conflicting/base packages
-rum remove -y wofi tuned tuned-ppd 2>/dev/null || true
 
 ## Remove fedora wallpapers
 rm -rf /usr/share/backgrounds/fedora-workstation/
