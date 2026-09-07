@@ -1,0 +1,6 @@
+[default_session]
+user = "greeter"
+command = "/usr/bin/noctalia-greeter-session"
+
+[terminal]
+vt = 1

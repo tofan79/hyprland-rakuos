@@ -1,0 +1,49 @@
+# noctalia-greeter config for RakuOS Hyprland
+
+[session]
+default = "Hyprland (uwsm-managed)"
+
+[appearance]
+scheme = "Synced"
+password_style = "default"
+hide_logo = false
+power_buttons_position = "bottom-right"
+scheme_selector_position = "top-right"
+theme_mode = "dark"
+corner_radius_scale = 1.0
+
+[appearance.palette]
+primary = "#fff59b"
+on_primary = "#0e0e43"
+secondary = "#a9aefe"
+on_secondary = "#0e0e43"
+tertiary = "#9BFECE"
+on_tertiary = "#0e0e43"
+error = "#FD4663"
+on_error = "#0e0e43"
+surface = "#070722"
+on_surface = "#f3edf7"
+surface_variant = "#11112d"
+on_surface_variant = "#7c80b4"
+outline = "#21215F"
+shadow = "#070722"
+hover = "#9BFECE"
+on_hover = "#0e0e43"
+
+[idle]
+timeout = 300
+
+[cursor]
+theme = "Bibata-Modern-Ice"
+size = 24
+path = "/usr/share/icons"
+
+[keyboard]
+layout = "us,id"
+variant = ","
+options = "grp:alt_shift_toggle"
+numlock = true
+
+[auth]
+allow_empty_password = true
+request_timeout = 60
