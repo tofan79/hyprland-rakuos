@@ -45,13 +45,8 @@ xdg-desktop-portal-gtk
 xdg-user-dirs-gtk
 wl-clipboard
 egl-wayland
-hyprpicker
-cliphist
-brightnessctl
-playerctl
 grim
 slurp
-swappy
 wtype
 gnome-keyring
 gnome-keyring-pam

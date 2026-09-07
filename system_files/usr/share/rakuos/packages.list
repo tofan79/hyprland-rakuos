@@ -10,3 +10,10 @@ nautilus
 loupe
 gnome-calculator
 gnome-disk-utility
+
+# Hyprland tools (optional)
+hyprpicker
+cliphist
+brightnessctl
+playerctl
+swappy
