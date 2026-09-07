@@ -74,9 +74,8 @@ NetworkManager-wwan
 tuned
 tuned-ppd
 libnotify
-sddm
-sddm-breeze
-ibus-mozc
+  sddm
+  ibus-mozc
 qt6ct
 rakuos-software-qt
 rakuos-welcome-qt
