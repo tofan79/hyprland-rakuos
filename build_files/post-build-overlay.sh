@@ -121,6 +121,18 @@ ethtool
 python3-pyudev
 python3-inotify
 virt-what
+nautilus
+satty
+tesseract
+zbar
+mpv
+loupe
+gnome-calculator
+hyprpicker
+cliphist
+brightnessctl
+playerctl
+asusctl
 PKGLIST
 
 if [ -f /usr/share/rpm-ostree/treefile.json ]; then
