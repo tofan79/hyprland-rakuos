@@ -2,6 +2,9 @@
 
 set -ouex pipefail
 
+# Source os-release so VERSION_ID is available (set -u is active)
+[ -f /etc/os-release ] && . /etc/os-release || VERSION_ID="$(rpm -q --qf '%{VERSION}' fedora-release 2>/dev/null || echo 40)"
+
 # Enable COPR for Hyprland and Noctalia
 dnf -y copr enable lionheartp/Hyprland
 dnf -y copr enable mindset/Mindset-Apps
