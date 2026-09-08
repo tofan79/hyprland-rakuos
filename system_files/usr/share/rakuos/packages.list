@@ -1,27 +1,14 @@
-# Recommended packages - install via: rum install -y <package>
-
-# Screenshot & OCR tools
 satty
 tesseract
 zbar
-
-# Browsers
 zen-browser
-
-# Media player
 mpv
-
-# GNOME apps (optional - remove if not needed)
 nautilus
 loupe
 gnome-calculator
 gnome-disk-utility
-
-# Hyprland tools (optional)
 hyprpicker
 cliphist
 brightnessctl
 playerctl
-
-# ASUS ROG (optional - only on ASUS laptops)
 asusctl
