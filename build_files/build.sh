@@ -57,6 +57,8 @@ rum install -y --refresh \
   kitty-shell-integration \
   kitty-terminfo \
   neovim \
+  zen-browser \
+  nautilus \
   pipewire \
   pipewire-alsa \
   wireplumber \
