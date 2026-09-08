@@ -20,11 +20,17 @@ dnf -y copr enable mindset/Mindset-Apps
 # fi
 
 ## Remove tuned first
-# Auto-fix: Terra repo GPG key may have changed - try recovery
+# Auto-fix: Terra (Fyralabs) rotated its signing keys - refresh bundled keys so
+# repo metadata verification doesn't fail with stale RPM-GPG-KEY-terra files.
 rum install -y fedora-gpg-keys 2>/dev/null || true
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-${VERSION_ID}-primary 2>/dev/null || true
+for _suffix in "" "-source" "-extras" "-extras-source" "-mesa" "-mesa-source" "-multimedia" "-multimedia-source" "-nvidia" "-nvidia-source"; do
+    curl -fsSL "https://repos.fyralabs.com/terra${VERSION_ID}${_suffix}/key.asc" \
+        -o "/etc/pki/rpm-gpg/RPM-GPG-KEY-terra${VERSION_ID}${_suffix}" 2>/dev/null || true
+done
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-terra${VERSION_ID}* 2>/dev/null || true
 
-# Try updating key from Fedora keyserver, fallback: disable GPG check for Terra
+# Last-resort fallback: disable GPG check for Terra if the refreshed key fails
 if ! dnf -y install --refresh terra-release 2>/dev/null; then
     echo "::warning::Terra GPG recovery needed, disabling GPG check for terra repo..."
     dnf config-manager --save --setopt terra.gpgcheck=0 2>/dev/null || true
