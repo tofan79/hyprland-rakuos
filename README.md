@@ -77,6 +77,14 @@ locally with **rakuos-forge** from the separate repo:
 [`tofan79/rakuos-hyprland-iso`](https://github.com/tofan79/rakuos-hyprland-iso)
 (`sudo ./build-local.sh`).
 
+### Noctalia polkit agent
+
+Noctalia's built-in polkit agent (used by the RakuOS installer and other
+privileged GUI apps) ships **off by default**. Enable it once per session:
+**Noctalia settings → polkit agent → on** (also required by
+`rakuos-installer-qt` — otherwise install fails with
+`Error creating textual authentication agent ... '/dev/tty': No such device`).
+
 ## License
 
 Licensed under the [Apache License 2.0](LICENSE).
