@@ -57,7 +57,6 @@ rum install -y --refresh \
   kitty-shell-integration \
   kitty-terminfo \
   neovim \
-  zen-browser \
   nautilus \
   pipewire \
   pipewire-alsa \
@@ -95,7 +94,18 @@ rum install -y --refresh \
   ethtool \
   python3-pyudev \
   python3-inotify \
-  virt-what
+  virt-what \
+  satty \
+  tesseract \
+  zbar \
+  mpv \
+  loupe \
+  gnome-calculator \
+  hyprpicker \
+  cliphist \
+  brightnessctl \
+  playerctl \
+  asusctl
 
 ## Remove wofi and tuned configs
 rum remove -y wofi 2>/dev/null || true
