@@ -48,7 +48,7 @@ fi
 rum remove -y tuned tuned-ppd 2>/dev/null || true
 
 ## Install packages
-rum install -y \
+rum install -y --refresh \
   hyprland \
   hyprland-guiutils \
   noctalia-git \
