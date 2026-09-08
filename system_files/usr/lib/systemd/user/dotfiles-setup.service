@@ -1,0 +1,10 @@
+[Unit]
+Description=Configure dotfiles for current user
+ConditionUser=!@system
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/dotfiles-setup.sh
+
+[Install]
+WantedBy=default.target
