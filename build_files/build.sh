@@ -75,7 +75,6 @@ rum install -y \
   NetworkManager-wwan \
   nm-connection-editor \
   power-profiles-daemon \
-  asusctl \
   libnotify \
   noctalia-greeter \
   ibus-mozc \

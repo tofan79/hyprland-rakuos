@@ -19,3 +19,6 @@ hyprpicker
 cliphist
 brightnessctl
 playerctl
+
+# ASUS ROG (optional - only on ASUS laptops)
+asusctl

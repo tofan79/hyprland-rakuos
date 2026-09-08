@@ -110,7 +110,6 @@ NetworkManager-bluetooth
 NetworkManager-ppp
 NetworkManager-wwan
 power-profiles-daemon
-asusctl
 libnotify
 noctalia-greeter
 ibus-mozc
