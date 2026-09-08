@@ -9,10 +9,16 @@ set -ouex pipefail
 dnf -y copr enable lionheartp/Hyprland
 dnf -y copr enable mindset/Mindset-Apps
 
-# Set priority for COPR repos (higher priority than Terra/RPM Fusion)
-# COPR repos are enabled last, so they're already highest priority by default
-dnf -y config-manager --setopt='copr:copr.fedorainfracloud.org:lionheartp:Hyprland.priority=1'
-dnf -y config-manager --setopt='copr:copr.fedorainfracloud.org:mindset:Mindset-Apps.priority=1'
+# Pin COPRs at priority=20: below RakuOS repos (v4=5, v3=10), above defaults.
+# Matches RakuOS base's convention of editing repo files directly with sed.
+# Remove any pre-existing priority line (e.g. baked in by copr enable) first.
+for _copr_repo in "mindset:Mindset-Apps" "lionheartp:Hyprland"; do
+    _copr_id="${_copr_repo%%:*}"            # mindset / lionheartp
+    _copr_name="${_copr_repo#*:}"           # Mindset-Apps / Hyprland
+    _copr_file="/etc/yum.repos.d/_copr:copr.fedorainfracloud.org:${_copr_repo}.repo"
+    sed -i '/^priority=/d' "$_copr_file"
+    sed -i '/^\[copr:copr.fedorainfracloud.org:'"$_copr_id"':'"$_copr_name"'\]/a priority=20' "$_copr_file"
+done
 
 # NOTE: rakuos-release-hyprland package not available yet in repos
 # When available, uncomment below:
