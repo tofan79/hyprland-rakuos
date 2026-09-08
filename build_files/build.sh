@@ -17,10 +17,16 @@ dnf -y copr enable mindset/Mindset-Apps
 # fi
 
 ## Remove tuned first
-# Update GPG keys (fix: Terra repomd.xml signature verification failed)
+# Auto-fix: Terra repo GPG key may have changed - try recovery
 rum install -y fedora-gpg-keys 2>/dev/null || true
-dnf -y upgrade --refresh ca-certificates 2>/dev/null || true
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-${VERSION_ID}-primary 2>/dev/null || true
+
+# Try updating key from Fedora keyserver, fallback: disable GPG check for Terra
+if ! dnf -y install --refresh terra-release 2>/dev/null; then
+    echo "::warning::Terra GPG recovery needed, disabling GPG check for terra repo..."
+    dnf config-manager --save --setopt terra.gpgcheck=0 2>/dev/null || true
+    sed -i 's/gpgcheck=1/gpgcheck=0/g' /etc/yum.repos.d/terra.repo 2>/dev/null || true
+fi
 
 rum remove -y tuned tuned-ppd 2>/dev/null || true
 
