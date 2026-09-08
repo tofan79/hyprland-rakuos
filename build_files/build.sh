@@ -131,7 +131,7 @@ systemctl enable greetd
 systemctl enable --global dotfiles-setup
 
 ## Disable problematic services on bootc/ostree
-systemctl mask grub-boot-success.timer 2>/dev/null || true
+systemctl mask grub-boot-success.service grub-boot-success.timer 2>/dev/null || true
 
 ## Remove problematic autostart files
 rm -f /etc/xdg/autostart/nvidia-settings-user.desktop 2>/dev/null || true
