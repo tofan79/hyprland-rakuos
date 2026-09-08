@@ -128,6 +128,7 @@ fi
 
 ## Enable Services
 systemctl enable greetd
+systemctl enable rakuos-firstboot.service
 
 ## Disable problematic services on bootc/ostree
 systemctl mask grub-boot-success.timer 2>/dev/null || true
