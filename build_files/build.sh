@@ -11,6 +11,8 @@ dnf -y copr enable mindset/Mindset-Apps
 
 # Set priority for COPR repos (higher priority than Terra/RPM Fusion)
 # COPR repos are enabled last, so they're already highest priority by default
+dnf -y config-manager --setopt='copr:copr.fedorainfracloud.org:lionheartp:Hyprland.priority=1'
+dnf -y config-manager --setopt='copr:copr.fedorainfracloud.org:mindset:Mindset-Apps.priority=1'
 
 # NOTE: rakuos-release-hyprland package not available yet in repos
 # When available, uncomment below:
