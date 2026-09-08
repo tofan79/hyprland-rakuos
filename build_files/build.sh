@@ -17,6 +17,11 @@ dnf -y copr enable mindset/Mindset-Apps
 # fi
 
 ## Remove tuned first
+# Update GPG keys (fix: Terra repomd.xml signature verification failed)
+rum install -y fedora-gpg-keys 2>/dev/null || true
+dnf -y upgrade --refresh ca-certificates 2>/dev/null || true
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-${VERSION_ID}-primary 2>/dev/null || true
+
 rum remove -y tuned tuned-ppd 2>/dev/null || true
 
 ## Install packages
