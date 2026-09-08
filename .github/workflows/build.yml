@@ -45,6 +45,8 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/amd64 \
+            --provenance=false \
+            --sbom=false \
             -f Containerfile \
             --build-arg BASE_IMAGE_TAG=${{ github.event.inputs.base_image_tag || 'staging' }} \
             --build-arg RAKUOS_STAGING=${{ github.event.inputs.rakuos_staging || '1' }} \
