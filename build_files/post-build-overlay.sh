@@ -111,7 +111,7 @@ NetworkManager-ppp
 NetworkManager-wwan
 power-profiles-daemon
 libnotify
-noctalia-greeter
+noctalia-greeter-git
 ibus-mozc
 qt6ct
 rakuos-software-qt
