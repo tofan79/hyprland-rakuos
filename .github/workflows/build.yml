@@ -61,3 +61,33 @@ jobs:
       - name: Image digest
         run: |
           echo "Built ${{ env.IMAGE_NAME }}:latest"
+
+      - name: Cleanup old Quay tags
+        env:
+          QUAY_USER: ${{ secrets.QUAY_ROBOT_USER }}
+          QUAY_TOKEN: ${{ secrets.QUAY_ROBOT_TOKEN }}
+          KEEP_COUNT: 5
+        run: |
+          REPO="mindset404/hyprland-atomic"
+          echo "Fetching tags on quay.io/$REPO..."
+          TAGS=$(curl -sS -u "$QUAY_USER:$QUAY_TOKEN" \
+            "https://quay.io/api/v1/repository/$REPO/tag/?onlyActiveTags=true&limit=100" \
+            | python3 -c 'import sys,json; d=json.load(sys.stdin); print("\n".join(t["name"] for t in d.get("tags",[])))')
+          echo "All tags:"
+          echo "$TAGS"
+          # Only consider date tags we manage (e.g. 20260908); never touch latest
+          DATE_TAGS=$(echo "$TAGS" | grep -E '^[0-9]{8}$' | sort -r)
+          COUNT=$(echo "$DATE_TAGS" | grep -c . || true)
+          echo "Date tags found: $COUNT"
+          if [ "$COUNT" -le "$KEEP_COUNT" ]; then
+            echo "Date tags ($COUNT) <= keep count ($KEEP_COUNT), skipping cleanup"
+            exit 0
+          fi
+          echo "Keeping latest $KEEP_COUNT date tags, deleting older ones..."
+          echo "$DATE_TAGS" | tail -n +$((KEEP_COUNT + 1)) | while read -r TAG; do
+            [ -z "$TAG" ] && continue
+            echo "Deleting tag $TAG..."
+            curl -sS -X DELETE -u "$QUAY_USER:$QUAY_TOKEN" \
+              "https://quay.io/api/v1/repository/$REPO/tag/$TAG" -o /dev/null || true
+          done
+          echo "Cleanup complete"
