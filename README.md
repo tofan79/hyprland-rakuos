@@ -86,3 +86,8 @@ Linux on Fedora. RakuOS projects are Apache 2.0 as well
 (see [gitlab.com/rakuos](https://gitlab.com/rakuos), e.g. `rakuos-base`).
 Hyprland is GPL-3.0; uWSM, Noctalia and included packages retain their own
 licenses.
+
+> **Disclaimer:** This is an **unofficial, community-built image**. It is not
+> affiliated with, endorsed by, or a product of the RakuOS project. "RakuOS"
+> and associated marks are property of their respective owners and are used
+> only to describe the upstream base this image builds on.
