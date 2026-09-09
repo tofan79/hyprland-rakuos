@@ -3,14 +3,14 @@
 -- (bind di binds.lua memakai variabel ini)
 
 TERMINAL      = "kitty"
-FILE_MANAGER  = "nautilus"
+FILE_MANAGER  = "dolphin"
 BROWSER       = "zen-browser"
 EDITOR        = "zeditor"
 CALCULATOR    = "gnome-calculator"
 
 MUSIC_PLAYER  = "mpv"
 VIDEO_PLAYER  = "mpv"
-IMAGE_VIEWER  = "loupe"
+IMAGE_VIEWER  = "nomacs"
 
 --Monitors
 MONITOR1 = "eDP-1"

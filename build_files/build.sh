@@ -27,7 +27,7 @@ done
 #     RAKUOS_RELEASE_PKG="rakuos-release-hyprland-staging"
 # fi
 
-## Remove tuned first
+## Terra repo keys refresh
 # Auto-fix: Terra (Fyralabs) rotated its signing keys - refresh bundled keys so
 # repo metadata verification doesn't fail with stale RPM-GPG-KEY-terra files.
 rum install -y fedora-gpg-keys 2>/dev/null || true
@@ -45,8 +45,6 @@ if ! dnf -y install --refresh terra-release 2>/dev/null; then
     sed -i 's/gpgcheck=1/gpgcheck=0/g' /etc/yum.repos.d/terra.repo 2>/dev/null || true
 fi
 
-rum remove -y tuned tuned-ppd 2>/dev/null || true
-
 ## Install packages
 rum install -y --refresh \
   hyprland \
@@ -56,15 +54,15 @@ rum install -y --refresh \
   kitty \
   kitty-shell-integration \
   kitty-terminfo \
-  neovim \
-  nautilus \
   pipewire \
   pipewire-alsa \
+  pipewire-pulseaudio \
   wireplumber \
   xdg-desktop-portal \
   xdg-desktop-portal-hyprland \
   xdg-desktop-portal-gtk \
   xdg-user-dirs-gtk \
+  xorg-x11-server-Xwayland \
   wl-clipboard \
   egl-wayland \
   grim \
@@ -74,45 +72,49 @@ rum install -y --refresh \
   gnome-keyring-pam \
   fprintd-pam \
   adw-gtk3-theme \
+  papirus-icon-theme \
+  jetbrainsmono-nerd-fonts \
   gvfs \
   gvfs-mtp \
   gvfs-nfs \
+  gvfs-smb \
   pavucontrol \
   NetworkManager-adsl \
   NetworkManager-bluetooth \
   NetworkManager-ppp \
   NetworkManager-wwan \
   nm-connection-editor \
-  power-profiles-daemon \
+  tuned-ppd \
   libnotify \
   noctalia-greeter-git \
-  ibus-mozc \
   qt6ct \
   rakuos-software-qt \
   rakuos-welcome-qt \
   systemd-oomd-defaults \
-  ethtool \
-  python3-pyudev \
-  python3-inotify \
-  virt-what \
   satty \
   tesseract \
+  tesseract-langpack-eng \
+  tesseract-langpack-ind \
+  tesseract-langpack-jpn \
+  tesseract-langpack-jpn_vert \
+  tesseract-langpack-kor \
+  tesseract-langpack-kor_vert \
+  tesseract-langpack-chi_sim \
+  tesseract-langpack-chi_sim_vert \
+  tesseract-langpack-chi_tra \
+  tesseract-langpack-chi_tra_vert \
   zbar \
-  mpv \
-  loupe \
-  gnome-calculator \
   hyprpicker \
   cliphist \
   brightnessctl \
   playerctl \
-  asusctl
+  unzip \
+  zip \
+  7zip \
+  unar
 
-## Remove wofi and tuned configs
+## Remove wofi
 rum remove -y wofi 2>/dev/null || true
-rm -rf /etc/tuned /usr/lib/tuned 2>/dev/null || true
-
-## Remove heavy dev dependencies not needed for desktop
-rum remove -y tree-sitter-cli nodejs22 nodejs22-libs nodejs22-bin nodejs22-docs nodejs22-full-i18n nodejs22-npm nodejs22-npm-bin 2>/dev/null || true
 
 ## Remove fedora wallpapers
 rm -rf /usr/share/backgrounds/fedora-workstation/
