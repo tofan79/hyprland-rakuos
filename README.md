@@ -9,7 +9,7 @@ with **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
 
 | Key            | Value                                              |
 | -------------- | -------------------------------------------------- |
-| Registry       | `quay.io/mindset404/hyprland-atomic`               |
+| Registry       | `quay.io/mindset404/hyprland-nvidia-v3`               |
 | Base image     | `quay.io/rakuos/rakuos-base-nvidia-v3:staging`     |
 | Architecture   | `linux/amd64`                                      |
 | Tags           | `latest`, `<YYYYMMDD>` (date tag, **5 kept**)      |
@@ -58,7 +58,7 @@ already point at them:
    the real image size)
 2. Base = RakuOS `rakuos-base-nvidia-v3:staging` (COPR Hyprland +
    `mindset/Mindset-Apps`, Terra/RPM-Fusion repos tuned)
-3. Pushes `latest` + date tag to `quay.io/mindset404/hyprland-atomic`
+3. Pushes `latest` + date tag to `quay.io/mindset404/hyprland-nvidia-v3`
 4. **Retention**: deletes date tags older than the 5 newest (keeps storage
    within Quay free tier)
 5. Terra signing-key auto-recovery (refreshes `key.asc` from Fyralabs,
@@ -77,7 +77,7 @@ Workflow inputs: `base_image_tag` (default `staging`) and `rakuos_staging`
 
 ```bash
 # From the live ISO or another image
-sudo bootc switch quay.io/mindset404/hyprland-atomic:latest
+sudo bootc switch quay.io/mindset404/hyprland-nvidia-v3:latest
 sudo reboot
 
 # Later updates are pulled automatically by RakuOS Software Center / bootc
