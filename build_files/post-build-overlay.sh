@@ -65,7 +65,7 @@ mkdir -p "$WORK_DIR"
 
 if [[ -f "$DEFAULT_PACKAGES_LIST" ]]; then
     cp "$DEFAULT_PACKAGES_LIST" "$PACKAGES_LIST"
-    PKG_COUNT=$(grep -v '^\s*#' "$PACKAGES_LIST" | grep -v '^\s*$' | wc -l)
+    PKG_COUNT=$(grep -v '^\s*#' "$PACKAGES_LIST" | grep -v '^\s*$' | wc -l) || true
     echo "[rakuos] packages.list seeded with $PKG_COUNT packages."
 else
     touch "$PACKAGES_LIST"
