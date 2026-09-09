@@ -17,21 +17,38 @@ with **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
 
 ### Included
 
-- **Desktop**: Hyprland, uWSM, noctalia (greeter), kitty, neovim
-- **Portal/multimedia**: xdg-desktop-portal(-hyprland/-gtk), pipewire,
-  wireplumber, egl-wayland, wl-clipboard, grim+slurp, pavucontrol
-- **Keyring/auth**: gnome-keyring, fprintd-pam, ibus-mozc
-- **Base duties**: NetworkManager suite, power-profiles-daemon, gvfs(+mtp/nfs),
+- **Desktop**: Hyprland, uWSM, noctalia (greeter), kitty
+- **Portal/media**: xdg-desktop-portal(-hyprland/-gtk), pipewire + ALSA +
+  PulseAudio emulation, wireplumber, egl-wayland, Xwayland, wl-clipboard,
+  grim+slurp, pavucontrol, libnotify
+- **Keyring/auth**: gnome-keyring(+PAM), fprintd-pam
+- **Base duties**: NetworkManager suite, tuned-ppd, gvfs(+mtp/nfs/smb),
   systemd-oomd-defaults, rakuos-software, rakuos-welcome, noctalia-greeter
+- **Tools**: satty, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
+  brightnessctl, playerctl, unzip/zip/7zip/unar
+- **Theme/fonts**: adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts
+- **File/apps (overlay)**: `dolphin` (file manager), `nomacs` (image viewer) via
+  `packages.list` — prebaked, present on live and installed systems
 - **NVIDIA dGPU**: inherited from the Nvidia base image (driver + CUDA stack)
 
 ### Not included (optional)
 
-- **asusctl** (ASUS ROG fan/light control): now in `packages.list` — install on
-  ASUS hardware only:
+Apps below are **not baked** — install them after first boot (e.g. via the
+RakuOS welcome setup or Software Center). Hyprland keybinds (`variables.lua`)
+already point at them:
+
+- **browser** `zen-browser`, **editor** `zeditor`, **calculator**
+  `gnome-calculator`, **video/audio player** `mpv`
+- **asusctl** (ASUS ROG fan/light control) — install on ASUS hardware only:
   ```bash
   sudo rum install asusctl
   ```
+
+### Overlay & live split
+
+- `packages.list` (overlay — live ISO **and** installed system): `nomacs`,
+  `dolphin`
+- `packages-live.list` (live ISO only, not carried into installs): `firefox`
 
 ## How it's built
 
