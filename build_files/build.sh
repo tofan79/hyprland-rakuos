@@ -45,6 +45,14 @@ if ! dnf -y install --refresh terra-release 2>/dev/null; then
     sed -i 's/gpgcheck=1/gpgcheck=0/g' /etc/yum.repos.d/terra.repo 2>/dev/null || true
 fi
 
+## Ensure rpm scriptlets can find a /bin/sh interpreter in this baseless OCI image
+# Some pulled packages (e.g. tk, kf6-kdoctools) run %prein/%post scriptlets via the
+# absolute path /bin/sh; a merged-usr base without /bin fails with
+# "failed to exec scriptlet interpreter /bin/sh: No such file or directory".
+mkdir -p /bin
+ln -sfn /usr/bin/sh /bin/sh
+ln -sfn /usr/bin/bash /usr/bin/sh 2>/dev/null || true
+
 ## Install packages
 rum install -y --refresh \
   hyprland \
@@ -73,6 +81,7 @@ rum install -y --refresh \
   fprintd-pam \
   adw-gtk3-theme \
   papirus-icon-theme \
+  bibata-cursor-theme \
   jetbrainsmono-nerd-fonts \
   gvfs \
   gvfs-mtp \
@@ -91,7 +100,7 @@ rum install -y --refresh \
   rakuos-software-qt \
   rakuos-welcome-qt \
   systemd-oomd-defaults \
-  satty \
+  swash \
   tesseract \
   tesseract-langpack-eng \
   tesseract-langpack-ind \
@@ -108,10 +117,19 @@ rum install -y --refresh \
   cliphist \
   brightnessctl \
   playerctl \
+  dolphin \
+  nomacs \
   unzip \
   zip \
   7zip \
   unar
+
+## Set Bibata as default cursor theme systemwide
+mkdir -p /usr/share/icons/default
+cat > /usr/share/icons/default/index.theme << 'EOF'
+[Icon Theme]
+Inherits=Bibata-Modern-Ice
+EOF
 
 ## Remove wofi
 rum remove -y wofi 2>/dev/null || true
@@ -143,6 +161,11 @@ fi
 ## Enable Services
 systemctl enable greetd
 systemctl enable --global dotfiles-setup
+
+## Unlock keyring on login (greetd PAM)
+if [ -f /etc/pam.d/greetd ]; then
+    sed -i -E 's/^-([a-z]+[[:space:]]+.*pam_gnome_keyring\.so)/\1/' /etc/pam.d/greetd
+fi
 
 ## Disable problematic services on bootc/ostree
 systemctl mask grub-boot-success.service grub-boot-success.timer 2>/dev/null || true

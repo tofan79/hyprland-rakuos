@@ -24,7 +24,7 @@ with **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
 - **Keyring/auth**: gnome-keyring(+PAM), fprintd-pam
 - **Base duties**: NetworkManager suite, tuned-ppd, gvfs(+mtp/nfs/smb),
   systemd-oomd-defaults, rakuos-software, rakuos-welcome, noctalia-greeter
-- **Tools**: satty, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
+- **Tools**: swash, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
   brightnessctl, playerctl, unzip/zip/7zip/unar
 - **Theme/fonts**: adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts
 - **File/apps (overlay)**: `dolphin` (file manager), `nomacs` (image viewer) via
