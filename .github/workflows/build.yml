@@ -82,9 +82,9 @@ jobs:
           echo "Built ${{ env.IMAGE_NAME }}:latest"
           cat >> "$GITHUB_STEP_SUMMARY" <<EOF
           ## Build info
-          - Image: `quay.io/mindset404/hyprland-nvidia-v3:latest`
-          - Base (`staging`): `$BASE_DIGEST`
-          - Revision: `${{ github.sha }}`
+          - Image: \`quay.io/mindset404/hyprland-nvidia-v3:latest\`
+          - Base (\`staging\`): \`$BASE_DIGEST\`
+          - Revision: \`${{ github.sha }}\`
           EOF
 
       - name: Cleanup old Quay tags
