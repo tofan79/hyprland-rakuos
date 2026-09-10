@@ -167,11 +167,19 @@ if [ -f /etc/pam.d/greetd ]; then
     sed -i -E 's/^-([a-z]+[[:space:]]+.*pam_gnome_keyring\.so)/\1/' /etc/pam.d/greetd
 fi
 
-## Disable problematic services on bootc/ostree
+## Disable grub-boot-success: it also ships a user-scope unit that fires 2min
+## after login and fails (grub2-set-bootflag needs root), spamming a failed
+## service notification every session. Mask system AND user scope.
 systemctl mask grub-boot-success.service grub-boot-success.timer 2>/dev/null || true
+mkdir -p /etc/systemd/user
+ln -sfn /dev/null /etc/systemd/user/grub-boot-success.service
+ln -sfn /dev/null /etc/systemd/user/grub-boot-success.timer
 
-## Remove problematic autostart files
+## Remove autostart entries that are noisy/failing (rakuos tray/welcome fire the
+## rakuos-software GUI at login; can be launched manually from the menu/app grid)
 rm -f /etc/xdg/autostart/nvidia-settings-user.desktop 2>/dev/null || true
+rm -f /etc/xdg/autostart/rakuos-software-tray.desktop 2>/dev/null || true
+rm -f /etc/xdg/autostart/rakuos-welcome.desktop 2>/dev/null || true
 
 ## Create flatpak exports dir (fix rakuos-flatpak-watcher)
 mkdir -p /var/lib/flatpak/exports/bin
