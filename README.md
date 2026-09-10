@@ -27,8 +27,8 @@ with **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
 - **Tools**: swash, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
   brightnessctl, playerctl, unzip/zip/7zip/unar
 - **Theme/fonts**: adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts
-- **File/apps (overlay)**: `dolphin` (file manager), `nomacs` (image viewer) via
-  `packages.list` — prebaked, present on live and installed systems
+- **Browser (overlay)**: `brave-origin` — prebaked via `packages.list` /
+  `packages-live.list`, present on live and installed systems
 - **NVIDIA dGPU**: inherited from the Nvidia base image (driver + CUDA stack)
 
 ### Not included (optional)
@@ -37,8 +37,8 @@ Apps below are **not baked** — install them after first boot (e.g. via the
 RakuOS welcome setup or Software Center). Hyprland keybinds (`variables.lua`)
 already point at them:
 
-- **browser** `zen-browser`, **editor** `zeditor`, **calculator**
-  `gnome-calculator`, **video/audio player** `mpv`
+- **editor** `zeditor`, **calculator** `gnome-calculator`, **video/audio
+  player** `mpv`
 - **asusctl** (ASUS ROG fan/light control) — install on ASUS hardware only:
   ```bash
   sudo rum install asusctl
@@ -46,9 +46,8 @@ already point at them:
 
 ### Overlay & live split
 
-- `packages.list` (overlay — live ISO **and** installed system): `nomacs`,
-  `dolphin`
-- `packages-live.list` (live ISO only, not carried into installs): `firefox`
+- `packages.list` (overlay — live ISO **and** installed system): `brave-origin`
+- `packages-live.list` (live ISO only, not carried into installs): `brave-origin`
 
 ## How it's built
 
@@ -86,6 +85,50 @@ sudo bootc upgrade
 
 The RakuOS software center detects updates via the Quay API (`specificTag=latest`)
 — this image is a full Quay reference, so update badges work out of the box.
+
+## Update & troubleshooting
+
+This image follows the RakuOS base on a **floating** tag, so each rebuild pulls
+the latest `rakuos-base-nvidia-v3:staging`. Upstream ships 1–3 base updates per
+day; our builds run:
+
+- **Automatically every 3 days** at 17:00 UTC (`0 17 */3 * *`)
+- **Manually anytime** via `Actions → Run workflow`
+
+### Base digest tracing
+
+Every build records which exact base it was built from:
+
+- Step **"Resolve base image digest"** prints the digest before building.
+- The digested value is baked into the image label `org.rakuos.base-digest`.
+- The run page shows a **Build info** summary (base digest + commit revision).
+
+Use it to pin down regressions: compare the digest of a failing build against
+the last known-good one.
+
+### When to look / what to do
+
+1. **After every update** — quick sanity check:
+   ```bash
+   sudo bootc upgrade && sudo reboot
+   systemctl --failed            # expect empty
+   ```
+2. **Build fails** → read the failing step. Cause is usually one of:
+   - Upstream **base staging change** (often kernel/`dkms-nvidia`/rakuos-core) —
+     compare the failed digest with the last successful one, then retry.
+   - **Our layer** (prebake/scriptlets, `post-build*.sh`, `system_files`) — fix
+     in this repo and rebuild.
+3. **Runtime issue after upgrading** → check the digest of the running image
+   (`podman image inspect --format '{{.Labels}}' ...`). If it regressed from a
+   base change, report upstream (`rakuos-base`); to rebuild against an older
+   base, temporarily pin the digest in `Containerfile` and re-trigger.
+4. **Known device quirks** (ASUS + NVIDIA dGPU / AMD iGPU): harmless kernel
+   "noise" at boot — ACPI `_TZ.THRM._SCP`, `NVRM PlatformRequestHandler`
+   SBIOS assertions, `amdgpu DCN reg offset`, and `bpf-restrict-fs` are benign
+   and do not affect performance. `fwupd` stays **masked** on this hardware
+   (daemon hangs in D-state); a `fwupdmgr --version` shim keeps the software
+   center's firmware check non-errored, but LVFS refresh/update is intentionally
+   non-functional here.
 
 ## Live ISO
 
