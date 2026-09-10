@@ -64,7 +64,7 @@ jobs:
             --build-arg BASE_IMAGE_TAG=${{ github.event.inputs.base_image_tag || 'staging' }} \
             --build-arg RAKUOS_STAGING=${{ github.event.inputs.rakuos_staging || '1' }} \
             --build-arg BUILD_DATE=$(date -u +%Y%m%d%H%M%S) \
-            --label 'org.opencontainers.image.created=$(date -u +%Y-%m-%dT%H:%M:%SZ)' \
+            --label "org.opencontainers.image.created=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
             --label 'org.opencontainers.image.source=https://github.com/${{ github.repository }}' \
             --label 'org.opencontainers.image.revision=${{ github.sha }}' \
             --label "org.rakuos.base-digest=${{ steps.base_digest.outputs.digest }}" \
