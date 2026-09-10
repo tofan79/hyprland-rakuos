@@ -175,6 +175,12 @@ mkdir -p /etc/systemd/user
 ln -sfn /dev/null /etc/systemd/user/grub-boot-success.service
 ln -sfn /dev/null /etc/systemd/user/grub-boot-success.timer
 
+## Disable fwupd: the daemon hangs in D-state on this hardware, stalling boot
+## ~3min and ending in a failed unit. Firmware updates stay manual (menu/EFI).
+ln -sfn /dev/null /etc/systemd/system/fwupd.service
+ln -sfn /dev/null /etc/systemd/system/fwupd-refresh.service
+ln -sfn /dev/null /etc/systemd/system/fwupd-refresh.timer
+
 ## Remove autostart entries that are noisy/failing (rakuos tray/welcome fire the
 ## rakuos-software GUI at login; can be launched manually from the menu/app grid)
 rm -f /etc/xdg/autostart/nvidia-settings-user.desktop 2>/dev/null || true
