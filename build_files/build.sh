@@ -122,8 +122,7 @@ rum install -y --refresh \
   unzip \
   zip \
   7zip \
-  unar \
-  zed
+  unar
 
 ## Set Bibata as default cursor theme systemwide
 mkdir -p /usr/share/icons/default
