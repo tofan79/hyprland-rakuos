@@ -41,6 +41,18 @@ jobs:
           username: ${{ secrets.QUAY_ROBOT_USER }}
           password: ${{ secrets.QUAY_ROBOT_TOKEN }}
 
+      - name: Resolve base image digest
+        id: base_digest
+        env:
+          BASE_IMAGE_TAG: ${{ github.event.inputs.base_image_tag || 'staging' }}
+        run: |
+          DIGEST=$(docker buildx imagetools inspect \
+            "quay.io/rakuos/rakuos-base-nvidia-v3:${BASE_IMAGE_TAG}" \
+            --format '{{.Manifest.Digest}}')
+          echo "digest=${DIGEST}" >> "$GITHUB_OUTPUT"
+          echo "Base image: quay.io/rakuos/rakuos-base-nvidia-v3:${BASE_IMAGE_TAG}"
+          echo "Base digest: ${DIGEST}"
+
       - name: Build image
         run: |
           docker buildx build \
@@ -55,6 +67,7 @@ jobs:
             --label 'org.opencontainers.image.created=$(date -u +%Y-%m-%dT%H:%M:%SZ)' \
             --label 'org.opencontainers.image.source=https://github.com/${{ github.repository }}' \
             --label 'org.opencontainers.image.revision=${{ github.sha }}' \
+            --label "org.rakuos.base-digest=${{ steps.base_digest.outputs.digest }}" \
             --label 'org.opencontainers.image.vendor=RakuOS' \
             --label 'org.opencontainers.image.description=RakuOS Hyprland' \
             -t ${{ env.IMAGE_NAME }}:latest \
@@ -64,7 +77,15 @@ jobs:
 
       - name: Image digest
         run: |
+          BASE_IMAGE_TAG="${{ github.event.inputs.base_image_tag || 'staging' }}"
+          BASE_DIGEST="${{ steps.base_digest.outputs.digest }}"
           echo "Built ${{ env.IMAGE_NAME }}:latest"
+          cat >> "$GITHUB_STEP_SUMMARY" <<EOF
+          ## Build info
+          - Image: `quay.io/mindset404/hyprland-nvidia-v3:latest`
+          - Base (`staging`): `$BASE_DIGEST`
+          - Revision: `${{ github.sha }}`
+          EOF
 
       - name: Cleanup old Quay tags
         env:
