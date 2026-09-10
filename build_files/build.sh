@@ -181,11 +181,5 @@ ln -sfn /dev/null /etc/systemd/system/fwupd.service
 ln -sfn /dev/null /etc/systemd/system/fwupd-refresh.service
 ln -sfn /dev/null /etc/systemd/system/fwupd-refresh.timer
 
-## Remove autostart entries that are noisy/failing (rakuos tray/welcome fire the
-## rakuos-software GUI at login; can be launched manually from the menu/app grid)
-rm -f /etc/xdg/autostart/nvidia-settings-user.desktop 2>/dev/null || true
-rm -f /etc/xdg/autostart/rakuos-software-tray.desktop 2>/dev/null || true
-rm -f /etc/xdg/autostart/rakuos-welcome.desktop 2>/dev/null || true
-
 ## Create flatpak exports dir (fix rakuos-flatpak-watcher)
 mkdir -p /var/lib/flatpak/exports/bin
