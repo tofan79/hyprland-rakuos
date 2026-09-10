@@ -1,0 +1,6 @@
+#!/bin/bash
+if [ "$1" = "--version" ]; then
+    echo "client version: 2.1.7"
+    exit 0
+fi
+exec /usr/bin/fwupdmgr "$@"
