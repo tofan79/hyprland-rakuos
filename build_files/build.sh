@@ -158,6 +158,7 @@ chmod +x /usr/libexec/rakuos/rakuos-greetd-wrapper.sh 2>/dev/null || true
 
 ## Ensure state dir ownership (fallback if setup script didn't run)
 if [ -d /var/lib/noctalia-greeter ]; then
+    mkdir -p /var/lib/noctalia-greeter/.themes
     chown -R greeter:greeter /var/lib/noctalia-greeter
     chmod 0750 /var/lib/noctalia-greeter
 fi
