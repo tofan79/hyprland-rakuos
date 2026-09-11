@@ -119,8 +119,6 @@ tuned-ppd
 libnotify
 noctalia-greeter-git
 qt6ct
-rakuos-software-qt
-rakuos-welcome-qt
 systemd-oomd-defaults
 swash
 tesseract
@@ -135,6 +133,8 @@ tesseract-langpack-chi_sim_vert
 tesseract-langpack-chi_tra
 tesseract-langpack-chi_tra_vert
 zbar
+zsh-autosuggestions
+zsh-syntax-highlighting
 hyprpicker
 cliphist
 brightnessctl

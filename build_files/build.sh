@@ -97,10 +97,10 @@ rum install -y --refresh \
   libnotify \
   noctalia-greeter-git \
   qt6ct \
-  rakuos-software-qt \
-  rakuos-welcome-qt \
   systemd-oomd-defaults \
   swash \
+  zsh-autosuggestions \
+  zsh-syntax-highlighting \
   tesseract \
   tesseract-langpack-eng \
   tesseract-langpack-ind \
@@ -142,6 +142,10 @@ for group in audio video input disk tty kvm render lp clock kmem sgx utmp; do
     groupadd -r "$group" 2>/dev/null || true
 done
 
+## plugdev: referenced by U2F/ZSA/switch udev rules but absent on Fedora,
+## producing repeated "Failed to resolve group 'plugdev'" warnings at boot.
+getent group plugdev >/dev/null 2>&1 || groupadd -r plugdev
+
 ## Create greeter user for greetd
 if ! id greeter &>/dev/null; then
     useradd -r -s /sbin/nologin -d /var/lib/noctalia-greeter -M greeter
@@ -180,6 +184,16 @@ ln -sfn /dev/null /etc/systemd/user/grub-boot-success.timer
 ln -sfn /dev/null /etc/systemd/system/fwupd.service
 ln -sfn /dev/null /etc/systemd/system/fwupd-refresh.service
 ln -sfn /dev/null /etc/systemd/system/fwupd-refresh.timer
+
+
+## Remove autostart entries that are noisy/failing at login:
+## - nvidia-settings-load: --load-config-only (X11-only) intermittently
+##   exits status=1 on Wayland (race: "Cannot find any crtc or sizes")
+## - rakuos-software-tray / rakuos-welcome: emit desktop-file (duplicate
+##   Name, empty Path) and portal warnings. Launchable manually from menu.
+rm -f /etc/xdg/autostart/nvidia-settings-load.desktop 2>/dev/null || true
+rm -f /etc/xdg/autostart/rakuos-software-tray.desktop 2>/dev/null || true
+rm -f /etc/xdg/autostart/rakuos-welcome.desktop 2>/dev/null || true
 
 ## Create flatpak exports dir (fix rakuos-flatpak-watcher)
 mkdir -p /var/lib/flatpak/exports/bin
