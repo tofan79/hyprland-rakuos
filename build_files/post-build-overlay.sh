@@ -98,8 +98,6 @@ egl-wayland
 grim
 slurp
 wtype
-gnome-keyring
-gnome-keyring-pam
 fprintd-pam
 adw-gtk3-theme
 papirus-icon-theme

@@ -76,8 +76,6 @@ rum install -y --refresh \
   grim \
   slurp \
   wtype \
-  gnome-keyring \
-  gnome-keyring-pam \
   fprintd-pam \
   adw-gtk3-theme \
   papirus-icon-theme \
@@ -167,11 +165,6 @@ fi
 ## Enable Services
 systemctl enable greetd
 systemctl enable --global dotfiles-setup
-
-## Unlock keyring on login (greetd PAM)
-if [ -f /etc/pam.d/greetd ]; then
-    sed -i -E 's/^-([a-z]+[[:space:]]+.*pam_gnome_keyring\.so)/\1/' /etc/pam.d/greetd
-fi
 
 ## Disable grub-boot-success: it also ships a user-scope unit that fires 2min
 ## after login and fails (grub2-set-bootflag needs root), spamming a failed
