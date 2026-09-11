@@ -166,6 +166,12 @@ fi
 systemctl enable greetd
 systemctl enable --global dotfiles-setup
 
+## Mask dkms: nvidia modules are pre-baked into the image for its exact kernel,
+## so the boot-time autoinstall always fails ("already installed, need --force").
+## Kernel updates come bundled with freshly compiled modules from the image CI,
+## so runtime dkms is never needed.
+systemctl mask dkms.service 2>/dev/null || true
+
 ## Disable grub-boot-success: it also ships a user-scope unit that fires 2min
 ## after login and fails (grub2-set-bootflag needs root), spamming a failed
 ## service notification every session. Mask system AND user scope.

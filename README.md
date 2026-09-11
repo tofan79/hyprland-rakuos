@@ -21,7 +21,9 @@ with **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
 - **Portal/media**: xdg-desktop-portal(-hyprland/-gtk), pipewire + ALSA +
   PulseAudio emulation, wireplumber, egl-wayland, Xwayland, wl-clipboard,
   grim+slurp, pavucontrol, libnotify
-- **Keyring/auth**: gnome-keyring(+PAM), fprintd-pam
+- **Keyring/auth**: gnome-keyring intentionally **excluded** (Noctalia/Hyprland
+  work fine without `org.freedesktop.secrets` and it caused dual-daemon crashes
+  at login with the greetd PAM setup), fprintd-pam, libsecret client lib
 - **Base duties**: NetworkManager suite, tuned-ppd, gvfs(+mtp/nfs/smb),
   systemd-oomd-defaults, rakuos-software, rakuos-welcome, noctalia-greeter
 - **Tools**: swash, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
