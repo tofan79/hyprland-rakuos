@@ -138,13 +138,12 @@ rum remove -y wofi 2>/dev/null || true
 rm -rf /usr/share/backgrounds/fedora-workstation/
 
 ## Create required system groups (fixes systemd-tmpfiles warnings)
-for group in audio video input disk tty kvm render lp clock kmem sgx utmp; do
+## plugdev is also created: it is referenced by U2F/ZSA/switch udev rules but
+## absent on Fedora, producing repeated "Failed to resolve group 'plugdev'"
+## warnings at boot.
+for group in audio video input disk tty kvm render lp clock kmem sgx utmp plugdev; do
     groupadd -r "$group" 2>/dev/null || true
 done
-
-## plugdev: referenced by U2F/ZSA/switch udev rules but absent on Fedora,
-## producing repeated "Failed to resolve group 'plugdev'" warnings at boot.
-getent group plugdev >/dev/null 2>&1 || groupadd -r plugdev
 
 ## Create greeter user for greetd
 if ! id greeter &>/dev/null; then
@@ -155,6 +154,9 @@ fi
 if [ -x /usr/share/noctalia-greeter/setup_greeter_system.sh ]; then
     /usr/share/noctalia-greeter/setup_greeter_system.sh || true
 fi
+
+## Make greetd wrapper executable (sourced from system_files/)
+chmod +x /usr/libexec/rakuos/rakuos-greetd-wrapper.sh 2>/dev/null || true
 
 ## Ensure state dir ownership (fallback if setup script didn't run)
 if [ -d /var/lib/noctalia-greeter ]; then

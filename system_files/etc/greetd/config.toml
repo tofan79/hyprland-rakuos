@@ -1,6 +1,6 @@
 [default_session]
 user = "greeter"
-command = "/usr/bin/noctalia-greeter-session"
+command = "/usr/libexec/rakuos/rakuos-greetd-wrapper.sh"
 
 [terminal]
 vt = 1
