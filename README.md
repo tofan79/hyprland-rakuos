@@ -25,7 +25,9 @@ with **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
   work fine without `org.freedesktop.secrets` and it caused dual-daemon crashes
   at login with the greetd PAM setup), fprintd-pam, libsecret client lib
 - **Base duties**: NetworkManager suite, tuned-ppd, gvfs(+mtp/nfs/smb),
-  systemd-oomd-defaults, rakuos-software, rakuos-welcome, noctalia-greeter
+  systemd-oomd-defaults, noctalia-greeter (rakuos-software / rakuos-welcome
+  are **not** installed; their autostart desktop files were noisy and failing
+  at login — apps stay reachable via the menu)
 - **Tools**: swash, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
   brightnessctl, playerctl, unzip/zip/7zip/unar
 - **Theme/fonts**: adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts
