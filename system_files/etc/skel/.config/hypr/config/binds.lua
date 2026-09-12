@@ -14,7 +14,7 @@ hl.bind(M .. " + Q", hl.dsp.window.close(), { description = "Close active window
 hl.bind(M .. " + Escape", hl.dsp.exec_cmd("noctalia msg panel-toggle session"), { description = "Session menu" })
 hl.bind(M .. " + CTRL + L", hl.dsp.exec_cmd("noctalia msg session lock"), { description = "Lock screen" })
 hl.bind(M .. " + slash", hl.dsp.exec_cmd("noctalia msg panel-toggle tordex/nvtop:panel -mem"), { description = "System monitor (procmon)" })
-hl.bind("CTRL + SHIFT + Escape", hl.dsp.exec_cmd(launchPrefix .. TERMINAL .. " --title btop-monitor -e btop"), { description = "System monitor (btop, floating)" })
+hl.bind("CTRL + SHIFT + Escape", hl.dsp.exec_cmd(launchPrefix .. TERMINAL .. " -e btop"), { description = "System monitor (btop, floating)" })
 
 -- ───────────────────────────────────────────
 -- Noctalia Shell

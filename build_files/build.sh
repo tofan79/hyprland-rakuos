@@ -59,9 +59,9 @@ rum install -y --refresh \
   hyprland-guiutils \
   noctalia-git \
   uwsm \
-  kitty \
-  kitty-shell-integration \
-  kitty-terminfo \
+  ghostty \
+  ghostty-shell-integration \
+  ghostty-terminfo \
   pipewire \
   pipewire-alsa \
   pipewire-pulseaudio \
@@ -99,6 +99,9 @@ rum install -y --refresh \
   swash \
   zsh-autosuggestions \
   zsh-syntax-highlighting \
+  eza \
+  fastfetch \
+  starship \
   tesseract \
   tesseract-langpack-eng \
   tesseract-langpack-ind \

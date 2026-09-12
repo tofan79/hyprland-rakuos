@@ -87,8 +87,8 @@ source = "wallpaper"
 wallpaper_scheme = "m3-tonal-spot"
 
     [theme.templates]
-    builtin_ids = [ "btop", "gtk3", "gtk4", "kcolorscheme", "kitty", "qt" ]
-    community_ids = [ "papirus-icons" ]
+    builtin_ids = [ "btop", "ghostty", "gtk3", "gtk4", "hyprland", "kcolorscheme", "qt" ]
+    community_ids = [ "papirus-icons", "bat", "fzf" ]
 
 [widget.clock]
 color = "secondary"

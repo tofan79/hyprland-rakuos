@@ -1,5 +1,5 @@
 export BROWSER=zen-browser
-export TERM=xterm-kitty
+export TERM=xterm-ghostty
 
 # XDG / Session
 export XDG_CURRENT_DESKTOP=Hyprland

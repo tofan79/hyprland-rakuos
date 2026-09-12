@@ -2,7 +2,7 @@
 -- Ganti nilai di sini untuk mengganti default app
 -- (bind di binds.lua memakai variabel ini)
 
-TERMINAL      = "kitty"
+TERMINAL      = "ghostty"
 FILE_MANAGER  = "dolphin"
 BROWSER       = "zen-browser"
 EDITOR        = "zeditor"

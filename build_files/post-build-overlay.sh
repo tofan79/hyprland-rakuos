@@ -81,9 +81,9 @@ hyprland
 hyprland-guiutils
 noctalia-git
 uwsm
-kitty
-kitty-shell-integration
-kitty-terminfo
+ghostty
+ghostty-shell-integration
+ghostty-terminfo
 pipewire
 pipewire-alsa
 pipewire-pulseaudio
@@ -133,6 +133,9 @@ tesseract-langpack-chi_tra_vert
 zbar
 zsh-autosuggestions
 zsh-syntax-highlighting
+eza
+fastfetch
+starship
 hyprpicker
 cliphist
 brightnessctl
