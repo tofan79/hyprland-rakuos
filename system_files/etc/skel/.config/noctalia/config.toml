@@ -81,6 +81,12 @@ settings_show_advanced = true
 [system.monitor]
 gpu_poll_seconds = 2
 
+[wallpaper]
+directory = ""
+
+    [wallpaper.default]
+    path = "~/Pictures/Wallpaper/Japan-rakuos.webp"
+
 [theme]
 mode = "dark"
 source = "wallpaper"
@@ -88,7 +94,7 @@ wallpaper_scheme = "m3-tonal-spot"
 
     [theme.templates]
     builtin_ids = [ "btop", "ghostty", "gtk3", "gtk4", "hyprland", "kcolorscheme", "qt" ]
-    community_ids = [ "papirus-icons", "bat", "fzf" ]
+    community_ids = [ "fastfetch", "papirus-icons", "bat", "fzf" ]
 
 [widget.clock]
 color = "secondary"

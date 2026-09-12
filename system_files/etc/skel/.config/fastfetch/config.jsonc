@@ -1,133 +1,149 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
-    "type": "file",
-    "source": "/usr/share/fastfetch/presets/rakuos/rakuos-ascii.txt",
+    "type": "kitty-direct",
+    "source": "~/.config/fastfetch/rakuos.png",
+    "width": 30,
+    "height": 20,
     "padding": {
-      "top": 2,
-      "right": 6,
-      "left": 2,
+      "top": 6,
+      "right": 3,
+      "left": 3
     },
+    "color": {
+      "1": "#63c2ff",
+      "2": "#63c4dd"
+    }
+  },
+  "display": {
+    "color": {
+      "keys": "#bdc2ff",
+      "title": "#c4c4dd"
+    },
+    "key": {
+      "width": 10
+    },
+    "separator": "  ",
+    "percent": {
+      "type": 9,
+      "color": {
+        "green": "#e7b9d5",
+        "yellow": "#bdc2ff",
+        "red": "#ffb4ab"
+      }
+    }
   },
   "modules": [
     "break",
     {
-      "type": "custom",
-      "format": "\u001b[90m┌──────────────────────Hardware──────────────────────┐",
+      "type": "title",
+      "format": "\u001b[1;38;2;243;237;225m{user-name}\u001b[0m\u001b[38;2;143;135;112m @ \u001b[0m\u001b[1;38;2;243;237;225m{host-name}\u001b[0m"
+    },
+    {
+      "type": "command",
+      "key": " ",
+      "text": "bash ~/.config/fastfetch/noctalia-header.sh brand"
+    },
+    "break",
+    {
+      "type": "command",
+      "key": " ",
+      "text": "bash ~/.config/fastfetch/noctalia-header.sh VITALS"
     },
     {
       "type": "host",
-      "key": " PC",
-      "keyColor": "green",
+      "key": "HOST"
     },
     {
       "type": "cpu",
-      "key": "│ ├",
-      "showPeCoreCount": true,
-      "keyColor": "green",
+      "key": "CPU"
     },
     {
       "type": "gpu",
-      "key": "│ ├",
+      "key": "GPU",
       "detectionMethod": "pci",
-      "keyColor": "green",
+      "format": "{vendor} {name}"
     },
     {
       "type": "display",
-      "key": "│ ├󱄄",
-      "keyColor": "green",
-    },
-    {
-      "type": "disk",
-      "key": "│ ├󰋊",
-      "keyColor": "green",
+      "key": "DISPLAY"
     },
     {
       "type": "memory",
-      "key": "│ ├",
-      "keyColor": "green",
+      "key": "MEMORY"
     },
     {
       "type": "swap",
-      "key": "└ └󰓡",
-      "keyColor": "green",
+      "key": "SWAP"
     },
     {
-      "type": "custom",
-      "format": "\u001b[90m└────────────────────────────────────────────────────┘",
+      "type": "disk",
+      "key": "DISK"
     },
     "break",
     {
-      "type": "custom",
-      "format": "\u001b[90m┌──────────────────────Software──────────────────────┐",
+      "type": "command",
+      "key": " ",
+      "text": "bash ~/.config/fastfetch/noctalia-header.sh SYSTEM"
     },
     {
-      "type": "os",
-      "key": " OS",
-      "keyColor": "blue",
+      "type": "command",
+      "key": "OS",
+      "text": ". /etc/os-release && echo \"$PRETTY_NAME x86_64\""
     },
     {
       "type": "kernel",
-      "key": "│ ├",
-      "keyColor": "blue",
-    },
-    {
-      "type": "wm",
-      "key": "│ ├",
-      "keyColor": "blue",
+      "key": "KERNEL"
     },
     {
       "type": "command",
-      "key": "│ ├󰉼",
-      "keyColor": "blue",
-      "text": "rpm -q --qf 'Noctalia %{VERSION}' noctalia-git 2>/dev/null || echo 'not installed'",
+      "key": "WM",
+      "text": "echo \"${XDG_CURRENT_DESKTOP:-Hyprland}\""
+    },
+    {
+      "type": "command",
+      "key": "SHELL",
+      "text": "basename \"${SHELL:-unknown}\""
+    },
+    {
+      "type": "command",
+      "key": "NOCTALIA",
+      "text": "rpm -q --qf '%{VERSION}' noctalia-git 2>/dev/null || echo unknown"
     },
     {
       "type": "terminal",
-      "key": "│ ├",
-      "keyColor": "blue",
+      "key": "TERM"
+    },
+    {
+      "type": "command",
+      "key": "FONT",
+      "text": "f=$(awk -F'\\\"' '/^font-family/ {print $2}' ~/.config/ghostty/config.ghostty 2>/dev/null); s=$(awk '/^font-size/ {print $3}' ~/.config/ghostty/config.ghostty 2>/dev/null); [ -n \"$f\" ] && fc-match \"$f\" -f \"$f (%{style}) - $s pt\" || echo \"default - $s pt\""
     },
     {
       "type": "packages",
-      "key": "│ ├󰏖",
-      "keyColor": "blue",
-    },
-    {
-      "type": "command",
-      "key": "│ ├󰸌",
-      "keyColor": "blue",
-      "text": "scheme=$(noctalia msg color-scheme-get 2>/dev/null | awk '{print $2, $3}'); echo -e \"$scheme \\e[38m●\\e[37m●\\e[36m●\\e[35m●\\e[34m●\\e[33m●\\e[32m●\\e[31m●\"",
-    },
-    {
-      "type": "command",
-      "key": "└ └",
-      "keyColor": "blue",
-      "text": "f=$(awk -F'\"' '/^font-family/ {print $2}' ~/.config/ghostty/config.ghostty); fc-match \"$f\" -f \"$f (%{style})\"",
-    },
-    {
-      "type": "custom",
-      "format": "\u001b[90m└────────────────────────────────────────────────────┘",
+      "key": "PKGS"
     },
     "break",
     {
-      "type": "custom",
-      "format": "\u001b[90m┌────────────────────Age / Uptime────────────────────┐",
+      "type": "command",
+      "key": " ",
+      "text": "bash ~/.config/fastfetch/noctalia-header.sh SESSION"
     },
     {
       "type": "command",
-      "key": "󱦟 OS Age",
-      "keyColor": "magenta",
-      "text": "echo $(( ($(date +%s) - $(stat -c %W /)) / 86400 )) days",
+      "key": "AGE",
+      "text": "echo $(( ($(date +%s) - $(stat -c %W /etc/machine-id)) / 86400 )) days"
     },
     {
       "type": "uptime",
-      "key": "󱫐 Uptime",
-      "keyColor": "magenta",
+      "key": "UPTIME"
     },
-
+    "break",
     {
-      "type": "custom",
-      "format": "\u001b[90m└────────────────────────────────────────────────────┘",
+      "type": "colors",
+      "symbol": "circle",
+      "paddingLeft": 2
     },
-  ],
+    "break"
+  ]
 }

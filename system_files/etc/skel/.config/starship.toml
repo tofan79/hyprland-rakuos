@@ -63,7 +63,7 @@ red	= '#FF5555'
 yellow = '#F1FA8C'
 
 [os]
-format = '(fg:current_line)[](fg:red)[$symbol ](fg:primary bg:red)[](fg:red)'
+format = '(fg:current_line)[](fg:blue)[$symbol ](fg:primary bg:blue)[](fg:blue)'
 disabled = false
 
 [os.symbols]
