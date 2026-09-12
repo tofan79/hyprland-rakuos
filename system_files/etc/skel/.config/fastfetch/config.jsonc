@@ -4,10 +4,10 @@
     "type": "kitty-direct",
     "source": "~/.config/fastfetch/rakuos.png",
     "width": 30,
-    "height": 20,
+    "height": 17,
     "padding": {
-      "top": 6,
-      "right": 3,
+      "top": 7,
+      "right": 4,
       "left": 3
     },
     "color": {
@@ -48,7 +48,7 @@
     {
       "type": "command",
       "key": " ",
-      "text": "bash ~/.config/fastfetch/noctalia-header.sh VITALS"
+      "text": "bash ~/.config/fastfetch/noctalia-header.sh DEVICE"
     },
     {
       "type": "host",
