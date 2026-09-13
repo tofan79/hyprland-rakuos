@@ -45,6 +45,14 @@ if ! dnf -y install --refresh terra-release 2>/dev/null; then
     sed -i 's/gpgcheck=1/gpgcheck=0/g' /etc/yum.repos.d/terra.repo 2>/dev/null || true
 fi
 
+# Re-enable Terra: rakuos-base now ships post-build.sh with terra disabled by
+# default (rum config-manager --set-disabled terra). This image installs
+# terra-hosted packages (bibata-cursor-theme, jetbrainsmono-nerd-fonts, plus
+# base deps like dysk/fresh/surge/termflix/wlctl), so enable it explicitly.
+# --set-enabled also flips enabled_metadata=1.
+rum config-manager --set-enabled terra 2>/dev/null || true
+sed -i '/^\[terra\]$/,/^\[/ s/^\(enabled\|enabled_metadata\)=0/\1=1/' /etc/yum.repos.d/terra.repo 2>/dev/null || true
+
 ## Ensure rpm scriptlets can find a /bin/sh interpreter in this baseless OCI image
 # Some pulled packages (e.g. tk, kf6-kdoctools) run %prein/%post scriptlets via the
 # absolute path /bin/sh; a merged-usr base without /bin fails with
@@ -142,8 +150,23 @@ rm -rf /usr/share/backgrounds/fedora-workstation/
 ## plugdev is also created: it is referenced by U2F/ZSA/switch udev rules but
 ## absent on Fedora, producing repeated "Failed to resolve group 'plugdev'"
 ## warnings at boot.
+##
+## NOTE: do NOT use plain `groupadd` here. On Fedora the standard groups live
+## only in /usr/lib/group (altfiles NSS), so `groupadd` resolves them via
+## altfiles, thinks they already exist and silently skips writing them to
+## /etc/group. During initrd /usr is not mounted yet and altfiles is
+## unavailable, so udev/systemd-tmpfiles cannot resolve these groups. We write
+## them into /etc/group directly (keeping the canonical GID) so they are
+## resolvable from the very first boot phase.
 for group in audio video input disk tty kvm render lp clock kmem sgx utmp plugdev; do
-    groupadd -r "$group" 2>/dev/null || true
+    if ! grep -q "^${group}:" /etc/group; then
+        gid=$(getent group "$group" | awk -F: '{print $3}')
+        if [ -n "$gid" ]; then
+            echo "${group}:x:${gid}:" >> /etc/group
+        else
+            groupadd -r "$group" 2>/dev/null || true
+        fi
+    fi
 done
 
 ## Create greeter user for greetd
@@ -189,6 +212,37 @@ ln -sfn /dev/null /etc/systemd/user/grub-boot-success.timer
 ln -sfn /dev/null /etc/systemd/system/fwupd.service
 ln -sfn /dev/null /etc/systemd/system/fwupd-refresh.service
 ln -sfn /dev/null /etc/systemd/system/fwupd-refresh.timer
+
+## Quiet cosmetic systemd-tmpfiles noise on immutable systems:
+## - home.conf: /home and /srv are symlinks into /var here, so the Q/q rules
+##   log "/home already exists and is not a directory" every boot.
+## - root.conf: its `z / 555` rule tries to chmod /, which is a read-only
+##   composefs mount -> "fchmod() of / failed: Read-only file system".
+## - provision.conf: instead of masking it entirely, ship a trimmed copy that
+##   keeps the (credential-based) provisioning behavior but drops the `d- /root`
+##   line, which hits the /root -> /var/roothome symlink and logs "/root already
+##   exists and is not a directory" every boot.
+mkdir -p /etc/tmpfiles.d
+ln -sfn /dev/null /etc/tmpfiles.d/home.conf
+ln -sfn /dev/null /etc/tmpfiles.d/root.conf
+cat > /etc/tmpfiles.d/provision.conf << 'EOF'
+# Trimmed copy of /usr/lib/tmpfiles.d/provision.conf:
+# the `d- /root` line is dropped because /root is a symlink to /var/roothome
+# on this immutable system (would log "already exists and is not a directory").
+
+# Provision additional login messages from credentials, if they are set. Note
+# that these lines are NOPs if the credentials are not set or if the files
+# already exist.
+f^ /etc/motd.d/50-provision.conf - - - - login.motd
+f^ /etc/issue.d/50-provision.conf - - - - login.issue
+
+# Provision a /etc/hosts file from credentials.
+f^ /etc/hosts - - - - network.hosts
+
+# Provision SSH key for root
+d- /root/.ssh :0700 root :root -
+f^ /root/.ssh/authorized_keys :0600 root :root - ssh.authorized_keys.root
+EOF
 
 
 ## Remove autostart entries that are noisy/failing at login:
