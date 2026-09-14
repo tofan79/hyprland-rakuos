@@ -11,25 +11,25 @@
       "left": 3
     },
     "color": {
-      "1": "#63c2ff",
-      "2": "#63c4dd"
+      "1": "#eddd63",
+      "2": "#eddd63"
     }
   },
   "display": {
     "color": {
-      "keys": "#bdc2ff",
-      "title": "#c4c4dd"
+      "keys": "#eddd8e",
+      "title": "#eddd8e"
     },
     "key": {
-      "width": 10
+      "width": 12
     },
     "separator": "  ",
     "percent": {
       "type": 9,
       "color": {
-        "green": "#e7b9d5",
-        "yellow": "#bdc2ff",
-        "red": "#ffb4ab"
+        "green": "#f7e99e",
+        "yellow": "#edde91",
+        "red": "#e56c6c"
       }
     }
   },
@@ -52,33 +52,33 @@
     },
     {
       "type": "host",
-      "key": "HOST"
+      "key": "{#italic_36}󰇅 {#keys} HOST"
     },
     {
       "type": "cpu",
-      "key": "CPU"
+      "key": "{#italic_36}󰍛 {#keys} CPU"
     },
     {
       "type": "gpu",
-      "key": "GPU",
+      "key": "{#italic_36}󰾲 {#keys} GPU",
       "detectionMethod": "pci",
       "format": "{vendor} {name}"
     },
     {
       "type": "display",
-      "key": "DISPLAY"
+      "key": "{#italic_36}󰍹 {#keys} DISPLAY"
     },
     {
       "type": "memory",
-      "key": "MEMORY"
+      "key": "{#italic_36}󰟶 {#keys} MEMORY"
     },
     {
       "type": "swap",
-      "key": "SWAP"
+      "key": "{#italic_36}󰣁 {#keys} SWAP"
     },
     {
       "type": "disk",
-      "key": "DISK"
+      "key": "{#italic_36}󰋊 {#keys} DISK"
     },
     "break",
     {
@@ -88,40 +88,40 @@
     },
     {
       "type": "command",
-      "key": "OS",
+      "key": "{#italic_36} {#keys} OS",
       "text": ". /etc/os-release && echo \"$PRETTY_NAME x86_64\""
     },
     {
       "type": "kernel",
-      "key": "KERNEL"
+      "key": "{#italic_36} {#keys} KERNEL"
     },
     {
       "type": "command",
-      "key": "WM",
+      "key": "{#italic_36} {#keys} WM",
       "text": "echo \"${XDG_CURRENT_DESKTOP:-Hyprland}\""
     },
     {
       "type": "command",
-      "key": "SHELL",
+      "key": "{#italic_36}󰉼 {#keys} DESKTOP",
+      "text": "echo \"Noctalia $(rpm -q --qf '%{VERSION}' noctalia-git 2>/dev/null || echo unknown)\""
+    },
+    {
+      "type": "terminal",
+      "key": "{#italic_36} {#keys} TERM"
+    },
+    {
+      "type": "command",
+      "key": "{#italic_36}󰞷 {#keys} SHELL",
       "text": "basename \"${SHELL:-unknown}\""
     },
     {
       "type": "command",
-      "key": "NOCTALIA",
-      "text": "rpm -q --qf '%{VERSION}' noctalia-git 2>/dev/null || echo unknown"
-    },
-    {
-      "type": "terminal",
-      "key": "TERM"
-    },
-    {
-      "type": "command",
-      "key": "FONT",
-      "text": "f=$(awk -F'\\\"' '/^font-family/ {print $2}' ~/.config/ghostty/config.ghostty 2>/dev/null); s=$(awk '/^font-size/ {print $3}' ~/.config/ghostty/config.ghostty 2>/dev/null); [ -n \"$f\" ] && fc-match \"$f\" -f \"$f (%{style}) - $s pt\" || echo \"default - $s pt\""
+      "key": "{#italic_36}󰛖 {#keys} FONT",
+      "text": "f=$(awk -F'\"' '/^font-family/ {print $2}' ~/.config/ghostty/config.ghostty 2>/dev/null); s=$(awk '/^font-size/ {print $3}' ~/.config/ghostty/config.ghostty 2>/dev/null); [ -n \"$f\" ] && echo \"$f - $s pt\" || echo \"default - $s pt\""
     },
     {
       "type": "packages",
-      "key": "PKGS"
+      "key": "{#italic_36}󰏖 {#keys} PKGS"
     },
     "break",
     {
@@ -131,18 +131,12 @@
     },
     {
       "type": "command",
-      "key": "AGE",
+      "key": "{#italic_36}󱦟 {#keys} AGE",
       "text": "echo $(( ($(date +%s) - $(stat -c %W /etc/machine-id)) / 86400 )) days"
     },
     {
       "type": "uptime",
-      "key": "UPTIME"
-    },
-    "break",
-    {
-      "type": "colors",
-      "symbol": "circle",
-      "paddingLeft": 2
+      "key": "{#italic_36}󰥔 {#keys} UPTIME"
     },
     "break"
   ]
