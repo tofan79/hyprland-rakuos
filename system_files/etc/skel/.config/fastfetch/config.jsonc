@@ -132,7 +132,7 @@
     {
       "type": "command",
       "key": "{#italic_36}󱦟 {#keys} AGE",
-      "text": "echo $(( ($(date +%s) - $(stat -c %W /etc/machine-id)) / 86400 )) days"
+      "text": "echo $(( ($(date +%s) - $(stat -c %Y /var/lib/rakuos/install-id)) / 86400 )) days"
     },
     {
       "type": "uptime",
