@@ -25,21 +25,24 @@ with **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
   work fine without `org.freedesktop.secrets` and it caused dual-daemon crashes
   at login with the greetd PAM setup), fprintd-pam, libsecret client lib
 - **Base duties**: NetworkManager suite, tuned-ppd, gvfs(+mtp/nfs/smb),
-  systemd-oomd-defaults, noctalia-greeter (rakuos-software / rakuos-welcome
-  are **not** installed; their autostart desktop files were noisy and failing
-  at login — apps stay reachable via the menu)
+  systemd-oomd-defaults, noctalia-greeter
 - **Tools**: swash, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
   brightnessctl, playerctl, unzip/zip/7zip/unar
 - **Theme/fonts**: adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts
+- **Terra** (Vendor repo, enabled at build: `bibata-cursor-theme`,
+  `jetbrainsmono-nerd-fonts`, plus base deps `dysk`/`fresh`/`surge`/`termflix`/`wlctl`)
 - **Browser (overlay)**: `brave-origin` — prebaked via `packages.list` /
   `packages-live.list`, present on live and installed systems
 - **NVIDIA dGPU**: inherited from the Nvidia base image (driver + CUDA stack)
 
 ### Not included (optional)
 
-Apps below are **not baked** — install them after first boot (e.g. via the
-RakuOS welcome setup or Software Center). Hyprland keybinds (`variables.lua`)
-already point at them:
+Apps below are **not baked** — install them after first boot with:
+```bash
+sudo rum install <package>     # overlay (survives image upgrades)
+sudo dnf5 install <package>    # base image layer (dev-only, not atomic)
+```
+Hyprland keybinds (`variables.lua`) already point at them:
 
 - **editor** `zeditor`, **calculator** `gnome-calculator`, **video/audio
   player** `mpv`
@@ -61,10 +64,14 @@ already point at them:
    the real image size)
 2. Base = RakuOS `rakuos-base-nvidia-v3:staging` (COPR Hyprland +
    `mindset/Mindset-Apps`, Terra/RPM-Fusion repos tuned)
-3. Pushes `latest` + date tag to `quay.io/mindset404/hyprland-nvidia-v3`
-4. **Retention**: deletes date tags older than the 5 newest (keeps storage
+3. Bakes canonical system GIDs into `/etc/group` (audio/video/input/kvm/utmp
+   etc. — the `bootc-minimal` base lacks the `altfiles` NSS module, so
+   `getent` falls back to the file) and masks noisy systemd tmpfiles
+   (`sudo-message`, `openvpn`, `mdadm`, `dbus` ones) in `build.sh`/`post-build*.sh`
+4. Pushes `latest` + date tag to `quay.io/mindset404/hyprland-nvidia-v3`
+5. **Retention**: deletes date tags older than the 5 newest (keeps storage
    within Quay free tier)
-5. Terra signing-key auto-recovery (refreshes `key.asc` from Fyralabs,
+6. Terra signing-key auto-recovery (refreshes `key.asc` from Fyralabs,
    falls back to disabling `gpgcheck` if the keys rotate again)
 
 ### Manual trigger
@@ -83,12 +90,15 @@ Workflow inputs: `base_image_tag` (default `staging`) and `rakuos_staging`
 sudo bootc switch quay.io/mindset404/hyprland-nvidia-v3:latest
 sudo reboot
 
-# Later updates are pulled automatically by RakuOS Software Center / bootc
+# Later updates are pulled by the 3-day auto-rebuild, or manually:
 sudo bootc upgrade
+sudo reboot
 ```
 
-The RakuOS software center detects updates via the Quay API (`specificTag=latest`)
-— this image is a full Quay reference, so update badges work out of the box.
+New image tags are pushed to `quay.io/mindset404/hyprland-nvidia-v3:latest`;
+pulling that reference is all `bootc upgrade` needs to detect a new build.
+The `rakuos-updater.service`+`.timer` (daily at 03:00 UTC) also checks for
+new image and overlay updates automatically.
 
 ## Update & troubleshooting
 
@@ -130,8 +140,8 @@ the last known-good one.
    "noise" at boot — ACPI `_TZ.THRM._SCP`, `NVRM PlatformRequestHandler`
    SBIOS assertions, `amdgpu DCN reg offset`, and `bpf-restrict-fs` are benign
    and do not affect performance. `fwupd` stays **masked** on this hardware
-   (daemon hangs in D-state); a `fwupdmgr --version` shim keeps the software
-   center's firmware check non-errored, but LVFS refresh/update is intentionally
+   (daemon hangs in D-state); a `fwupdmgr --version` shim keeps firmware API
+   consumers non-errored, but LVFS refresh/update is intentionally
    non-functional here.
 
 ## License
