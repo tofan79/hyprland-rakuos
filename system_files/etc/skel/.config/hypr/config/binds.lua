@@ -180,11 +180,11 @@ hl.bind(M .. " + U", hl.dsp.exec_cmd("/opt/abdownloadmanager/bin/ABDownloadManag
 -- ───────────────────────────────────────────
 -- Screenshot & Screen Tools
 -- ───────────────────────────────────────────
-hl.bind("Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot region"), { description = "Screenshot: region" })
-hl.bind("SHIFT + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot fullscreen"), { description = "Screenshot: fullscreen" })
-hl.bind("CTRL + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot window"), { description = "Screenshot: active window" })
+hl.bind("Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh region"), { description = "Screenshot: region" })
+hl.bind("SHIFT + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh fullscreen"), { description = "Screenshot: fullscreen" })
+hl.bind("CTRL + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh window"), { description = "Screenshot: active window" })
 hl.bind(M .. " + SHIFT + L", hl.dsp.exec_cmd("~/.config/hypr/scripts/lens.sh"), { description = "Google Lens (region)" })
-hl.bind(M .. " + SHIFT + C", hl.dsp.exec_cmd("~/.config/hypr/scripts/ocr"), { description = "OCR (region)" })
+hl.bind(M .. " + SHIFT + C", hl.dsp.exec_cmd("~/.config/hypr/scripts/ocr.sh"), { description = "OCR (region)" })
 hl.bind(M .. " + SHIFT + Q", hl.dsp.exec_cmd("~/.config/hypr/scripts/qr.sh"), { description = "QR Scan (region)" })
 
 -- ───────────────────────────────────────────
