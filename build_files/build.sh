@@ -197,10 +197,12 @@ systemctl enable chronyd
 systemctl enable greetd
 systemctl enable --global dotfiles-setup
 
-## Mask dkms: nvidia modules are pre-baked into the image for its exact kernel,
-## so the boot-time autoinstall always fails ("already installed, need --force").
+## [Khusus NVIDIA dGPU pre-baked image] Mask dkms:
+## nvidia modules are pre-baked into the image for its exact kernel, so the
+## boot-time autoinstall always fails ("already installed, need --force").
 ## Kernel updates come bundled with freshly compiled modules from the image CI,
 ## so runtime dkms is never needed.
+## ► Device lain tanpa nvidia dGPU boleh skip blok ini (aman diabaikan).
 systemctl mask dkms.service 2>/dev/null || true
 
 ## Disable grub-boot-success: it also ships a user-scope unit that fires 2min
@@ -211,8 +213,10 @@ mkdir -p /etc/systemd/user
 ln -sfn /dev/null /etc/systemd/user/grub-boot-success.service
 ln -sfn /dev/null /etc/systemd/user/grub-boot-success.timer
 
-## Disable fwupd: the daemon hangs in D-state on this hardware, stalling boot
-## ~3min and ending in a failed unit. Firmware updates stay manual (menu/EFI).
+## [Khusus device ini — AMD+NVIDIA hybrid ASUS laptop] Disable fwupd:
+## the daemon hangs in D-state on this hardware, stalling boot ~3min and
+## ending in a failed unit. Firmware updates stay manual (menu/EFI).
+## ► Device lain: JANGAN di-disable — fwupd berfungsi normal di hardware lain.
 ln -sfn /dev/null /etc/systemd/system/fwupd.service
 ln -sfn /dev/null /etc/systemd/system/fwupd-refresh.service
 ln -sfn /dev/null /etc/systemd/system/fwupd-refresh.timer
@@ -249,8 +253,9 @@ f^ /root/.ssh/authorized_keys :0600 root :root - ssh.authorized_keys.root
 EOF
 
 
-## Remove autostart entries that are noisy/failing at login:
+## [Khusus NVIDIA dGPU] Remove autostart entries that are noisy/failing at login:
 ## - nvidia-settings-load: --load-config-only (X11-only) intermittently
+## ► Device AMD-only: file ini tidak ada, rm -f no-op (aman).
 rm -f /etc/xdg/autostart/nvidia-settings-load.desktop 2>/dev/null || true
 
 ## Create flatpak exports dir (fix rakuos-flatpak-watcher)

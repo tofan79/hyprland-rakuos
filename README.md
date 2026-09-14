@@ -116,6 +116,24 @@ pulling that reference is all `bootc upgrade` needs to detect a new build.
 The `rakuos-updater.service`+`.timer` (daily at 03:00 UTC) also checks for
 new image and overlay updates automatically.
 
+### Noctalia Updates plugin & sudoers
+
+The Noctalia "Updates" panel plugin shows/installs pending image + overlay
+updates from the desktop. It runs headless helpers via sudo, so the repo ships
+an extra sudoers drop-in `system_files/etc/sudoers.d/rakuos-plugin-updates`
+(chmod `0440 root:root` in `build.sh`) granting **narrow** NOPASSWD to exactly
+the commands the plugin runs:
+
+- `rakuos-reset-overlay --soft/--confirm` (overlay cleanup after updates)
+- `bootc kargs *`, `flatpak update -y`
+- `rum config-manager` / `dnf5 config-manager` repo toggles
+- `tee /etc/systemd/zram-generator.conf`
+
+Scope is deliberately narrow (no blanket `ALL`). Without it the plugin would
+prompt for a password on every update; on systems that never use the Updates
+plugin the drop-in is inert. Filename and format mirror the base's own
+`/etc/sudoers.d/rakuos` (sudo-rs).
+
 ## Update & troubleshooting
 
 This image follows the RakuOS base on a **floating** tag, so each rebuild pulls
