@@ -157,7 +157,23 @@ rum remove -y wofi 2>/dev/null || true
 ## resolvable from the very first boot phase.
 for group in audio video input disk tty kvm render lp clock kmem sgx utmp plugdev; do
     if ! grep -q "^${group}:" /etc/group; then
-        gid=$(getent group "$group" | awk -F: '{print $3}')
+        case "$group" in
+            ## Canonical Fedora GIDs (bootc-minimal images may not ship the
+            ## altfiles module at all, so do not rely on getent for these).
+            audio) gid=63 ;;
+            video) gid=39 ;;
+            input) gid=114 ;;
+            disk) gid=6 ;;
+            tty) gid=5 ;;
+            kvm) gid=36 ;;
+            render) gid=44 ;;
+            lp) gid=7 ;;
+            clock) gid=21 ;;
+            kmem) gid=9 ;;
+            sgx) gid=115 ;;
+            utmp) gid=46 ;;
+            *) gid=$(getent group "$group" 2>/dev/null | awk -F: '{print $3}' || true) ;;
+        esac
         if [ -n "$gid" ]; then
             echo "${group}:x:${gid}:" >> /etc/group
         else
