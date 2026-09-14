@@ -82,10 +82,10 @@ settings_show_advanced = true
 gpu_poll_seconds = 2
 
 [wallpaper]
-directory = ""
+directory = "~/Pictures/Wallpaper"
 
     [wallpaper.default]
-    path = "~/Pictures/Wallpaper/Japan-rakuos.webp"
+    path = "~/Pictures/Wallpaper/RakuOS-Japan.png"
 
 [theme]
 mode = "dark"

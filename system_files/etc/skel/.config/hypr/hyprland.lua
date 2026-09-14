@@ -1,4 +1,4 @@
--- CachyOS Hyprland Configuration
+-- RakuOS Hyprland Configuration
 
 require("config.animations")
 require("config.autostart")

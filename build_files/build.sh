@@ -131,7 +131,22 @@ rum install -y --refresh \
   unzip \
   zip \
   7zip \
-  unar
+  unar \
+  bat \
+  fzf \
+  zoxide
+
+## Populate skeleton wallpaper folder with the OFFICIAL base RakuOS wallpaper
+## set. Noctalia's wallpaper picker points at ~/Pictures/Wallpaper so users get
+## a real selection out of the box (and can drop in their own files anytime).
+mkdir -p /etc/skel/Pictures/Wallpaper
+for wpdir in /usr/share/wallpapers/RakuOS-*/; do
+    wpimg=$(find "$wpdir" -path '*/contents/images/*.png' | head -n1)
+    if [ -n "$wpimg" ]; then
+        cp -n "$wpimg" "/etc/skel/Pictures/Wallpaper/$(basename "$wpdir").png"
+    fi
+done
+cp -n /usr/share/wallpapers/default.jpg /etc/skel/Pictures/Wallpaper/default.jpg || true
 
 ## Set Bibata as default cursor theme systemwide
 mkdir -p /usr/share/icons/default
@@ -142,45 +157,6 @@ EOF
 
 ## Remove wofi
 rum remove -y wofi 2>/dev/null || true
-
-## Create required system groups (fixes systemd-tmpfiles warnings)
-## plugdev is also created: it is referenced by U2F/ZSA/switch udev rules but
-## absent on Fedora, producing repeated "Failed to resolve group 'plugdev'"
-## warnings at boot.
-##
-## NOTE: do NOT use plain `groupadd` here. On Fedora the standard groups live
-## only in /usr/lib/group (altfiles NSS), so `groupadd` resolves them via
-## altfiles, thinks they already exist and silently skips writing them to
-## /etc/group. During initrd /usr is not mounted yet and altfiles is
-## unavailable, so udev/systemd-tmpfiles cannot resolve these groups. We write
-## them into /etc/group directly (keeping the canonical GID) so they are
-## resolvable from the very first boot phase.
-for group in audio video input disk tty kvm render lp clock kmem sgx utmp plugdev; do
-    if ! grep -q "^${group}:" /etc/group; then
-        case "$group" in
-            ## Canonical Fedora GIDs (bootc-minimal images may not ship the
-            ## altfiles module at all, so do not rely on getent for these).
-            audio) gid=63 ;;
-            video) gid=39 ;;
-            input) gid=114 ;;
-            disk) gid=6 ;;
-            tty) gid=5 ;;
-            kvm) gid=36 ;;
-            render) gid=44 ;;
-            lp) gid=7 ;;
-            clock) gid=21 ;;
-            kmem) gid=9 ;;
-            sgx) gid=115 ;;
-            utmp) gid=46 ;;
-            *) gid=$(getent group "$group" 2>/dev/null | awk -F: '{print $3}' || true) ;;
-        esac
-        if [ -n "$gid" ]; then
-            echo "${group}:x:${gid}:" >> /etc/group
-        else
-            groupadd -r "$group" 2>/dev/null || true
-        fi
-    fi
-done
 
 ## Create greeter user for greetd
 if ! id greeter &>/dev/null; then
@@ -204,6 +180,41 @@ if [ -d /var/lib/noctalia-greeter ]; then
     chown -R greeter:greeter /var/lib/noctalia-greeter
     chmod 0750 /var/lib/noctalia-greeter
 fi
+
+## Enable NTP: chrony keeps clock synced across reboots.
+## RTC is UTC (Windows already configured with RealTimeIsUniversal=1 in registry),
+## so no need for timedatectl set-local-rtc — both OS agree on UTC.
+rum install -y chrony
+systemctl enable chronyd
+
+## Install AppArmor userspace tools (MAC replacement for SELinux)
+##
+## The RakuOS base ALREADY ships kernel LSM config in
+## /usr/lib/bootc/kargs.d/10-rakuos.toml:
+##     kargs = ["security=apparmor", "apparmor=1", "selinux=0"]
+## so the kernel boots with AppArmor active (check /sys/kernel/security/lsm).
+## What's missing here is only userspace: the parser, profiles, tools, and the
+## RakuOS profile set.
+##
+## SAFETY: "Full Apparmor support" is still In Progress on the RakuOS project
+## board, and several DE services (greetd, noctalia-greeter, uwsm, hyprland,
+## pipewire) may not have complete enforced profiles yet. So we install the
+## tools ONLY and keep apparmor.service DISABLED — the service stays off until
+## the official profile set is released. Enforcing now risks login/audio
+## breakage that is hard to roll back.
+##
+## NOTE: If the base image later ships these packages natively, review/sync
+## this block so we don't double-install or conflict with the official
+## packaging.
+rum install -y \
+  apparmor-parser \
+  apparmor-profiles \
+  apparmor-utils \
+  apparmor.d-rakuos
+
+## apparmor-parser ships system presets (70-apparmor.preset -> enable), so
+## explicitly disable the service: tools are staged but not activated.
+systemctl disable apparmor.service 2>/dev/null || true
 
 ## Enable Services
 systemctl enable greetd

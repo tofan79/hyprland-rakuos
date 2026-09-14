@@ -53,6 +53,38 @@ prebake_overlay_from_installroot() {
         cp -a "$installroot/etc/." /etc/
     fi
 
+    ## This MUST run here, AFTER the installroot /etc payload copy above:
+    ## baked system groups appended earlier in build.sh would otherwise be
+    ## overwritten by that copy. These groups live only in /usr/lib/group
+    ## (altfiles NSS) on Fedora, which is not resolvable during initrd
+    ## (before /usr is mounted), so udev/systemd-tmpfiles can't resolve them.
+    ## We bake them into /etc/group directly (canonical Fedora GIDs) so they
+    ## are resolvable from the very first boot phase.
+    for group in audio video input disk tty kvm render lp clock kmem sgx utmp plugdev; do
+        if ! grep -q "^${group}:" /etc/group; then
+            case "$group" in
+                audio) gid=63 ;;
+                video) gid=39 ;;
+                input) gid=104 ;;
+                disk) gid=6 ;;
+                tty) gid=5 ;;
+                kvm) gid=36 ;;
+                render) gid=105 ;;
+                lp) gid=7 ;;
+                clock) gid=103 ;;
+                kmem) gid=9 ;;
+                sgx) gid=106 ;;
+                utmp) gid=22 ;;
+                *) gid=$(getent group "$group" 2>/dev/null | awk -F: '{print $3}' || true) ;;
+            esac
+            if [ -n "$gid" ]; then
+                echo "${group}:x:${gid}:" >> /etc/group
+            else
+                groupadd -r "$group" 2>/dev/null || true
+            fi
+        fi
+    done
+
     echo "prebaked-installroot" > "$STATE_FILE"
     rm -f "$DIRTY_FILE"
 

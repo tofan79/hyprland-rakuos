@@ -27,13 +27,23 @@ with **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
 - **Base duties**: NetworkManager suite, tuned-ppd, gvfs(+mtp/nfs/smb),
   systemd-oomd-defaults, noctalia-greeter
 - **Tools**: swash, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
-  brightnessctl, playerctl, unzip/zip/7zip/unar
+  brightnessctl, playerctl, unzip/zip/7zip/unar, bat, fzf, zoxide
 - **Theme/fonts**: adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts
 - **Terra** (Vendor repo, enabled at build: `bibata-cursor-theme`,
   `jetbrainsmono-nerd-fonts`, plus base deps `dysk`/`fresh`/`surge`/`termflix`/`wlctl`)
-- **Browser (overlay)**: `brave-origin` — prebaked via `packages.list` /
+- **Browser (overlay)**: `zen-browser` — prebaked via `packages.list` /
   `packages-live.list`, present on live and installed systems
 - **NVIDIA dGPU**: inherited from the Nvidia base image (driver + CUDA stack)
+- **Time sync**: `chrony` for automatic NTP (RTC stays UTC — Windows already
+  configured with `RealTimeIsUniversal=1`, so no local-time offset)
+- **AppArmor (MAC)**: base already boots the kernel with
+  `security=apparmor apparmor=1 selinux=0`
+  ([kargs.d/10-rakuos.toml](https://gitlab.com/rakuos/rakuos-settings)) — this
+  image adds the userspace stack (`apparmor-parser`, `apparmor-profiles`,
+  `apparmor-utils`, `apparmor.d-rakuos` profile set). `apparmor.service` is
+  installed **disabled**: RakuOS "Full Apparmor support" is still In Progress on
+  the project board, so the service stays off until official profiles are
+  ready and safe to enforce
 
 ### Not included (optional)
 
@@ -53,8 +63,8 @@ Hyprland keybinds (`variables.lua`) already point at them:
 
 ### Overlay & live split
 
-- `packages.list` (overlay — live ISO **and** installed system): `brave-origin`
-- `packages-live.list` (live ISO only, not carried into installs): `brave-origin`
+- `packages.list` (overlay — live ISO **and** installed system): `zen-browser`
+- `packages-live.list` (live ISO only, not carried into installs): `zen-browser`
 
 ## How it's built
 
@@ -73,6 +83,14 @@ Hyprland keybinds (`variables.lua`) already point at them:
    within Quay free tier)
 6. Terra signing-key auto-recovery (refreshes `key.asc` from Fyralabs,
    falls back to disabling `gpgcheck` if the keys rotate again)
+7. Enables NTP (`chrony`) and installs/activates the **AppArmor** userspace
+   (profiles from `apparmor.d-rakuos`) — SELinux stays removed per base policy
+
+> **Security note:** RakuOS's [project board](https://rakuos.org/project-board)
+> tracks "Full Apparmor support" as **in progress**. The base already sets the
+> AppArmor kernel LSM; this image pre-adds the official userland packages ahead
+> of base shipping them. If the base later bundles these itself, `build.sh`'s
+> AppArmor block must be re-checked/synced to avoid double installs.
 
 ### Manual trigger
 
