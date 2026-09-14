@@ -251,12 +251,7 @@ EOF
 
 ## Remove autostart entries that are noisy/failing at login:
 ## - nvidia-settings-load: --load-config-only (X11-only) intermittently
-##   exits status=1 on Wayland (race: "Cannot find any crtc or sizes")
-## - rakuos-software-tray / rakuos-welcome: emit desktop-file (duplicate
-##   Name, empty Path) and portal warnings. Launchable manually from menu.
 rm -f /etc/xdg/autostart/nvidia-settings-load.desktop 2>/dev/null || true
-rm -f /etc/xdg/autostart/rakuos-software-tray.desktop 2>/dev/null || true
-rm -f /etc/xdg/autostart/rakuos-welcome.desktop 2>/dev/null || true
 
 ## Create flatpak exports dir (fix rakuos-flatpak-watcher)
 mkdir -p /var/lib/flatpak/exports/bin
