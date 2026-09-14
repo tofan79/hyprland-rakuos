@@ -143,9 +143,6 @@ EOF
 ## Remove wofi
 rum remove -y wofi 2>/dev/null || true
 
-## Remove fedora wallpapers
-rm -rf /usr/share/backgrounds/fedora-workstation/
-
 ## Create required system groups (fixes systemd-tmpfiles warnings)
 ## plugdev is also created: it is referenced by U2F/ZSA/switch udev rules but
 ## absent on Fedora, producing repeated "Failed to resolve group 'plugdev'"

@@ -151,14 +151,6 @@ PKGLIST
 rum remove -y 'selinux-policy*' 'policycoreutils-gui'
 rum install -y libselinux
 
-# selinux-policy is fully removed on RakuOS (AppArmor is the sole MAC), but the
-# baked-in rpm-ostree treefile still defaults "selinux": true. rpm-ostree reads
-# that flag on every deploy-time layering operation and tries to load a policy
-# from / that no longer exists, causing spurious sepolicy-mismatch failures.
-if [ -f /usr/share/rpm-ostree/treefile.json ]; then
-    sed -i 's/"selinux": *true/"selinux": false/' /usr/share/rpm-ostree/treefile.json
-fi
-
 echo "[rakuos] stale overlay state cleared — prebake will write fresh first-boot state."
 echo "[rakuos] Post-build seed complete."
 
