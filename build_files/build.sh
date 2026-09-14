@@ -195,6 +195,9 @@ fi
 ## Make greetd wrapper executable (sourced from system_files/)
 chmod +x /usr/libexec/rakuos/rakuos-greetd-wrapper.sh 2>/dev/null || true
 
+## Harden sudoers drop-in for the RakuOS Updates plugin (0440 root:root)
+chmod 0440 /etc/sudoers.d/rakuos-plugin-updates 2>/dev/null || true
+
 ## Ensure state dir ownership (fallback if setup script didn't run)
 if [ -d /var/lib/noctalia-greeter ]; then
     mkdir -p /var/lib/noctalia-greeter/.themes
