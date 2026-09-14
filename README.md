@@ -36,14 +36,12 @@ with **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
 - **NVIDIA dGPU**: inherited from the Nvidia base image (driver + CUDA stack)
 - **Time sync**: `chrony` for automatic NTP (RTC stays UTC — Windows already
   configured with `RealTimeIsUniversal=1`, so no local-time offset)
-- **AppArmor (MAC)**: base already boots the kernel with
+- **AppArmor (MAC)**: `DEFERRED` — base already boots the kernel with
   `security=apparmor apparmor=1 selinux=0`
-  ([kargs.d/10-rakuos.toml](https://gitlab.com/rakuos/rakuos-settings)) — this
-  image adds the userspace stack (`apparmor-parser`, `apparmor-profiles`,
-  `apparmor-utils`, `apparmor.d-rakuos` profile set). `apparmor.service` is
-  installed **disabled**: RakuOS "Full Apparmor support" is still In Progress on
-  the project board, so the service stays off until official profiles are
-  ready and safe to enforce
+  ([kargs.d/10-rakuos.toml](https://gitlab.com/rakuos/rakuos-settings)), and this
+  image currently ships **no** AppArmor userspace. RakuOS "Full Apparmor
+  support" is still In Progress on the project board; when the official
+  packages land in the CI repos, enable them here
 
 ### Not included (optional)
 

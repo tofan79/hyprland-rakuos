@@ -187,34 +187,11 @@ fi
 rum install -y chrony
 systemctl enable chronyd
 
-## Install AppArmor userspace tools (MAC replacement for SELinux)
-##
-## The RakuOS base ALREADY ships kernel LSM config in
-## /usr/lib/bootc/kargs.d/10-rakuos.toml:
-##     kargs = ["security=apparmor", "apparmor=1", "selinux=0"]
-## so the kernel boots with AppArmor active (check /sys/kernel/security/lsm).
-## What's missing here is only userspace: the parser, profiles, tools, and the
-## RakuOS profile set.
-##
-## SAFETY: "Full Apparmor support" is still In Progress on the RakuOS project
-## board, and several DE services (greetd, noctalia-greeter, uwsm, hyprland,
-## pipewire) may not have complete enforced profiles yet. So we install the
-## tools ONLY and keep apparmor.service DISABLED — the service stays off until
-## the official profile set is released. Enforcing now risks login/audio
-## breakage that is hard to roll back.
-##
-## NOTE: If the base image later ships these packages natively, review/sync
-## this block so we don't double-install or conflict with the official
-## packaging.
-rum install -y \
-  apparmor-parser \
-  apparmor-profiles \
-  apparmor-utils \
-  apparmor.d-rakuos
-
-## apparmor-parser ships system presets (70-apparmor.preset -> enable), so
-## explicitly disable the service: tools are staged but not activated.
-systemctl disable apparmor.service 2>/dev/null || true
+## AppArmor: DEFERRED until RakuOS ships "Full Apparmor support" (project board).
+## The kernel already boots with AppArmor LSM active (kargs.d/10-rakuos.toml),
+## but userspace packages (apparmor-parser, apparmor.d-rakuos) are not yet
+## available in the CI build repos. Uncomment and review when official support
+## lands.
 
 ## Enable Services
 systemctl enable greetd
