@@ -82,10 +82,10 @@ settings_show_advanced = true
 gpu_poll_seconds = 2
 
 [wallpaper]
-directory = "~/Pictures/Wallpaper"
+directory = "/usr/share/backgrounds/rakuos"
 
     [wallpaper.default]
-    path = "~/Pictures/Wallpaper/RakuOS-Japan.png"
+    path = "/usr/share/backgrounds/rakuos/RakuOS-Fuji-2.png"
 
 [theme]
 builtin = "Dracula"
