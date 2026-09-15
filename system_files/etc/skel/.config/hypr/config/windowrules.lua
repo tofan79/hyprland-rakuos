@@ -8,7 +8,7 @@ hl.window_rule({
     match = { title = "^btop-monitor$" },
     float = true,
     center = true,
-    size = { 1200, 600 },
+    size = { 1000, 700 },
 })
 
 -- Picture-in-Picture
