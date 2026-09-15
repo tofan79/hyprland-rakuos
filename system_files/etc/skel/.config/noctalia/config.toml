@@ -88,13 +88,15 @@ directory = "~/Pictures/Wallpaper"
     path = "~/Pictures/Wallpaper/RakuOS-Japan.png"
 
 [theme]
+builtin = "Dracula"
+community_palette = "GitHub Dark"
 mode = "dark"
-source = "wallpaper"
+source = "community"
 wallpaper_scheme = "m3-tonal-spot"
 
     [theme.templates]
     builtin_ids = [ "btop", "ghostty", "gtk3", "gtk4", "hyprland", "kcolorscheme", "qt" ]
-    community_ids = [ "fastfetch", "papirus-icons", "bat", "fzf" ]
+    community_ids = [ "fastfetch", "papirus-icons", "bat", "fzf", "lazygit" ]
 
 [widget.clock]
 color = "secondary"
