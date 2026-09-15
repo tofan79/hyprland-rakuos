@@ -90,7 +90,7 @@ directory = "/usr/share/backgrounds/rakuos"
 [theme]
 builtin = "Dracula"
 community_palette = "GitHub Dark"
-mode = "dark"
+mode = "light"
 source = "community"
 wallpaper_scheme = "m3-tonal-spot"
 
