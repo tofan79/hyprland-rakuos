@@ -1,4 +1,4 @@
-export BROWSER=zen-browser
+export BROWSER=vivaldi-stable
 export TERM=xterm-ghostty
 
 # XDG / Session

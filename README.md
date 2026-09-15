@@ -31,7 +31,7 @@ with **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
 - **Theme/fonts**: adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts
 - **Terra** (Vendor repo, enabled at build: `bibata-cursor-theme`,
   `jetbrainsmono-nerd-fonts`, plus base deps `dysk`/`fresh`/`surge`/`termflix`/`wlctl`)
-- **Browser (overlay)**: `zen-browser` — prebaked via `packages.list` /
+- **Browser (overlay)**: `vivaldi-stable` — prebaked via `packages.list` /
   `packages-live.list`, present on live and installed systems
 - **NVIDIA dGPU**: inherited from the Nvidia base image (driver + CUDA stack)
 - **Time sync**: `chrony` for automatic NTP (RTC stays UTC — Windows already
@@ -61,8 +61,8 @@ Hyprland keybinds (`variables.lua`) already point at them:
 
 ### Overlay & live split
 
-- `packages.list` (overlay — live ISO **and** installed system): `zen-browser`
-- `packages-live.list` (live ISO only, not carried into installs): `zen-browser`
+- `packages.list` (overlay — live ISO **and** installed system): `vivaldi-stable`
+- `packages-live.list` (live ISO only, not carried into installs): `vivaldi-stable`
 
 ## How it's built
 
