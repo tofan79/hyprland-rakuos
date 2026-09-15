@@ -134,7 +134,9 @@ rum install -y --refresh \
   unar \
   bat \
   fzf \
-  zoxide
+  zoxide \
+  rakuos-software-qt \
+  rakuos-welcome-qt
 
 ## Populate skeleton wallpaper folder with the OFFICIAL base RakuOS wallpaper
 ## set. Noctalia's wallpaper picker points at ~/Pictures/Wallpaper so users get
@@ -257,6 +259,11 @@ EOF
 ## - nvidia-settings-load: --load-config-only (X11-only) intermittently
 ## ► Device AMD-only: file ini tidak ada, rm -f no-op (aman).
 rm -f /etc/xdg/autostart/nvidia-settings-load.desktop 2>/dev/null || true
+
+## Remove autostart entries (systemd xdg-autostart-generator ignores
+## X-GNOME-Autostart-enabled; only Hidden= or file removal stops it).
+rm -f /etc/xdg/autostart/rakuos-welcome.desktop \
+      /etc/xdg/autostart/rakuos-software-tray.desktop
 
 ## Create flatpak exports dir (fix rakuos-flatpak-watcher)
 mkdir -p /var/lib/flatpak/exports/bin
