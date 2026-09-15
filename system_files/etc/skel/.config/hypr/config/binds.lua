@@ -169,7 +169,7 @@ hl.bind("CTRL + SHIFT + right", hl.dsp.window.move({ x = 50, y = 0, relative = t
 -- ───────────────────────────────────────────
 hl.bind(M .. " + Return", hl.dsp.exec_cmd(launchPrefix .. TERMINAL), { description = "Terminal" })
 hl.bind(M .. " + E", hl.dsp.exec_cmd(launchPrefix .. FILE_MANAGER), { description = "File manager" })
-hl.bind(M .. " + B", hl.dsp.exec_cmd(launchPrefix .. BROWSER), { description = "Browser (Vivaldi)" })
+hl.bind(M .. " + B", hl.dsp.exec_cmd(launchPrefix .. BROWSER), { description = "Browser (Zen)" })
 hl.bind(M .. " + N", hl.dsp.exec_cmd(launchPrefix .. EDITOR), { description = "Editor" })
 hl.bind(M .. " + T", hl.dsp.exec_cmd("Telegram"), { description = "Telegram" })
 hl.bind(M .. " + W", hl.dsp.exec_cmd("flatpak run io.github.tobagin.karere"), { description = "Karere" })

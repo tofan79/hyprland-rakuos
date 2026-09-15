@@ -4,7 +4,7 @@
 
 TERMINAL      = "ghostty"
 FILE_MANAGER  = "dolphin"
-BROWSER       = "vivaldi-stable"
+BROWSER       = "zen-browser"
 EDITOR        = "zeditor"
 CALCULATOR    = "gnome-calculator"
 
