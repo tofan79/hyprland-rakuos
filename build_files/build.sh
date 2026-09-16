@@ -262,8 +262,7 @@ rm -f /etc/xdg/autostart/nvidia-settings-load.desktop 2>/dev/null || true
 
 ## Remove autostart entries (systemd xdg-autostart-generator ignores
 ## X-GNOME-Autostart-enabled; only Hidden= or file removal stops it).
-rm -f /etc/xdg/autostart/rakuos-welcome.desktop \
-      /etc/xdg/autostart/rakuos-software-tray.desktop
+rm -f /etc/xdg/autostart/rakuos-software-tray.desktop
 
 ## Create flatpak exports dir (fix rakuos-flatpak-watcher)
 mkdir -p /var/lib/flatpak/exports/bin
