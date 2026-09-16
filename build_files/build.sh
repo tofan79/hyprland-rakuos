@@ -62,7 +62,14 @@ ln -sfn /usr/bin/sh /bin/sh
 ln -sfn /usr/bin/bash /usr/bin/sh 2>/dev/null || true
 
 ## Install packages
+## nss-altfiles: base already references the "altfiles" NSS service in
+## /etc/nsswitch.conf (passwd/group) and ships /usr/lib/group + /usr/lib/passwd,
+## but the module library is absent from the minimal image. Without it, initrd
+## tmpfiles/udev cannot resolve system groups (audio, video, disk, tty, utmp,
+## ...) and log ~45 "Failed to resolve group" warnings every boot. Installing
+## the module completes the chain defined in nsswitch.conf and removes the noise.
 rum install -y --refresh \
+  nss-altfiles \
   hyprland \
   hyprland-guiutils \
   noctalia-git \
