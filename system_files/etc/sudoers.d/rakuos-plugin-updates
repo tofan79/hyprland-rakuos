@@ -2,12 +2,15 @@
 ## Mirrors the format of /etc/sudoers.d/rakuos (sudo-rs).
 ## Must be chmod 0440 root:root (done in build.sh).
 ## Scope is deliberately narrow: only the exact helpers the plugin runs.
+## Note: `bootc kargs` does NOT exist on bootc 1.16.10 → NOT listed here.
 %wheel ALL=(ALL) NOPASSWD: /usr/libexec/rakuos/rakuos-reset-overlay --soft
 %wheel ALL=(ALL) NOPASSWD: /usr/libexec/rakuos/rakuos-reset-overlay --confirm
-%wheel ALL=(ALL) NOPASSWD: /usr/bin/bootc kargs *
 %wheel ALL=(ALL) NOPASSWD: /usr/bin/flatpak update -y
 %wheel ALL=(ALL) NOPASSWD: /usr/bin/rum config-manager --set-enabled *
 %wheel ALL=(ALL) NOPASSWD: /usr/bin/rum config-manager --set-disabled *
 %wheel ALL=(ALL) NOPASSWD: /usr/bin/rum copr enable *
 %wheel ALL=(ALL) NOPASSWD: /usr/bin/dnf5 config-manager addrepo *
 %wheel ALL=(ALL) NOPASSWD: /usr/bin/tee /etc/systemd/zram-generator.conf
+## OPSIONAL (aktifkan hanya jika mau headless penuh, tanpa prompt password):
+# %wheel ALL=(ALL) NOPASSWD: /usr/bin/systemctl reboot
+# %wheel ALL=(ALL) NOPASSWD: /usr/bin/tee /usr/lib/bootc/kargs.d/*.toml
