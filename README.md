@@ -172,13 +172,33 @@ the last known-good one.
    (`podman image inspect --format '{{.Labels}}' ...`). If it regressed from a
    base change, report upstream (`rakuos-base`); to rebuild against an older
    base, temporarily pin the digest in `Containerfile` and re-trigger.
-4. **Known device quirks** (ASUS + NVIDIA dGPU / AMD iGPU): harmless kernel
-   "noise" at boot — ACPI `_TZ.THRM._SCP`, `NVRM PlatformRequestHandler`
-   SBIOS assertions, `amdgpu DCN reg offset`, and `bpf-restrict-fs` are benign
-   and do not affect performance. `fwupd` stays **masked** on this hardware
-   (daemon hangs in D-state); a `fwupdmgr --version` shim keeps firmware API
-   consumers non-errored, but LVFS refresh/update is intentionally
-   non-functional here.
+
+### Known device quirks (ASUS TUF Gaming A15 FA506ICB)
+
+Reference hardware for this image: **ASUS TUF Gaming A15 FA506ICB** —
+AMD **Ryzen 7 4800H** (Zen 2) + **Radeon iGPU** (Vega) + **NVIDIA dGPU**
+(hooked through the NVIDIA v3 base). Two categories of quirks:
+
+**1. Harmless boot/kernel "noise"** (log-only, no functional impact):
+- ACPI `_TZ.THRM._SCP` / `AE_NOT_FOUND` — thermal ACPI method stub
+- `NVRM PlatformRequestHandler` SBIOS assertions (get temp / power mode)
+- `amdgpu DCN reg offset` — internal display register dump at init
+- `bpf-restrict-fs` — BPF LSM object load failure on this kernel
+- `mcelog` fails: **AMD CPUs are not supported by the mcelog userspace**
+  daemon (`AMD Processor family 23`); AMD MCE decoding is in-kernel
+  (`edac_mce_amd`) so the unit is `mask`ed in `build.sh`
+
+**2. Real hardware workarounds shipped in this image**:
+- **MT7921 Wi-Fi hang** (`14c3:7961`, MediaTek Filogic 330): driver can hang
+  ~minutes after boot with `driver own failed` / `Timeout for driver own` /
+  `chip reset failed` (known upstream bugs #215391, #220353). Two drop-ins:
+  - `system_files/etc/modprobe.d/mt7921e-aspm.conf` — `disable_aspm=1`,
+    an official MediaTek module param that disables PCIe ASPM L1
+  - `system_files/etc/NetworkManager/conf.d/wifi-powersave.conf` —
+    `wifi.powersave = 2` (disables Wi-Fi power save, same approach Omarchy)
+- **fwupd** stays **masked** on this hardware (daemon hangs in D-state); a
+  `fwupdmgr --version` shim keeps firmware API consumers non-errored, but
+  LVFS refresh/update is intentionally non-functional here.
 
 ## License
 

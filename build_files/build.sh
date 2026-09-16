@@ -199,12 +199,12 @@ systemctl enable chronyd
 systemctl enable greetd
 systemctl enable --global dotfiles-setup
 
-## [Khusus NVIDIA dGPU pre-baked image] Mask dkms:
+## [NVIDIA dGPU pre-baked image] Mask dkms:
 ## nvidia modules are pre-baked into the image for its exact kernel, so the
 ## boot-time autoinstall always fails ("already installed, need --force").
 ## Kernel updates come bundled with freshly compiled modules from the image CI,
 ## so runtime dkms is never needed.
-## ► Device lain tanpa nvidia dGPU boleh skip blok ini (aman diabaikan).
+## ► Devices without an NVIDIA dGPU may skip this block (safe to ignore).
 systemctl mask dkms.service 2>/dev/null || true
 
 ## Disable grub-boot-success: it also ships a user-scope unit that fires 2min
@@ -215,13 +215,21 @@ mkdir -p /etc/systemd/user
 ln -sfn /dev/null /etc/systemd/user/grub-boot-success.service
 ln -sfn /dev/null /etc/systemd/user/grub-boot-success.timer
 
-## [Khusus device ini — AMD+NVIDIA hybrid ASUS laptop] Disable fwupd:
+## [This device — AMD+NVIDIA hybrid ASUS laptop] Disable fwupd:
 ## the daemon hangs in D-state on this hardware, stalling boot ~3min and
 ## ending in a failed unit. Firmware updates stay manual (menu/EFI).
-## ► Device lain: JANGAN di-disable — fwupd berfungsi normal di hardware lain.
+## ► Other devices: do NOT disable — fwupd works normally on other hardware.
 ln -sfn /dev/null /etc/systemd/system/fwupd.service
 ln -sfn /dev/null /etc/systemd/system/fwupd-refresh.service
 ln -sfn /dev/null /etc/systemd/system/fwupd-refresh.timer
+
+## Mask mcelog: mcelog userspace daemon does not support AMD (Zen) CPUs and
+## aborts at every boot ("mcelog: ERROR: AMD Processor family 23: mcelog does
+## not support this processor"), leaving a spurious failed unit. AMD MCE
+## decoding is handled in-kernel (edac_mce_amd) already, so this is cosmetic.
+## Relevant here: AMD Ryzen 7 4800H (Zen 2, ACPI family 17h reported as 23).
+## ► AMD-only device; Intel machines should keep mcelog enabled.
+systemctl mask mcelog.service 2>/dev/null || true
 
 ## Quiet cosmetic systemd-tmpfiles noise on immutable systems:
 ## - home.conf: /home and /srv are symlinks into /var here, so the Q/q rules
@@ -255,9 +263,9 @@ f^ /root/.ssh/authorized_keys :0600 root :root - ssh.authorized_keys.root
 EOF
 
 
-## [Khusus NVIDIA dGPU] Remove autostart entries that are noisy/failing at login:
+## [NVIDIA dGPU] Remove autostart entries that are noisy/failing at login:
 ## - nvidia-settings-load: --load-config-only (X11-only) intermittently
-## ► Device AMD-only: file ini tidak ada, rm -f no-op (aman).
+## ► AMD-only devices: this file does not exist, rm -f is a no-op (safe).
 rm -f /etc/xdg/autostart/nvidia-settings-load.desktop 2>/dev/null || true
 
 ## Remove autostart entries (systemd xdg-autostart-generator ignores
