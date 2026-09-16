@@ -62,7 +62,14 @@ ln -sfn /usr/bin/sh /bin/sh
 ln -sfn /usr/bin/bash /usr/bin/sh 2>/dev/null || true
 
 ## Install packages
+## altfiles: base ships without the altfiles NSS module, so systemd-tmpfiles/
+## udev in the initrd and early boot cannot resolve system groups (audio, video,
+## disk, tty, utmp, ...) that only exist in /usr/lib/group, logging ~45 "Failed
+## to resolve group" warnings every boot. altfiles lets NSS read /usr/lib/group
+## as a fallback, removing the noise. The /etc/group bake in
+## post-build-overlay.sh remains as the initrd-visible source of these groups.
 rum install -y --refresh \
+  altfiles \
   hyprland \
   hyprland-guiutils \
   noctalia-git \

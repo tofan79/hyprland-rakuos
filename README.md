@@ -199,6 +199,13 @@ AMD **Ryzen 7 4800H** (Zen 2) + **Radeon iGPU** (Vega) + **NVIDIA dGPU**
 - **fwupd** stays **masked** on this hardware (daemon hangs in D-state); a
   `fwupdmgr --version` shim keeps firmware API consumers non-errored, but
   LVFS refresh/update is intentionally non-functional here.
+- **TSC → HPET clocksource fallback**: the clocksource watchdog flags TSC
+  `unstable due to frequency skew` vs HPET at boot and falls back to HPET
+  (lower timekeeping performance). CPU here has an invariant TSC
+  (`constant_tsc` + `nonstop_tsc`), so the TSC is reliable and the HPET is the
+  drifting one. Fixed with karg `tsc=reliable`, baked via
+  `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` (merged by bootc
+  over the base's `10-rakuos.toml`, applied on next `bootc upgrade`).
 
 ## License
 
