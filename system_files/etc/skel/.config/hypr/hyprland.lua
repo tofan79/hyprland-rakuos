@@ -2,11 +2,14 @@
 
 require("config.animations")
 require("config.autostart")
-require("config.colors")
 require("config.decorations")
 require("config.variables")
 require("config.environment")
 require("config.inputs")
+
+-- GloView plugin must be loaded before binds referencing it are evaluated
+hl.plugin.load("/usr/lib64/gloview.so")
+
 require("config.binds")
 require("config.misc")
 require("config.monitors")

@@ -72,6 +72,7 @@ rum install -y --refresh \
   nss-altfiles \
   hyprland \
   hyprland-guiutils \
+  gloview \
   noctalia-git \
   uwsm \
   ghostty \
