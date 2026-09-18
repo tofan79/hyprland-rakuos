@@ -1,3 +1,17 @@
+# First-login dotfiles populator.
+#
+# RakuOS creates user accounts WITHOUT a full skeleton ($HOME starts empty).
+# This user unit runs once, at the very first graphical login of each user,
+# and copies /etc/skel/. into $HOME (Hyprland's modular config, wallpapers,
+# GTK/ghostty/fastfetch themes, etc.).
+#
+# Idempotent: the script exits immediately if it already ran once for the
+# current user (marker file at ~/.local/share/dotfiles-setup), so on all later
+# boots this unit is a no-op. It is a oneshot that blocks login only while it
+# copies, and is WantedBy=default.target to start alongside the session.
+#
+# Without this, Hyprland would boot with no config and fall back to its
+# built-in defaults.
 [Unit]
 Description=Configure dotfiles for current user
 ConditionUser=!@system

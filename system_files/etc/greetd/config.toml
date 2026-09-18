@@ -1,3 +1,18 @@
+# greetd configuration for the RakuOS Hyprland display manager.
+#
+# `user = "greeter"` — greetd drops privileges to this unprivileged user
+# before launching the greeter. The account itself is created during the
+# image build (build.sh: useradd -r greeter).
+#
+# `command` — runs the greeter compositor inside the greeter session.
+# We do NOT call noctalia-greeter directly: rakuos-greetd-wrapper.sh is a
+# thin shim that first waits for the DRM devices to settle (needed on
+# NVIDIA+AMD hybrid/PRIME laptops, where logind needs a few seconds before
+# TakeDevice(card1) succeeds) and then execs the real greeter binary.
+#
+# [terminal] vt = 1 — the greeter always occupies VT1; the desktop session
+# (Hyprland via UWSM) runs on a fresh VT after login, so switching between
+# greeter and session never conflicts.
 [default_session]
 user = "greeter"
 command = "/usr/libexec/rakuos/rakuos-greetd-wrapper.sh"

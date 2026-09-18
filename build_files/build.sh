@@ -2,9 +2,6 @@
 
 set -ouex pipefail
 
-# Source os-release so VERSION_ID is available (set -u is active)
-[ -f /etc/os-release ] && . /etc/os-release || VERSION_ID="$(rpm -q --qf '%{VERSION}' fedora-release 2>/dev/null || echo 40)"
-
 # Enable COPR for Hyprland and Noctalia
 dnf -y copr enable lionheartp/Hyprland
 dnf -y copr enable mindset/Mindset-Apps
@@ -27,31 +24,10 @@ done
 #     RAKUOS_RELEASE_PKG="rakuos-release-hyprland-staging"
 # fi
 
-## Terra repo keys refresh
-# Auto-fix: Terra (Fyralabs) rotated its signing keys - refresh bundled keys so
-# repo metadata verification doesn't fail with stale RPM-GPG-KEY-terra files.
-rum install -y fedora-gpg-keys 2>/dev/null || true
-rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-${VERSION_ID}-primary 2>/dev/null || true
-for _suffix in "" "-source" "-extras" "-extras-source" "-mesa" "-mesa-source" "-multimedia" "-multimedia-source" "-nvidia" "-nvidia-source"; do
-    curl -fsSL "https://repos.fyralabs.com/terra${VERSION_ID}${_suffix}/key.asc" \
-        -o "/etc/pki/rpm-gpg/RPM-GPG-KEY-terra${VERSION_ID}${_suffix}" 2>/dev/null || true
-done
-rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-terra${VERSION_ID}* 2>/dev/null || true
-
-# Last-resort fallback: disable GPG check for Terra if the refreshed key fails
-if ! dnf -y install --refresh terra-release 2>/dev/null; then
-    echo "::warning::Terra GPG recovery needed, disabling GPG check for terra repo..."
-    dnf config-manager --save --setopt terra.gpgcheck=0 2>/dev/null || true
-    sed -i 's/gpgcheck=1/gpgcheck=0/g' /etc/yum.repos.d/terra.repo 2>/dev/null || true
-fi
-
-# Re-enable Terra: rakuos-base now ships post-build.sh with terra disabled by
-# default (rum config-manager --set-disabled terra). This image installs
-# terra-hosted packages (bibata-cursor-theme, jetbrainsmono-nerd-fonts, plus
-# base deps like dysk/fresh/surge/termflix/wlctl), so enable it explicitly.
-# --set-enabled also flips enabled_metadata=1.
-rum config-manager --set-enabled terra 2>/dev/null || true
-sed -i '/^\[terra\]$/,/^\[/ s/^\(enabled\|enabled_metadata\)=0/\1=1/' /etc/yum.repos.d/terra.repo 2>/dev/null || true
+# Terra ships disabled by default (third-party repos are opt-in), so enable
+# it here in case any packages below come from Terra; post-build.sh disables
+# it again before the image is finalized.
+rum config-manager --set-enabled terra
 
 ## Ensure rpm scriptlets can find a /bin/sh interpreter in this baseless OCI image
 # Some pulled packages (e.g. tk, kf6-kdoctools) run %prein/%post scriptlets via the
@@ -143,7 +119,6 @@ rum install -y --refresh \
   bat \
   fzf \
   zoxide \
-  rakuos-software-qt \
   rakuos-welcome-qt
 
 ## Populate skeleton wallpaper folder with the OFFICIAL base RakuOS wallpaper
@@ -275,11 +250,6 @@ EOF
 ## - nvidia-settings-load: --load-config-only (X11-only) intermittently
 ## ► AMD-only devices: this file does not exist, rm -f is a no-op (safe).
 rm -f /etc/xdg/autostart/nvidia-settings-load.desktop 2>/dev/null || true
-
-## Remove autostart entries (systemd xdg-autostart-generator ignores
-## X-GNOME-Autostart-enabled; only Hidden= or file removal stops it).
-rm -f /etc/xdg/autostart/rakuos-software-tray.desktop \
-      /etc/xdg/autostart/rakuos-welcome.desktop
 
 ## Create flatpak exports dir (fix rakuos-flatpak-watcher)
 mkdir -p /var/lib/flatpak/exports/bin

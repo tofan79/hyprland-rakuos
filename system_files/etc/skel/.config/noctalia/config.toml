@@ -88,11 +88,7 @@ directory = "/usr/share/backgrounds/rakuos"
     path = "/usr/share/backgrounds/rakuos/RakuOS-Fuji-2.png"
 
 [theme]
-builtin = "Dracula"
-community_palette = "GitHub Dark"
 mode = "light"
-source = "community"
-wallpaper_scheme = "m3-tonal-spot"
 
     [theme.templates]
     builtin_ids = [ "btop", "ghostty", "gtk3", "gtk4", "hyprland", "kcolorscheme", "qt" ]

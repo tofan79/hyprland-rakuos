@@ -11,6 +11,6 @@
 %wheel ALL=(ALL) NOPASSWD: /usr/bin/rum copr enable *
 %wheel ALL=(ALL) NOPASSWD: /usr/bin/dnf5 config-manager addrepo *
 %wheel ALL=(ALL) NOPASSWD: /usr/bin/tee /etc/systemd/zram-generator.conf
-## OPSIONAL (aktifkan hanya jika mau headless penuh, tanpa prompt password):
+## OPTIONAL (activate only if you want fully headless updates, no password prompt):
 # %wheel ALL=(ALL) NOPASSWD: /usr/bin/systemctl reboot
 # %wheel ALL=(ALL) NOPASSWD: /usr/bin/tee /usr/lib/bootc/kargs.d/*.toml

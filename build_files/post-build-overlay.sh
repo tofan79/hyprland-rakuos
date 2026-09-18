@@ -1,4 +1,23 @@
 #!/usr/bin/env bash
+# post-build-overlay.sh
+# Runs inside the container build (Containerfile RUN step / GitHub Actions).
+#
+# Does NOT install packages — that's impossible inside a container build
+# because overlayfs on /usr requires CAP_SYS_ADMIN and a real kernel mount.
+#
+# Instead, this script seeds /usr/share/factory/var/lib/rakuos/ so the first
+# deployed system gets a populated /var/lib/rakuos/ state:
+#   - packages.list populated from /usr/share/rakuos/packages.list
+#   - overlay upper/work dirs created and empty
+#   - overlay.state intentionally absent
+#
+# On first boot, rakuos-overlay-sync.service sees the missing state file,
+# treats it as a fresh/reset system, and performs a full install into the
+# overlay automatically — no user interaction needed.
+#
+# Usage (from your Containerfile):
+#   RUN /usr/libexec/rakuos/build/post-build-overlay.sh
+
 set -euo pipefail
 
 DEFAULT_PACKAGES_LIST="/usr/share/rakuos/packages.list"
@@ -34,7 +53,14 @@ prebake_overlay_from_installroot() {
     trap 'rm -rf "$installroot"' RETURN
 
     echo "[rakuos] Prebaking overlay packages into installroot via rum..."
-    rum install --installroot "$installroot" -y --refresh --setopt=tsflags=noscripts "${prebake_packages[@]}"
+    # No base rpmdb snapshot exists yet inside a build container, so rum's
+    # OverlayPaths::detect() picks Standalone and resolves "already
+    # installed" against the build container's own default rpmdb — exactly
+    # the base image content this layer is being built on top of. --installroot
+    # still redirects package files under $installroot/usr and creates a
+    # fresh, disposable overlay rpmdb at $installroot/var/lib/rakuos/rum-rpmdb,
+    # applying --nodeps/tsflags=noscripts automatically.
+    rum install --installroot "$installroot" -y --refresh "${prebake_packages[@]}"
 
     rm -f "$installroot/usr/share/icons/default/index.theme"
 
@@ -91,9 +117,12 @@ prebake_overlay_from_installroot() {
     echo "[rakuos] Overlay prebake complete."
 }
 
+# ── Create runtime dirs ───────────────────────────────────────────────────────
 mkdir -p "$FACTORY_VAR_ROOT/lib/rakuos"
 mkdir -p "$UPPER_DIR"
 mkdir -p "$WORK_DIR"
+
+# ── Seed packages.list ────────────────────────────────────────────────────────
 
 if [[ -f "$DEFAULT_PACKAGES_LIST" ]]; then
     cp "$DEFAULT_PACKAGES_LIST" "$PACKAGES_LIST"
@@ -105,13 +134,17 @@ else
     echo "[rakuos] WARNING: No default packages.list - creating empty list."
 fi
 
+# ── Ensure stale state is cleared before prebake writes fresh state ───────────
 rm -f "$STATE_FILE" "$DIRTY_FILE"
+# Ensure packages.list ends with newline
 sed -i -e '$a\' "$PACKAGES_LIST" 2>/dev/null || true
 
 cat >> /usr/share/rakuos/protected-packages.txt << 'PKGLIST'
 hyprland
 hyprland-guiutils
+gloview
 noctalia-git
+rakuos-welcome-qt
 uwsm
 ghostty
 ghostty-shell-integration
@@ -182,6 +215,14 @@ PKGLIST
 
 rum remove -y 'selinux-policy*' 'policycoreutils-gui'
 rum install -y libselinux
+
+# selinux-policy is fully removed on RakuOS (AppArmor is the sole MAC), but the
+# baked-in rpm-ostree treefile still defaults "selinux": true. rpm-ostree reads
+# that flag on every deploy-time layering operation and tries to load a policy
+# from / that no longer exists, causing spurious sepolicy-mismatch failures.
+if [ -f /usr/share/rpm-ostree/treefile.json ]; then
+    sed -i 's/"selinux": *true/"selinux": false/' /usr/share/rpm-ostree/treefile.json
+fi
 
 echo "[rakuos] stale overlay state cleared — prebake will write fresh first-boot state."
 echo "[rakuos] Post-build seed complete."
