@@ -30,8 +30,8 @@ hl.bind(M .. " + CTRL + slash",hl.dsp.exec_cmd("noctalia msg panel-toggle noctal
 hl.bind(M .. " + CTRL + backslash", hl.dsp.exec_cmd("noctalia msg panel-toggle nomadcxx/gslapper:picker"),{ description = "Video wallpaper" })
 hl.bind(M .. " + ALT + P", hl.dsp.exec_cmd("hyprpicker -a -n"), { description = "Color picker (hyprpicker)" })
 hl.bind(M .. " + ALT + period", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher /emo"), { description = "Emoji panel" })
-hl.bind(M .. " + SHIFT + B", hl.dsp.exec_cmd("noctalia msg plugin mindset/gamer-mode:service all toggle"), { description = "Toggle gamer mode" })
-hl.bind(M .. " + ALT + B", hl.dsp.exec_cmd("noctalia msg panel-toggle mindset/gamer-mode:main"), { description = "Gamer mode panel" })
+hl.bind(M .. " + SHIFT + B", hl.dsp.exec_cmd("noctalia msg plugin nomadcxx/gamer-mode:service all toggle"), { description = "Toggle gamer mode" })
+hl.bind(M .. " + ALT + B", hl.dsp.exec_cmd("~/.config/hypr/scripts/gamemode.sh"), { description = "Toggle gamer mode (strip decorations)" })
 hl.bind(M .. " + CTRL + R", hl.dsp.exec_cmd("noctalia msg panel-toggle mindset/today-reminders:main"), { description = "Today Reminders panel" })
 
 -- ───────────────────────────────────────────
@@ -96,9 +96,7 @@ end
 -- ───────────────────────────────────────────
 -- Toggle Animations
 -- ───────────────────────────────────────────
-hl.bind(M .. " + SHIFT + A", hl.dsp.exec_cmd("~/.config/hypr/scripts/toggle-animations.sh"), { description = "Toggle animations" })
 hl.bind(M .. " + ALT + A", hl.dsp.exec_cmd("noctalia msg panel-toggle mindset/hypr-animations:panel"), { description = "Switch animation preset (panel)" })
-
 
 -- ───────────────────────────────────────────
 -- Scratchpad
