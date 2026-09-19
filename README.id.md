@@ -48,8 +48,6 @@ kamu fork build-nya**.
 | `build_files/build.sh` — blok "Disable fwupd" | fwupd menggantung (D-state) pada ASUS ini | ⚠️ hapus — normal di perangkat lain |
 | `build_files/build.sh` — blok "Mask mcelog" | unit kosmetik khusus AMD | ⚠️ mesin Intel: biarkan mcelog aktif |
 | `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` | `tsc=reliable` (TSC salah deteksi oleh watchdog) | ⚠️ hapus kecuali gejala yang sama |
-| `system_files/etc/modprobe.d/mt7921e-aspm.conf` | workaround Wi-Fi MT7921 gantung (`14c3:7961`) | ⚠️ hapus kecuali chip-nya sama |
-| `system_files/etc/NetworkManager/conf.d/wifi-powersave.conf` | menonaktifkan Wi-Fi power save (gangguan yang sama) | ⚠️ hapus kecuali terdampak |
 | `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` | mematikan aturan baterai ThinkPad | ⚠️ hapus di ThinkPad/non-ASUS |
 | `system_files/var/usrlocal/bin/fwupdmgr` | shim; hanya butuh karena fwupd di-mask | ⚠️ hapus |
 | `system_files/usr/lib/systemd/system/nvidia-persistenced.service.d/override.conf` | bootstrap tunggu-node | ✅ biarkan di NVIDIA; tidak relevan selain itu |
@@ -225,12 +223,10 @@ Khusus perangkat — hapus saat membangun untuk hardware lain:
 - **Wi-Fi MT7921 gantung** (`14c3:7961`, MediaTek Filogic 330): driver bisa
   menggantung beberapa menit setelah boot dengan `driver own failed` /
   `Timeout for driver own` / `chip reset failed` (bug upstream terkenal
-  #215391, #220353). Dua drop-in:
-  - `system_files/etc/modprobe.d/mt7921e-aspm.conf` — `disable_aspm=1`, param
-    modul resmi MediaTek yang menonaktifkan PCIe ASPM L1
-  - `system_files/etc/NetworkManager/conf.d/wifi-powersave.conf` —
-    `wifi.powersave = 2` (menonaktifkan Wi-Fi power save, pendekatan yang sama
-    dengan Omarchy)
+  #215391, #220353). Ini **bug driver/firmware upstream, masih terbuka**.
+  Workaround yang tadinya disertakan di sini (`mt7921e disable_aspm=1`,
+  `wifi.powersave = 2`) **tidak mencegah** hang tersebut, jadi sudah dihapus —
+  pantau image base untuk perbaikan di level kernel.
 - **fwupd** tetap **di-mask** di hardware ini (daemon menggantung di D-state);
   shim `fwupdmgr --version` membuat konsumen API firmware tetap tidak error,
   tetapi refresh/update LVFS sengaja non-fungsional di sini.
@@ -247,9 +243,6 @@ Khusus perangkat — hapus saat membangun untuk hardware lain:
 >
 > - `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` — `tsc=reliable`
 >   (biarkan hanya jika CPU kamu menampilkan `clocksource: unstable TSC` yang sama)
-> - `system_files/etc/modprobe.d/mt7921e-aspm.conf` +
->   `system_files/etc/NetworkManager/conf.d/wifi-powersave.conf` — Wi-Fi
->   MT7921 gantung (`14c3:7961`)
 > - `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` — mematikan
 >   aturan ThinkPad (driver baterai ASUS tidak punya atribut charge itu)
 > - `system_files/var/usrlocal/bin/fwupdmgr` + blok "Disable fwupd" di

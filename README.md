@@ -47,8 +47,6 @@ specific to that hardware and should be **removed when you fork the build**.
 | `build_files/build.sh` — "Disable fwupd" block | fwupd hangs in D-state on this ASUS | ⚠️ remove — works fine elsewhere |
 | `build_files/build.sh` — "Mask mcelog" block | AMD-only cosmetic unit | ⚠️ Intel machines: keep mcelog |
 | `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` | `tsc=reliable` (TSC watchdog false alarm) | ⚠️ remove unless same symptom |
-| `system_files/etc/modprobe.d/mt7921e-aspm.conf` | MT7921 Wi-Fi hang workaround (`14c3:7961`) | ⚠️ remove unless same chip |
-| `system_files/etc/NetworkManager/conf.d/wifi-powersave.conf` | disables Wi-Fi power save (same hang) | ⚠️ remove unless affected |
 | `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` | masks a ThinkPad battery rule | ⚠️ remove on ThinkPad/non-ASUS |
 | `system_files/var/usrlocal/bin/fwupdmgr` | shim; only needed because fwupd is masked | ⚠️ remove |
 | `system_files/usr/lib/systemd/system/nvidia-persistenced.service.d/override.conf` | wait-for-node bootstrap | ✅ keep on NVIDIA; irrelevant otherwise |
@@ -217,11 +215,10 @@ Device-specific — remove when building for other hardware:
 
 - **MT7921 Wi-Fi hang** (`14c3:7961`, MediaTek Filogic 330): driver can hang
   minutes after boot with `driver own failed` / `Timeout for driver own` /
-  `chip reset failed` (known upstream bugs #215391, #220353). Two drop-ins:
-  - `system_files/etc/modprobe.d/mt7921e-aspm.conf` — `disable_aspm=1`, an
-    official MediaTek module param that disables PCIe ASPM L1
-  - `system_files/etc/NetworkManager/conf.d/wifi-powersave.conf` —
-    `wifi.powersave = 2` (disables Wi-Fi power save, same approach as Omarchy)
+  `chip reset failed` (known upstream bugs #215391, #220353). This is an
+  **upstream driver/firmware bug**, still open. Workarounds that were shipped
+  here (`mt7921e disable_aspm=1`, `wifi.powersave = 2`) did **not** prevent it,
+  so they were removed — watch the base image for a kernel-level fix.
 - **fwupd** stays **masked** on this hardware (daemon hangs in D-state); a
   `fwupdmgr --version` shim keeps firmware API consumers non-errored, but LVFS
   refresh/update is intentionally non-functional here.
@@ -238,9 +235,6 @@ Device-specific — remove when building for other hardware:
 >
 > - `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` — `tsc=reliable`
 >   (keep only if your CPU shows the same `clocksource: unstable TSC` at boot)
-> - `system_files/etc/modprobe.d/mt7921e-aspm.conf` +
->   `system_files/etc/NetworkManager/conf.d/wifi-powersave.conf` — MT7921
->   Wi-Fi hang (`14c3:7961`)
 > - `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` — masks a
 >   ThinkPad rule (ASUS battery driver lacks those charge attrs)
 > - `system_files/var/usrlocal/bin/fwupdmgr` + the "Disable fwupd" block in
