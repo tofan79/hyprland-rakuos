@@ -210,7 +210,11 @@ systemctl mask mcelog.service 2>/dev/null || true
 ## place, but tuned-ppd — the layer that claimed the Power Profiles API — is
 ## replaced by power-profiles-daemon above. Mask the base's tuned.service +
 ## tuned-ppd.service so only one power manager owns CPU tuning and the PPD
-## D-Bus interface; the two would otherwise fight over governor/EPP settings.
+## D-Bus interface. Without the mask, tuned's default "balanced" profile
+## (governor + energy_performance_preference + platform_profile) would fight
+## power-profiles-daemon over the same sysfs knobs. tuned.service itself is
+## auto-enabled by the tuned package preset at install time, so it must be
+## masked here explicitly.
 systemctl mask tuned.service tuned-ppd.service 2>/dev/null || true
 
 ## Quiet cosmetic systemd-tmpfiles noise on immutable systems:
