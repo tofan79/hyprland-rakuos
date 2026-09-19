@@ -119,7 +119,14 @@ rum install -y --refresh \
   bat \
   fzf \
   zoxide \
-  rakuos-welcome-qt
+  rakuos-welcome-qt \
+  rakuos-software-qt
+
+## RakuOS Software Center: install engine + Qt frontend, but do NOT autostart
+## the tray daemon. The only trigger for it is the XDG autostart file below
+## (no systemd unit / dbus activation); removing it keeps the Software Center
+## fully functional while skipping the background tray at every login.
+rm -f /etc/xdg/autostart/rakuos-software-tray.desktop
 
 ## Populate skeleton wallpaper folder with the OFFICIAL base RakuOS wallpaper
 ## set. Noctalia's wallpaper picker points at ~/Pictures/Wallpaper so users get
