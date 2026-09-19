@@ -178,7 +178,7 @@ NetworkManager-bluetooth
 NetworkManager-ppp
 NetworkManager-wwan
 nm-connection-editor
-tuned-ppd
+power-profiles-daemon
 libnotify
 noctalia-greeter-git
 qt6ct

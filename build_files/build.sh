@@ -83,7 +83,7 @@ rum install -y --refresh \
   NetworkManager-ppp \
   NetworkManager-wwan \
   nm-connection-editor \
-  tuned-ppd \
+  power-profiles-daemon \
   libnotify \
   noctalia-greeter-git \
   qt6ct \
@@ -205,6 +205,13 @@ ln -sfn /dev/null /etc/systemd/system/fwupd-refresh.timer
 ## Relevant here: AMD Ryzen 7 4800H (Zen 2, ACPI family 17h reported as 23).
 ## ► AMD-only device; Intel machines should keep mcelog enabled.
 systemctl mask mcelog.service 2>/dev/null || true
+
+## Power management: tuned (a plain tuner from the base image) is left in
+## place, but tuned-ppd — the layer that claimed the Power Profiles API — is
+## replaced by power-profiles-daemon above. Mask the base's tuned.service +
+## tuned-ppd.service so only one power manager owns CPU tuning and the PPD
+## D-Bus interface; the two would otherwise fight over governor/EPP settings.
+systemctl mask tuned.service tuned-ppd.service 2>/dev/null || true
 
 ## Quiet cosmetic systemd-tmpfiles noise on immutable systems:
 ## - home.conf: /home and /srv are symlinks into /var here, so the Q/q rules
