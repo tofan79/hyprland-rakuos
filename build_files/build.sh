@@ -122,12 +122,6 @@ rum install -y --refresh \
   rakuos-welcome-qt \
   rakuos-software-qt
 
-## RakuOS Software Center: install engine + Qt frontend, but do NOT autostart
-## the tray daemon. The only trigger for it is the XDG autostart file below
-## (no systemd unit / dbus activation); removing it keeps the Software Center
-## fully functional while skipping the background tray at every login.
-rm -f /etc/xdg/autostart/rakuos-software-tray.desktop
-
 ## Populate skeleton wallpaper folder with the OFFICIAL base RakuOS wallpaper
 ## set. Noctalia's wallpaper picker points at ~/Pictures/Wallpaper so users get
 ## a real selection out of the box (and can drop in their own files anytime).
@@ -243,11 +237,16 @@ d- /root/.ssh :0700 root :root -
 f^ /root/.ssh/authorized_keys :0600 root :root - ssh.authorized_keys.root
 EOF
 
-
 ## [NVIDIA dGPU] Remove autostart entries that are noisy/failing at login:
 ## - nvidia-settings-load: --load-config-only (X11-only) intermittently
 ## ► AMD-only devices: this file does not exist, rm -f is a no-op (safe).
 rm -f /etc/xdg/autostart/nvidia-settings-load.desktop 2>/dev/null || true
+
+## RakuOS Software Center: install engine + Qt frontend, but do NOT autostart
+## the tray daemon. The only trigger for it is the XDG autostart file below
+## (no systemd unit / dbus activation); removing it keeps the Software Center
+## fully functional while skipping the background tray at every login.
+rm -f /etc/xdg/autostart/rakuos-software-tray.desktop
 
 ## Create flatpak exports dir (fix rakuos-flatpak-watcher)
 mkdir -p /var/lib/flatpak/exports/bin
