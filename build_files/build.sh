@@ -169,12 +169,6 @@ fi
 rum install -y chrony
 systemctl enable chronyd
 
-## AppArmor: DEFERRED until RakuOS ships "Full Apparmor support" (project board).
-## The kernel already boots with AppArmor LSM active (kargs.d/10-rakuos.toml),
-## but userspace packages (apparmor-parser, apparmor.d-rakuos) are not yet
-## available in the CI build repos. Uncomment and review when official support
-## lands.
-
 ## Enable Services
 systemctl enable greetd
 systemctl enable --global dotfiles-setup

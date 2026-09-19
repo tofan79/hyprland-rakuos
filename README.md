@@ -1,96 +1,136 @@
 # RakuOS Hyprland Image
 
+> **Languages:** [English](README.md) · [Bahasa Indonesia](README.id.md)
+
 Custom **Hyprland** spin of [RakuOS](https://rakuos.org) — a hybrid atomic,
 immutable Linux distro built on Fedora. This repository builds an OCI image
 with Hyprland + uWSM, the Noctalia greeter, and a tuned toolchain for laptops
-with **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
+with an **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
 
-## Image
+- **Registry:** `quay.io/mindset404/hyprland-nvidia-v3`
+- **Base image:** `quay.io/rakuos/rakuos-base-nvidia-v3:staging`
+- **Architecture:** `linux/amd64`
+- **Tags:** `latest`, `<YYYYMMDD>` (date tag, 5 kept)
+- **Rebuild:** every 3 days via GitHub Actions (`0 17 */3 * *` UTC, manual trigger supported)
 
-| Key            | Value                                              |
-| -------------- | -------------------------------------------------- |
-| Registry       | `quay.io/mindset404/hyprland-nvidia-v3`               |
-| Base image     | `quay.io/rakuos/rakuos-base-nvidia-v3:staging`     |
-| Architecture   | `linux/amd64`                                      |
-| Tags           | `latest`, `<YYYYMMDD>` (date tag, **5 kept**)      |
-| Rebuild        | **Every 3 days** (`cron: 0 17 */3 * *`, 17:00 UTC) |
+## TL;DR
 
-### Included
+> **Just want to install it?** Nothing to change — `bootc switch` the image and go.
+> The "compatibility" section below only matters if you **fork and rebuild** the
+> image for your own device.
 
-- **Desktop**: Hyprland, uWSM, noctalia (greeter), ghostty
-- **Portal/media**: xdg-desktop-portal(-hyprland/-gtk), pipewire + ALSA +
+```bash
+sudo bootc switch quay.io/mindset404/hyprland-nvidia-v3:latest
+sudo reboot
+```
+
+For later updates:
+
+```bash
+sudo bootc upgrade
+sudo reboot
+```
+
+---
+
+## Compatibility: generic vs. this laptop
+
+This image is **built, tested and daily-driven on one reference machine**:
+**ASUS TUF Gaming A15 FA506ICB** (AMD Ryzen 7 4800H, Radeon iGPU + NVIDIA
+dGPU, MediaTek MT7921 Wi-Fi). It works on other devices — a few parts are
+specific to that hardware and should be **removed when you fork the build**.
+
+| Part of this repo | What it is | On another device |
+|---|---|---|
+| `build_files/build.sh` — desktop stack, greetd, dotfiles, tmpfiles quieting, GID baking, chrony | Core image | ✅ keep |
+| `build_files/build.sh` — "Mask dkms" block | modules pre-baked; runtime dkms never needed | ✅ keep on NVIDIA images |
+| `build_files/build.sh` — "Disable fwupd" block | fwupd hangs in D-state on this ASUS | ⚠️ remove — works fine elsewhere |
+| `build_files/build.sh` — "Mask mcelog" block | AMD-only cosmetic unit | ⚠️ Intel machines: keep mcelog |
+| `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` | `tsc=reliable` (TSC watchdog false alarm) | ⚠️ remove unless same symptom |
+| `system_files/etc/modprobe.d/mt7921e-aspm.conf` | MT7921 Wi-Fi hang workaround (`14c3:7961`) | ⚠️ remove unless same chip |
+| `system_files/etc/NetworkManager/conf.d/wifi-powersave.conf` | disables Wi-Fi power save (same hang) | ⚠️ remove unless affected |
+| `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` | masks a ThinkPad battery rule | ⚠️ remove on ThinkPad/non-ASUS |
+| `system_files/var/usrlocal/bin/fwupdmgr` | shim; only needed because fwupd is masked | ⚠️ remove |
+| `system_files/usr/lib/systemd/system/nvidia-persistenced.service.d/override.conf` | wait-for-node bootstrap | ✅ keep on NVIDIA; irrelevant otherwise |
+| `system_files/etc/skel/.config/hypr/config/monitors.lua` | `eDP-1 1920x1080@144` layout | ⚠️ edit to your panel/resolution |
+| `system_files/etc/skel/.config/hypr/config/lid.lua` | laptop lid → lock + suspend | ✅ keep (works on any laptop) |
+| `asusctl` package (see "Not included") | ASUS ROG fan/light control | ⚠️ ASUS hardware only |
+
+**To build this image for another machine:** fork the repo, remove the rows
+marked ⚠️ (either `git rm` the files or delete the blocks in `build.sh`), and
+adapt `monitors.lua`. Everything else is a standard Hyprland/RakuOS desktop.
+
+---
+
+## Included
+
+- **Desktop:** Hyprland, uWSM, noctalia (greeter), ghostty
+- **Portal/media:** xdg-desktop-portal(`-hyprland`/`-gtk`), pipewire + ALSA +
   PulseAudio emulation, wireplumber, egl-wayland, Xwayland, wl-clipboard,
   grim+slurp, pavucontrol, libnotify
-- **Keyring/auth**: gnome-keyring intentionally **excluded** (Noctalia/Hyprland
+- **Keyring/auth:** gnome-keyring intentionally **excluded** (Noctalia/Hyprland
   work fine without `org.freedesktop.secrets` and it caused dual-daemon crashes
   at login with the greetd PAM setup), fprintd-pam, libsecret client lib
-- **Base duties**: NetworkManager suite, tuned-ppd, gvfs(+mtp/nfs/smb),
+- **Base duties:** NetworkManager suite, tuned-ppd, gvfs(+mtp/nfs/smb),
   systemd-oomd-defaults, noctalia-greeter
-- **Tools**: swash, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
+- **Tools:** swash, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
   brightnessctl, playerctl, unzip/zip/7zip/unar, bat, fzf, zoxide
-- **Theme/fonts**: adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts
-- **Terra** (Vendor repo, enabled at build: `bibata-cursor-theme`,
+- **Theme/fonts:** adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts
+- **Terra** (vendor repo, enabled at build: `bibata-cursor-theme`,
   `jetbrainsmono-nerd-fonts`, plus base deps `dysk`/`fresh`/`surge`/`termflix`/`wlctl`)
-- **Apps**: `rakuos-software-qt` (Software Center) + `rakuos-welcome-qt` —
+- **Apps:** `rakuos-software-qt` (Software Center) + `rakuos-welcome-qt` —
   installed baked, autostart entries removed (open only via menu)
-- **Browser (overlay)**: `zen-browser` — prebaked via `packages.list` /
+- **Browser (overlay):** `zen-browser` — prebaked via `packages.list` /
   `packages-live.list`, present on live and installed systems
-- **NVIDIA dGPU**: inherited from the Nvidia base image (driver + CUDA stack)
-- **Time sync**: `chrony` for automatic NTP (RTC stays UTC — Windows already
+- **NVIDIA dGPU:** inherited from the NVIDIA base image (driver + CUDA stack) —
+  generic for any NVIDIA device; machines without NVIDIA simply don't use it
+- **Time sync:** `chrony` for automatic NTP (RTC stays UTC — Windows already
   configured with `RealTimeIsUniversal=1`, so no local-time offset)
-- **AppArmor (MAC)**: `DEFERRED` — base already boots the kernel with
-  `security=apparmor apparmor=1 selinux=0`
-  ([kargs.d/10-rakuos.toml](https://gitlab.com/rakuos/rakuos-settings)), and this
-  image currently ships **no** AppArmor userspace. RakuOS "Full Apparmor
-  support" is still In Progress on the project board; when the official
-  packages land in the CI repos, enable them here
 
-### Not included (optional)
+## Not included (optional)
 
 Apps below are **not baked** — install them after first boot with:
+
 ```bash
 sudo rum install <package>     # overlay (survives image upgrades)
 sudo dnf5 install <package>    # base image layer (dev-only, not atomic)
 ```
+
 Hyprland keybinds (`variables.lua`) already point at them:
 
 - **editor** `zeditor`, **calculator** `gnome-calculator`, **video/audio
   player** `mpv`
-- **asusctl** (ASUS ROG fan/light control) — install on ASUS hardware only:
+- **asusctl** (ASUS ROG fan/light control) — **ASUS hardware only**; skip on
+  other devices:
   ```bash
   sudo rum install asusctl
   ```
 
-### Overlay & live split
+## Overlay & live split
 
 - `packages.list` (overlay — live ISO **and** installed system): `zen-browser`
 - `packages-live.list` (live ISO only, not carried into installs): `zen-browser`
+
+---
 
 ## How it's built
 
 `.github/workflows/build.yml` runs on GitHub Actions:
 
-1. `docker buildx build --provenance=false` (single-manifest, so Quay shows
-   the real image size)
+1. `docker buildx build --provenance=false` — single-manifest, so Quay shows
+   the real image size.
 2. Base = RakuOS `rakuos-base-nvidia-v3:staging` (COPR Hyprland +
-   `mindset/Mindset-Apps`, Terra/RPM-Fusion repos tuned)
+   `mindset/Mindset-Apps`, Terra/RPM-Fusion repos tuned).
 3. Bakes canonical system GIDs into `/etc/group` (audio/video/input/kvm/utmp
    etc. — the `bootc-minimal` base lacks the `altfiles` NSS module, so
    `getent` falls back to the file) and masks noisy systemd tmpfiles
-   (`sudo-message`, `openvpn`, `mdadm`, `dbus` ones) in `build.sh`/`post-build*.sh`
-4. Pushes `latest` + date tag to `quay.io/mindset404/hyprland-nvidia-v3`
-5. **Retention**: deletes date tags older than the 5 newest (keeps storage
-   within Quay free tier)
-6. Terra signing-key auto-recovery (refreshes `key.asc` from Fyralabs,
-   falls back to disabling `gpgcheck` if the keys rotate again)
-7. Enables NTP (`chrony`) and installs/activates the **AppArmor** userspace
-   (profiles from `apparmor.d-rakuos`) — SELinux stays removed per base policy
-
-> **Security note:** RakuOS's [project board](https://rakuos.org/project-board)
-> tracks "Full Apparmor support" as **in progress**. The base already sets the
-> AppArmor kernel LSM; this image pre-adds the official userland packages ahead
-> of base shipping them. If the base later bundles these itself, `build.sh`'s
-> AppArmor block must be re-checked/synced to avoid double installs.
+   (`sudo-message`, `openvpn`, `mdadm`, `dbus` ones) in `build.sh`/`post-build*.sh`.
+4. Pushes `latest` + date tag to `quay.io/mindset404/hyprland-nvidia-v3`.
+5. **Retention:** deletes date tags older than the 5 newest (keeps storage
+   within Quay free tier).
+6. Terra signing-key auto-recovery (refreshes `key.asc` from Fyralabs, falls
+   back to disabling `gpgcheck` if the keys rotate again).
+7. Enables NTP (`chrony`) — SELinux stays removed per base policy.
 
 ### Manual trigger
 
@@ -101,35 +141,24 @@ gh workflow run "Build RakuOS Hyprland Image" --repo tofan79/hyprland-rakuos
 Workflow inputs: `base_image_tag` (default `staging`) and `rakuos_staging`
 (default `1`).
 
-## Install / switch to this build
+---
 
-```bash
-# From the live ISO or another image
-sudo bootc switch quay.io/mindset404/hyprland-nvidia-v3:latest
-sudo reboot
-
-# Later updates are pulled by the 3-day auto-rebuild, or manually:
-sudo bootc upgrade
-sudo reboot
-```
+## Keeping the system up to date
 
 New image tags are pushed to `quay.io/mindset404/hyprland-nvidia-v3:latest`;
 pulling that reference is all `bootc upgrade` needs to detect a new build.
-The `rakuos-updater.service`+`.timer` (daily at 03:00 UTC) also checks for
-new image and overlay updates automatically.
+The `rakuos-updater.service`+`.timer` (daily at 03:00 UTC) also checks for new
+image and overlay updates automatically.
 
-### Noctalia Updates plugin & sudoers
-
-> **Removed:** the RakuOS Updates panel plugin (`mindset/rakuos-tools`) was
-> dropped from the plugin source and catalog, so the sudoers drop-in it depended
-> on is gone too. Update-center duties now rely on `rakuos-updater`,
-> `rum`/`bootc` CLI, or the declarative `dcli-bootc` overlay flow.
+> **Note:** the RakuOS Updates Noctalia panel plugin and its sudoers drop-in
+> were removed — update-center duties run through `rakuos-updater` and the
+> `rum`/`bootc` CLI.
 
 ## Update & troubleshooting
 
 This image follows the RakuOS base on a **floating** tag, so each rebuild pulls
 the latest `rakuos-base-nvidia-v3:staging`. Upstream ships 1–3 base updates per
-day; our builds run:
+day; this repo's builds run:
 
 - **Automatically every 3 days** at 17:00 UTC (`0 17 */3 * *`)
 - **Manually anytime** via `Actions → Run workflow`
@@ -162,39 +191,67 @@ the last known-good one.
    base change, report upstream (`rakuos-base`); to rebuild against an older
    base, temporarily pin the digest in `Containerfile` and re-trigger.
 
-### Known device quirks (ASUS TUF Gaming A15 FA506ICB)
+## Known device quirks (ASUS TUF Gaming A15 FA506ICB)
 
-Reference hardware for this image: **ASUS TUF Gaming A15 FA506ICB** —
-AMD **Ryzen 7 4800H** (Zen 2) + **Radeon iGPU** (Vega) + **NVIDIA dGPU**
-(hooked through the NVIDIA v3 base). Two categories of quirks:
+The reference hardware this image is tuned for is **ASUS TUF Gaming A15
+FA506ICB** — AMD **Ryzen 7 4800H** (Zen 2) + **Radeon iGPU** (Vega) + **NVIDIA
+dGPU** (hooked through the NVIDIA v3 base). Everything below is **specific to
+this machine's silicon** — other devices should drop the category **2**
+workarounds (see the Compatibility section above).
 
-**1. Harmless boot/kernel "noise"** (log-only, no functional impact):
+### 1. Harmless boot/kernel "noise"
+
+Log-only, no functional impact, safe on any device:
+
 - ACPI `_TZ.THRM._SCP` / `AE_NOT_FOUND` — thermal ACPI method stub
 - `NVRM PlatformRequestHandler` SBIOS assertions (get temp / power mode)
 - `amdgpu DCN reg offset` — internal display register dump at init
 - `bpf-restrict-fs` — BPF LSM object load failure on this kernel
-- `mcelog` fails: **AMD CPUs are not supported by the mcelog userspace**
-  daemon (`AMD Processor family 23`); AMD MCE decoding is in-kernel
-  (`edac_mce_amd`) so the unit is `mask`ed in `build.sh`
+- `mcelog` fails: **AMD CPUs are not supported by the mcelog userspace** daemon
+  (`AMD Processor family 23`); AMD MCE decoding is in-kernel (`edac_mce_amd`)
+  so the unit is `mask`ed in `build.sh`
 
-**2. Real hardware workarounds shipped in this image**:
+### 2. Real hardware workarounds shipped in this image
+
+Device-specific — remove when building for other hardware:
+
 - **MT7921 Wi-Fi hang** (`14c3:7961`, MediaTek Filogic 330): driver can hang
-  ~minutes after boot with `driver own failed` / `Timeout for driver own` /
+  minutes after boot with `driver own failed` / `Timeout for driver own` /
   `chip reset failed` (known upstream bugs #215391, #220353). Two drop-ins:
-  - `system_files/etc/modprobe.d/mt7921e-aspm.conf` — `disable_aspm=1`,
-    an official MediaTek module param that disables PCIe ASPM L1
+  - `system_files/etc/modprobe.d/mt7921e-aspm.conf` — `disable_aspm=1`, an
+    official MediaTek module param that disables PCIe ASPM L1
   - `system_files/etc/NetworkManager/conf.d/wifi-powersave.conf` —
-    `wifi.powersave = 2` (disables Wi-Fi power save, same approach Omarchy)
+    `wifi.powersave = 2` (disables Wi-Fi power save, same approach as Omarchy)
 - **fwupd** stays **masked** on this hardware (daemon hangs in D-state); a
-  `fwupdmgr --version` shim keeps firmware API consumers non-errored, but
-  LVFS refresh/update is intentionally non-functional here.
-- **TSC → HPET clocksource fallback**: the clocksource watchdog flags TSC
+  `fwupdmgr --version` shim keeps firmware API consumers non-errored, but LVFS
+  refresh/update is intentionally non-functional here.
+- **TSC → HPET clocksource fallback:** the clocksource watchdog flags TSC
   `unstable due to frequency skew` vs HPET at boot and falls back to HPET
   (lower timekeeping performance). CPU here has an invariant TSC
   (`constant_tsc` + `nonstop_tsc`), so the TSC is reliable and the HPET is the
   drifting one. Fixed with karg `tsc=reliable`, baked via
   `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` (merged by bootc
   over the base's `10-rakuos.toml`, applied on next `bootc upgrade`).
+
+> **To remove these on another device** (each is also listed in the
+> Compatibility section):
+>
+> - `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` — `tsc=reliable`
+>   (keep only if your CPU shows the same `clocksource: unstable TSC` at boot)
+> - `system_files/etc/modprobe.d/mt7921e-aspm.conf` +
+>   `system_files/etc/NetworkManager/conf.d/wifi-powersave.conf` — MT7921
+>   Wi-Fi hang (`14c3:7961`)
+> - `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` — masks a
+>   ThinkPad rule (ASUS battery driver lacks those charge attrs)
+> - `system_files/var/usrlocal/bin/fwupdmgr` + the "Disable fwupd" block in
+>   `build_files/build.sh` — this ASUS D-state hang; other hardware usually has
+>   working firmware updates
+> - the "Mask mcelog" block in `build_files/build.sh` — AMD only (Intel keeps
+>   mcelog)
+> - `system_files/etc/skel/.config/hypr/config/monitors.lua` — replace the
+>   `eDP-1 1920x1080@144` layout with your own panel/resolution
+
+---
 
 ## License
 
@@ -206,7 +263,7 @@ Linux on Fedora. RakuOS projects are Apache 2.0 as well
 Hyprland is GPL-3.0; uWSM, Noctalia and included packages retain their own
 licenses.
 
-> **Disclaimer:** This is an **unofficial, community-built image**. It is not
+> **Disclaimer:** this is an **unofficial, community-built image**. It is not
 > affiliated with, endorsed by, or a product of the RakuOS project. "RakuOS"
 > and associated marks are property of their respective owners and are used
 > only to describe the upstream base this image builds on.

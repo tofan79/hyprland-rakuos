@@ -3,5 +3,5 @@
 # boot and falls back to HPET. CPU has constant_tsc + nonstop_tsc (invariant),
 # so the TSC is reliable; it is the HPET that drifts. tsc=reliable tells the
 # kernel to trust TSC and skip the watchdog check, restoring TSC as clock source.
-# Base ships 10-rakuos.toml (apparmor/selinux kargs); this file is merged by bootc.
+# Base ships 10-rakuos.toml; this file is merged by bootc.
 kargs = ["tsc=reliable"]
