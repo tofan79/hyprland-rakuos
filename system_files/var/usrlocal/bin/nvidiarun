@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# nvidiarun — jalankan app apa pun di GPU NVIDIA (PRIME render offload).
+#   nvidiarun <app>            → offload polos (OBS, editor, Blender, dll)
+#   nvidiarun --game <cmd>     → game: NVIDIA + GameMode (+ MangoHud),
+#                                stripping dekorasi Hyprland otomatis ON saat
+#                                mulai & restore otomatis saat keluar.
+#
+# Default sesi tetap di AMD iGPU (hemat daya, dGPU tidur D3).
+# Steam Launch Options: nvidiarun --game %command%
+set -euo pipefail
+
+export __NV_PRIME_RENDER_OFFLOAD=1
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+export GBM_BACKEND=nvidia-drm
+export __VK_LAYER_NV_optimus=NVIDIA_only
+
+_GAMEMODE="$HOME/.config/hypr/scripts/gamemode.sh"
+
+if [[ "${1:-}" == "--game" ]]; then
+    shift
+    export MANGOHUD_DLSYM=1
+    _args=(gamemoderun)
+    if command -v mangohud >/dev/null 2>&1; then
+        _args+=(mangohud)
+    fi
+
+    [[ -x "$_GAMEMODE" ]] && "$_GAMEMODE" on >/dev/null 2>&1 || true
+
+    "${_args[@]}" "$@"
+    _rc=$?
+
+    [[ -x "$_GAMEMODE" ]] && "$_GAMEMODE" off >/dev/null 2>&1 || true
+    exit "$_rc"
+fi
+
+exec "$@"

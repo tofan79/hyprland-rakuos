@@ -31,7 +31,6 @@ hl.bind(M .. " + CTRL + backslash", hl.dsp.exec_cmd("noctalia msg panel-toggle n
 hl.bind(M .. " + ALT + P", hl.dsp.exec_cmd("hyprpicker -a -n"), { description = "Color picker (hyprpicker)" })
 hl.bind(M .. " + ALT + period", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher /emo"), { description = "Emoji panel" })
 hl.bind(M .. " + SHIFT + B", hl.dsp.exec_cmd("noctalia msg plugin nomadcxx/gamer-mode:service all toggle"), { description = "Toggle gamer mode" })
-hl.bind(M .. " + ALT + B", hl.dsp.exec_cmd("~/.config/hypr/scripts/gamemode.sh"), { description = "Toggle gamer mode (strip decorations)" })
 hl.bind(M .. " + CTRL + R", hl.dsp.exec_cmd("noctalia msg panel-toggle mindset/today-reminders:main"), { description = "Today Reminders panel" })
 
 -- ───────────────────────────────────────────
