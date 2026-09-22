@@ -145,6 +145,7 @@ hyprland-guiutils
 gloview
 noctalia-git
 rakuos-welcome-qt
+rakuos-system-qt
 uwsm
 ghostty
 ghostty-shell-integration

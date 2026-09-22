@@ -70,14 +70,16 @@ kamu fork build-nya**.
 - **Keyring/auth:** gnome-keyring sengaja **tidak disertakan** (Noctalia/Hyprland
   jalan normal tanpa `org.freedesktop.secrets`; dulu menyebabkan crash ganda
   saat login pada setup PAM greetd), fprintd-pam, libsecret client lib
-- **Dasar:** paket NetworkManager, tuned-ppd, gvfs(+mtp/nfs/smb),
+- **Dasar:** paket NetworkManager, power-profiles-daemon (pengganti
+  tuned-ppd; tuned/tuned-ppd dari base di-mask), gvfs(+mtp/nfs/smb),
   systemd-oomd-defaults, noctalia-greeter
 - **Perkakas:** swash, tesseract (+10 langpack), zbar, hyprpicker, cliphist,
   brightnessctl, playerctl, unzip/zip/7zip/unar, bat, fzf, zoxide
 - **Tema/font:** adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts
 - **Terra** (repo vendor, diaktifkan saat build: `bibata-cursor-theme`,
   `jetbrainsmono-nerd-fonts`, plus deps dasar `dysk`/`fresh`/`surge`/`termflix`/`wlctl`)
-- **Aplikasi:** `rakuos-software-qt` (Software Center) + `rakuos-welcome-qt` —
+- **Aplikasi:** `rakuos-software-qt` (Software Center) + `rakuos-system-qt`
+  (`org.rakuos.System`, pengaturan sistem) + `rakuos-welcome-qt` —
   ditanam saat build, entri autostart dihapus (dibuka hanya lewat menu)
 - **Browser (overlay):** `zen-browser` — ditanam lebih dulu via `packages.list` /
   `packages-live.list`, tersedia di ISO live dan sistem terpasang
@@ -124,14 +126,18 @@ Keybind Hyprland (`variables.lua`) sudah mengarah ke semuanya:
    `mindset/Mindset-Apps`, repo Terra/RPM-Fusion disesuaikan).
 3. Menulis GID sistem kanonik ke `/etc/group` (audio/video/input/kvm/utmp
    dst. — base `bootc-minimal` tidak punya modul NSS `altfiles`, jadi
-   `getent` memakai file) dan mematikan tmpfiles systemd yang bising
-   (`sudo-message`, `openvpn`, `mdadm`, `dbus`) di `build.sh`/`post-build*.sh`.
-4. Push `latest` + tag tanggal ke `quay.io/mindset404/hyprland-nvidia-v3`.
-5. **Retensi:** menghapus tag tanggal yang lebih lama dari 5 terbaru (menjaga
+   `getent` memakai file) dan meredam tmpfiles systemd yang bising
+   (`home.conf`/`root.conf` → `/dev/null`, `provision.conf` dipangkas) di
+   `build.sh`.
+4. Menonaktifkan `rum-makecache.timer` — refresh metadata repo `rum makecache`
+   berkala tidak diperlukan di gambar immutable; `rum` mengambil metadata
+   on-demand saat install.
+5. Push `latest` + tag tanggal ke `quay.io/mindset404/hyprland-nvidia-v3`.
+6. **Retensi:** menghapus tag tanggal yang lebih lama dari 5 terbaru (menjaga
    penyimpanan tetap dalam kuota gratis Quay).
-6. Pemulihan otomatis kunci tanda tangan Terra (refresh `key.asc` dari Fyralabs,
+7. Pemulihan otomatis kunci tanda tangan Terra (refresh `key.asc` dari Fyralabs,
    kembali ke menonaktifkan `gpgcheck` jika kunci berputar lagi).
-7. Mengaktifkan NTP (`chrony`) — SELinux tetap dihapus sesuai kebijakan base.
+8. Mengaktifkan NTP (`chrony`) — SELinux tetap dihapus sesuai kebijakan base.
 
 ### Pemicu manual
 

@@ -120,6 +120,7 @@ rum install -y --refresh \
   fzf \
   zoxide \
   rakuos-welcome-qt \
+  rakuos-system-qt \
   rakuos-software-qt
 
 ## Populate skeleton wallpaper folder with the OFFICIAL base RakuOS wallpaper
@@ -173,6 +174,13 @@ systemctl enable chronyd
 ## Enable Services
 systemctl enable greetd
 systemctl enable --global dotfiles-setup
+
+## Disable periodic rum metadata refresh:
+## rum-makecache.timer runs `rum makecache` 10min after boot and every ~3h on
+## AC power. On immutable images packages are baked in at build time, so the
+## periodic refresh is wasted network traffic — rum fetches metadata on demand
+## during install anyway. Rationale from upstream: keep it disabled on images.
+systemctl disable rum-makecache.timer 2>/dev/null || true
 
 ## [NVIDIA dGPU pre-baked image] Mask dkms:
 ## nvidia modules are pre-baked into the image for its exact kernel, so the

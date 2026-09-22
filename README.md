@@ -69,15 +69,17 @@ adapt `monitors.lua`. Everything else is a standard Hyprland/RakuOS desktop.
 - **Keyring/auth:** gnome-keyring intentionally **excluded** (Noctalia/Hyprland
   work fine without `org.freedesktop.secrets` and it caused dual-daemon crashes
   at login with the greetd PAM setup), fprintd-pam, libsecret client lib
-- **Base duties:** NetworkManager suite, tuned-ppd, gvfs(+mtp/nfs/smb),
+- **Base duties:** NetworkManager suite, power-profiles-daemon (replaces
+  tuned-ppd; base's tuned/tuned-ppd services are masked), gvfs(+mtp/nfs/smb),
   systemd-oomd-defaults, noctalia-greeter
 - **Tools:** swash, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
   brightnessctl, playerctl, unzip/zip/7zip/unar, bat, fzf, zoxide
 - **Theme/fonts:** adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts
 - **Terra** (vendor repo, enabled at build: `bibata-cursor-theme`,
   `jetbrainsmono-nerd-fonts`, plus base deps `dysk`/`fresh`/`surge`/`termflix`/`wlctl`)
-- **Apps:** `rakuos-software-qt` (Software Center) + `rakuos-welcome-qt` —
-  installed baked, autostart entries removed (open only via menu)
+- **Apps:** `rakuos-software-qt` (Software Center) + `rakuos-system-qt`
+  (`org.rakuos.System` settings) + `rakuos-welcome-qt` — installed baked,
+  autostart entries removed (open only via menu)
 - **Browser (overlay):** `zen-browser` — prebaked via `packages.list` /
   `packages-live.list`, present on live and installed systems
 - **NVIDIA dGPU:** inherited from the NVIDIA base image (driver + CUDA stack) —
@@ -121,8 +123,12 @@ Hyprland keybinds (`variables.lua`) already point at them:
    `mindset/Mindset-Apps`, Terra/RPM-Fusion repos tuned).
 3. Bakes canonical system GIDs into `/etc/group` (audio/video/input/kvm/utmp
    etc. — the `bootc-minimal` base lacks the `altfiles` NSS module, so
-   `getent` falls back to the file) and masks noisy systemd tmpfiles
-   (`sudo-message`, `openvpn`, `mdadm`, `dbus` ones) in `build.sh`/`post-build*.sh`.
+   `getent` falls back to the file) and quiets noisy systemd tmpfiles
+   (`home.conf`/`root.conf` → `/dev/null`, trimmed `provision.conf`) in
+   `build.sh`.
+4. Disables `rum-makecache.timer` — the periodic `rum makecache` repo-metadata
+   refresh is unneeded on an immutable image; `rum` pulls metadata on demand
+   during install.
 4. Pushes `latest` + date tag to `quay.io/mindset404/hyprland-nvidia-v3`.
 5. **Retention:** deletes date tags older than the 5 newest (keeps storage
    within Quay free tier).
