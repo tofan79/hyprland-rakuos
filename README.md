@@ -50,6 +50,7 @@ specific to that hardware and should be **removed when you fork the build**.
 | `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` | masks a ThinkPad battery rule | ⚠️ remove on ThinkPad/non-ASUS |
 | `system_files/var/usrlocal/bin/fwupdmgr` | shim; only needed because fwupd is masked | ⚠️ remove |
 | `system_files/usr/lib/systemd/system/nvidia-persistenced.service.d/override.conf` | wait-for-node bootstrap | ✅ keep on NVIDIA; irrelevant otherwise |
+| `system_files/usr/lib/systemd/system/nvidia-powerd.service.d/override.conf` | same wait-for-node bootstrap so dynamic boost actually runs | ✅ keep on NVIDIA; irrelevant otherwise |
 | `system_files/etc/skel/.config/hypr/config/monitors.lua` | `eDP-1 1920x1080@144` layout | ⚠️ edit to your panel/resolution |
 | `system_files/etc/skel/.config/hypr/config/lid.lua` | laptop lid → lock + suspend | ✅ keep (works on any laptop) |
 | `asusctl` package (see "Not included") | ASUS ROG fan/light control | ⚠️ ASUS hardware only |
@@ -235,6 +236,14 @@ Device-specific — remove when building for other hardware:
   drifting one. Fixed with karg `tsc=reliable`, baked via
   `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` (merged by bootc
   over the base's `10-rakuos.toml`, applied on next `bootc upgrade`).
+- **`nvidia-powerd` silently dead:** base enables the service, but cond's stock
+  `ConditionPathExistsGlob=/dev/nvidia*` is evaluated before the dGPU module
+  creates the nodes (same boot race as `nvidia-persistenced`), so it was
+  skipped forever. Fixed with a matching drop-in
+  (`system_files/usr/lib/systemd/system/nvidia-powerd.service.d/override.conf`)
+  that drops the condition and polls for `/dev/nvidia0` in `ExecStartPre` —
+  dynamic boost now runs when the dGPU is active. Harmless dead weight on
+  non-NVIDIA devices.
 
 > **To remove these on another device** (each is also listed in the
 > Compatibility section):
@@ -243,6 +252,8 @@ Device-specific — remove when building for other hardware:
 >   (keep only if your CPU shows the same `clocksource: unstable TSC` at boot)
 > - `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` — masks a
 >   ThinkPad rule (ASUS battery driver lacks those charge attrs)
+> - `system_files/usr/lib/systemd/system/nvidia-powerd.service.d/override.conf`
+>   (+ the persistenced one) — NVIDIA-only, remove on iGPU-only machines
 > - `system_files/var/usrlocal/bin/fwupdmgr` + the "Disable fwupd" block in
 >   `build_files/build.sh` — this ASUS D-state hang; other hardware usually has
 >   working firmware updates

@@ -51,6 +51,7 @@ kamu fork build-nya**.
 | `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` | mematikan aturan baterai ThinkPad | ⚠️ hapus di ThinkPad/non-ASUS |
 | `system_files/var/usrlocal/bin/fwupdmgr` | shim; hanya butuh karena fwupd di-mask | ⚠️ hapus |
 | `system_files/usr/lib/systemd/system/nvidia-persistenced.service.d/override.conf` | bootstrap tunggu-node | ✅ biarkan di NVIDIA; tidak relevan selain itu |
+| `system_files/usr/lib/systemd/system/nvidia-powerd.service.d/override.conf` | bootstrap tunggu-node yang sama agar dynamic boost benar-benar jalan | ✅ biarkan di NVIDIA; tidak relevan selain itu |
 | `system_files/etc/skel/.config/hypr/config/monitors.lua` | tata letak `eDP-1 1920x1080@144` | ⚠️ sesuaikan ke layar/resolusi kamu |
 | `system_files/etc/skel/.config/hypr/config/lid.lua` | lid laptop → kunci + suspend | ✅ biarkan (jalan di laptop mana pun) |
 | paket `asusctl` (lihat "Tidak disertakan") | kontrol kipas/lampu ASUS ROG | ⚠️ khusus hardware ASUS |
@@ -243,6 +244,14 @@ Khusus perangkat — hapus saat membangun untuk hardware lain:
   HPET. Diperbaiki dengan karg `tsc=reliable`, ditanam via
   `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` (digabung bootc
   di atas `10-rakuos.toml` base, berlaku pada `bootc upgrade` berikutnya).
+- **`nvidia-powerd` mati diam-diam:** base mengaktifkan service, tetapi
+  `ConditionPathExistsGlob=/dev/nvidia*` bawaan dievaluasi sebelum modul dGPU
+  membuat node (race boot yang sama dengan `nvidia-persistenced`), sehingga
+  selalu dilewati. Diperbaiki dengan drop-in yang serupa
+  (`system_files/usr/lib/systemd/system/nvidia-powerd.service.d/override.conf`)
+  yang menghapus kondisi dan melakukan polling `/dev/nvidia0` pada
+  `ExecStartPre` — dynamic boost kini berjalan saat dGPU aktif. Barang mati
+  yang tidak berbahaya di perangkat tanpa NVIDIA.
 
 > **Untuk menghapus ini di perangkat lain** (masing-masing juga tercantum di
 > bagian Kompatibilitas):
@@ -251,6 +260,8 @@ Khusus perangkat — hapus saat membangun untuk hardware lain:
 >   (biarkan hanya jika CPU kamu menampilkan `clocksource: unstable TSC` yang sama)
 > - `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` — mematikan
 >   aturan ThinkPad (driver baterai ASUS tidak punya atribut charge itu)
+> - `system_files/usr/lib/systemd/system/nvidia-powerd.service.d/override.conf`
+>   (+ yang persistenced) — khusus NVIDIA, hapus di mesin iGPU-only
 > - `system_files/var/usrlocal/bin/fwupdmgr` + blok "Disable fwupd" di
 >   `build_files/build.sh` — gantung D-state khusus ASUS ini; hardware lain
 >   biasanya punya update firmware yang berfungsi
