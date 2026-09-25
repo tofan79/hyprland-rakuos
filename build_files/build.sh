@@ -51,9 +51,6 @@ rum install -y --refresh \
   gloview \
   noctalia-git \
   uwsm \
-  ghostty \
-  ghostty-shell-integration \
-  ghostty-terminfo \
   pipewire \
   pipewire-alsa \
   pipewire-pulseaudio \
@@ -142,8 +139,8 @@ cat > /usr/share/icons/default/index.theme << 'EOF'
 Inherits=Bibata-Modern-Ice
 EOF
 
-## Remove wofi, kitty
-rum remove -y wofi kitty kitty-kitten kitty-shell-integration kitty-terminfo   2>/dev/null || true
+## Remove wofi
+rum remove -y wofi 2>/dev/null || true
 
 ## Create greeter user for greetd
 if ! id greeter &>/dev/null; then

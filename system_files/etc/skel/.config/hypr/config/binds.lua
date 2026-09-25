@@ -63,7 +63,6 @@ hl.bind(M .. " + CTRL + T", function()
 	hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
 	hl.dispatch(hl.dsp.window.pin())
 end, { description = "Toggle floating + pinned" })
-hl.bind(M .. " + ALT + R", hl.dsp.submap("resize"), { description = "Enter resize mode" })
 
 -- ───────────────────────────────────────────
 -- Layout Controls

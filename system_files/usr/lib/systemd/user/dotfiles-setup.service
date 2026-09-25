@@ -3,7 +3,7 @@
 # RakuOS creates user accounts WITHOUT a full skeleton ($HOME starts empty).
 # This user unit runs once, at the very first graphical login of each user,
 # and copies /etc/skel/. into $HOME (Hyprland's modular config, wallpapers,
-# GTK/ghostty/fastfetch themes, etc.).
+# GTK/kitty/fastfetch themes, etc.).
 #
 # Idempotent: the script exits immediately if it already ran once for the
 # current user (marker file at ~/.local/share/dotfiles-setup), so on all later

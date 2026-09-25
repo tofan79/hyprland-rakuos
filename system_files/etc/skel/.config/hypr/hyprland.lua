@@ -16,7 +16,6 @@ require("config.monitors")
 require("config.windowrules")
 require("config.workspaces")
 require("config.lid")
-require("config.resize")
 dofile(os.getenv("HOME") .. "/.config/hypr/layouts/fair.lua")
 dofile(os.getenv("HOME") .. "/.config/hypr/layouts/deck.lua")
 

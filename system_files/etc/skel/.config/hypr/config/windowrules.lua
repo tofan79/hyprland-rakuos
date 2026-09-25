@@ -137,7 +137,7 @@ hl.layer_rule({
     blur_popups = true,
 })
 
--- btop (diluncurkan via ghostty -T btop)
+-- btop (diluncurkan via kitty --title=btop -e btop)
 hl.window_rule({
     name  = "btop-float",
     match = { title = "^btop$" },

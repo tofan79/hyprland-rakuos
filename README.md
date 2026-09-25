@@ -63,7 +63,7 @@ adapt `monitors.lua`. Everything else is a standard Hyprland/RakuOS desktop.
 
 ## Included
 
-- **Desktop:** Hyprland, uWSM, noctalia (greeter), ghostty
+- **Desktop:** Hyprland, uWSM, noctalia (greeter), kitty
 - **Portal/media:** xdg-desktop-portal(`-hyprland`/`-gtk`), pipewire + ALSA +
   PulseAudio emulation, wireplumber, egl-wayland, Xwayland, wl-clipboard,
   grim+slurp, pavucontrol, libnotify

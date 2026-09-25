@@ -91,7 +91,7 @@ directory = "/usr/share/backgrounds/rakuos"
 mode = "light"
 
     [theme.templates]
-    builtin_ids = [ "btop", "ghostty", "gtk3", "gtk4", "hyprland", "kcolorscheme", "qt" ]
+    builtin_ids = [ "btop", "kitty", "gtk3", "gtk4", "hyprland", "kcolorscheme", "qt" ]
     community_ids = [ "fastfetch", "papirus-icons", "bat", "fzf", "lazygit" ]
 
 [widget.clock]

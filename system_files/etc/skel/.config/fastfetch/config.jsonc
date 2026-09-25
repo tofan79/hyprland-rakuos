@@ -117,7 +117,7 @@
     {
       "type": "command",
       "key": "{#italic_36}󰛖 {#keys} FONT",
-      "text": "f=$(awk -F'\"' '/^font-family/ {print $2}' ~/.config/ghostty/config.ghostty 2>/dev/null); s=$(awk '/^font-size/ {print $3}' ~/.config/ghostty/config.ghostty 2>/dev/null); [ -n \"$f\" ] && echo \"$f - $s pt\" || echo \"default - $s pt\""
+      "text": "f=$(awk -F'\"' '/^font_family[[:space:]]/ {print $2; exit}' ~/.config/kitty/kitty.conf 2>/dev/null); s=$(awk '/^font_size[[:space:]]/ {print $2; exit}' ~/.config/kitty/kitty.conf 2>/dev/null); [ -n \"$f\" ] && echo \"$f - $s pt\" || echo \"default - $s pt\""
     },
     {
       "type": "packages",

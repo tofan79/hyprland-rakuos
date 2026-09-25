@@ -64,7 +64,7 @@ kamu fork build-nya**.
 
 ## Yang disertakan
 
-- **Desktop:** Hyprland, uWSM, noctalia (greeter), ghostty
+- **Desktop:** Hyprland, uWSM, noctalia (greeter), kitty
 - **Portal/media:** xdg-desktop-portal(`-hyprland`/`-gtk`), pipewire + ALSA +
   emulasi PulseAudio, wireplumber, egl-wayland, Xwayland, wl-clipboard,
   grim+slurp, pavucontrol, libnotify

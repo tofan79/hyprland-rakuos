@@ -147,9 +147,6 @@ noctalia-git
 rakuos-welcome-qt
 rakuos-system-qt
 uwsm
-ghostty
-ghostty-shell-integration
-ghostty-terminfo
 pipewire
 pipewire-alsa
 pipewire-pulseaudio
