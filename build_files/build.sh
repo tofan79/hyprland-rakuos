@@ -84,6 +84,7 @@ rum install -y --refresh \
   libnotify \
   noctalia-greeter-git \
   qt6ct \
+  qt6-qtimageformats \
   systemd-oomd-defaults \
   swash \
   zsh-autosuggestions \
