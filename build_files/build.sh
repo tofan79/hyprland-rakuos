@@ -48,6 +48,7 @@ rum install -y --refresh \
   nss-altfiles \
   hyprland \
   hyprland-guiutils \
+  kineticwe \
   gloview \
   noctalia-git \
   uwsm \

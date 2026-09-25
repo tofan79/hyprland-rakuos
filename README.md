@@ -1,4 +1,4 @@
-# RakuOS Hyprland Image
+# RakuOS Hyprland + KineticWE Test Image
 
 > **Languages:** [English](README.md) · [Bahasa Indonesia](README.id.md)
 
@@ -7,7 +7,7 @@ immutable Linux distro built on Fedora. This repository builds an OCI image
 with Hyprland + uWSM, the SDDM X11 greeter, and a tuned toolchain for laptops
 with an **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
 
-- **Registry:** `quay.io/mindset404/hyprland-nvidia-v3`
+- **Registry:** `quay.io/mindset404/rakuos-kineticwe-nvidia-v3`
 - **Base image:** `quay.io/rakuos/rakuos-base-nvidia-v3:staging`
 - **Architecture:** `linux/amd64`
 - **Tags:** `latest`, `<YYYYMMDD>` (date tag, 5 kept)
@@ -20,7 +20,7 @@ with an **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
 > image for your own device.
 
 ```bash
-sudo bootc switch quay.io/mindset404/hyprland-nvidia-v3:latest
+sudo bootc switch quay.io/mindset404/rakuos-kineticwe-nvidia-v3:latest
 sudo reboot
 ```
 
@@ -64,7 +64,7 @@ adapt `monitors.lua`. Everything else is a standard Hyprland/RakuOS desktop.
 
 ## Included
 
-- **Desktop:** Hyprland, uWSM, SDDM (X11 greeter), kitty
+- **Desktop:** Hyprland (default), uWSM, SDDM (X11 greeter), kitty, optional KineticWE session
 - **Portal/media:** xdg-desktop-portal(`-hyprland`/`-gtk`), pipewire + ALSA +
   PulseAudio emulation, wireplumber, egl-wayland, Xwayland, wl-clipboard,
   grim+slurp, pavucontrol, libnotify
@@ -131,7 +131,7 @@ Hyprland keybinds (`variables.lua`) already point at them:
 4. Disables `rum-makecache.timer` — the periodic `rum makecache` repo-metadata
    refresh is unneeded on an immutable image; `rum` pulls metadata on demand
    during install.
-4. Pushes `latest` + date tag to `quay.io/mindset404/hyprland-nvidia-v3`.
+4. Pushes `latest` + date tag to `quay.io/mindset404/rakuos-kineticwe-nvidia-v3`.
 5. **Retention:** deletes date tags older than the 5 newest (keeps storage
    within Quay free tier).
 6. Terra signing-key auto-recovery (refreshes `key.asc` from Fyralabs, falls
@@ -151,7 +151,7 @@ Workflow inputs: `base_image_tag` (default `staging`) and `rakuos_staging`
 
 ## Keeping the system up to date
 
-New image tags are pushed to `quay.io/mindset404/hyprland-nvidia-v3:latest`;
+New image tags are pushed to `quay.io/mindset404/rakuos-kineticwe-nvidia-v3:latest`;
 pulling that reference is all `bootc upgrade` needs to detect a new build.
 The `rakuos-updater.service`+`.timer` (daily at 03:00 UTC) also checks for new
 image and overlay updates automatically.
