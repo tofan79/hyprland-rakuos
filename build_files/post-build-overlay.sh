@@ -180,6 +180,9 @@ power-profiles-daemon
 libnotify
 sddm
 sddm-x11
+qt6-qtdeclarative
+qt6-qt5compat
+qt6-qtsvg
 qt6ct
 qt6-qtimageformats
 systemd-oomd-defaults
