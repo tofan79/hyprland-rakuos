@@ -1,4 +1,5 @@
 [General]
 ColorScheme=Noctalia
 Name=noctalia
+IconTheme=Colloid-Dracula
 TerminalApplication=kitty

@@ -67,6 +67,7 @@ rum install -y --refresh \
   wtype \
   fprintd-pam \
   adw-gtk3-theme \
+  colloid-theme \
   papirus-icon-theme \
   bibata-cursor-theme \
   jetbrainsmono-nerd-fonts \

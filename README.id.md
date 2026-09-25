@@ -77,7 +77,7 @@ kamu fork build-nya**.
   systemd-oomd-defaults, SDDM
 - **Perkakas:** swash, tesseract (+10 langpack), zbar, hyprpicker, cliphist,
   brightnessctl, playerctl, unzip/zip/7zip/unar, bat, fzf, zoxide
-- **Tema/font:** adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts
+- **Tema/font:** colloid-theme (GTK + ikon), papirus-icon-theme (fallback), jetbrains-mono-nerd-fonts
 - **Terra** (repo vendor, diaktifkan saat build: `bibata-cursor-theme`,
   `jetbrainsmono-nerd-fonts`, plus deps dasar `dysk`/`fresh`/`surge`/`termflix`/`wlctl`)
 - **Aplikasi:** `rakuos-software-qt` (Software Center) + `rakuos-system-qt`

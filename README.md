@@ -76,7 +76,7 @@ adapt `monitors.lua`. Everything else is a standard Hyprland/RakuOS desktop.
   systemd-oomd-defaults, SDDM
 - **Tools:** swash, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
   brightnessctl, playerctl, unzip/zip/7zip/unar, bat, fzf, zoxide
-- **Theme/fonts:** adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts
+- **Theme/fonts:** colloid-theme (GTK + icons), papirus-icon-theme (fallback), jetbrains-mono-nerd-fonts
 - **Terra** (vendor repo, enabled at build: `bibata-cursor-theme`,
   `jetbrainsmono-nerd-fonts`, plus base deps `dysk`/`fresh`/`surge`/`termflix`/`wlctl`)
 - **Apps:** `rakuos-software-qt` (Software Center) + `rakuos-system-qt`
