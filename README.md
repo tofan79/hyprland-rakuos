@@ -4,7 +4,7 @@
 
 Custom **Hyprland** spin of [RakuOS](https://rakuos.org) — a hybrid atomic,
 immutable Linux distro built on Fedora. This repository builds an OCI image
-with Hyprland + uWSM, the Noctalia greeter, and a tuned toolchain for laptops
+with Hyprland + uWSM, the SDDM X11 greeter, and a tuned toolchain for laptops
 with an **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
 
 - **Registry:** `quay.io/mindset404/hyprland-nvidia-v3`
@@ -42,7 +42,8 @@ specific to that hardware and should be **removed when you fork the build**.
 
 | Part of this repo | What it is | On another device |
 |---|---|---|
-| `build_files/build.sh` — desktop stack, greetd, dotfiles, tmpfiles quieting, GID baking, chrony | Core image | ✅ keep |
+| `build_files/build.sh` — desktop stack, SDDM, dotfiles, tmpfiles quieting, GID baking, chrony | Core image | ✅ keep |
+| `system_files/etc/sddm.conf.d/10-hyprland.conf` | SDDM X11 greeter; user login still starts the Hyprland Wayland/UWSM session | ✅ keep |
 | `build_files/build.sh` — "Mask dkms" block | modules pre-baked; runtime dkms never needed | ✅ keep on NVIDIA images |
 | `build_files/build.sh` — "Disable fwupd" block | fwupd hangs in D-state on this ASUS | ⚠️ remove — works fine elsewhere |
 | `build_files/build.sh` — "Mask mcelog" block | AMD-only cosmetic unit | ⚠️ Intel machines: keep mcelog |
@@ -63,16 +64,16 @@ adapt `monitors.lua`. Everything else is a standard Hyprland/RakuOS desktop.
 
 ## Included
 
-- **Desktop:** Hyprland, uWSM, noctalia (greeter), kitty
+- **Desktop:** Hyprland, uWSM, SDDM (X11 greeter), kitty
 - **Portal/media:** xdg-desktop-portal(`-hyprland`/`-gtk`), pipewire + ALSA +
   PulseAudio emulation, wireplumber, egl-wayland, Xwayland, wl-clipboard,
   grim+slurp, pavucontrol, libnotify
 - **Keyring/auth:** gnome-keyring intentionally **excluded** (Noctalia/Hyprland
-  work fine without `org.freedesktop.secrets` and it caused dual-daemon crashes
-  at login with the greetd PAM setup), fprintd-pam, libsecret client lib
+  work fine without `org.freedesktop.secrets` and it previously caused
+  dual-daemon crashes at login), fprintd-pam, libsecret client lib
 - **Base duties:** NetworkManager suite, power-profiles-daemon (replaces
   tuned-ppd; base's tuned/tuned-ppd services are masked), gvfs(+mtp/nfs/smb),
-  systemd-oomd-defaults, noctalia-greeter
+  systemd-oomd-defaults, SDDM
 - **Tools:** swash, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
   brightnessctl, playerctl, unzip/zip/7zip/unar, bat, fzf, zoxide
 - **Theme/fonts:** adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts

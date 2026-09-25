@@ -42,8 +42,8 @@ EOF
 # plain COPY). /usr/local is a symlink to /var/usrlocal in the base image, so
 # it cannot be used as a COPY destination either — rewriting here is the only
 # reliable spot. UWSM_SILENT_START=2 stops uwsm start from printing its
-# progress to stdout (greetd forwards it to the VT, showing text between the
-# greeter and Hyprland); real errors still surface via syslog/journal.
+# progress to stdout (the display manager forwards it to the VT, showing text
+# between the greeter and Hyprland); real errors still surface via syslog/journal.
 mkdir -p /usr/share/wayland-sessions
 cat > /usr/share/wayland-sessions/hyprland-uwsm.desktop << 'EOF'
 [Desktop Entry]

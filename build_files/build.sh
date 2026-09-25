@@ -82,7 +82,8 @@ rum install -y --refresh \
   nm-connection-editor \
   power-profiles-daemon \
   libnotify \
-  noctalia-greeter-git \
+  sddm \
+  sddm-x11 \
   qt6ct \
   qt6-qtimageformats \
   systemd-oomd-defaults \
@@ -140,28 +141,8 @@ cat > /usr/share/icons/default/index.theme << 'EOF'
 Inherits=Bibata-Modern-Ice
 EOF
 
-## Remove wofi
+## Remove superseded packages
 rum remove -y wofi 2>/dev/null || true
-
-## Create greeter user for greetd
-if ! id greeter &>/dev/null; then
-    useradd -r -s /sbin/nologin -d /var/lib/noctalia-greeter -M greeter
-fi
-
-## Setup noctalia-greeter
-if [ -x /usr/share/noctalia-greeter/setup_greeter_system.sh ]; then
-    /usr/share/noctalia-greeter/setup_greeter_system.sh || true
-fi
-
-## Make greetd wrapper executable (sourced from system_files/)
-chmod +x /usr/libexec/rakuos/rakuos-greetd-wrapper.sh 2>/dev/null || true
-
-## Ensure state dir ownership (fallback if setup script didn't run)
-if [ -d /var/lib/noctalia-greeter ]; then
-    mkdir -p /var/lib/noctalia-greeter/.themes
-    chown -R greeter:greeter /var/lib/noctalia-greeter
-    chmod 0750 /var/lib/noctalia-greeter
-fi
 
 ## Enable NTP: chrony keeps clock synced across reboots.
 ## RTC is UTC (Windows already configured with RealTimeIsUniversal=1 in registry),
@@ -170,7 +151,7 @@ rum install -y chrony
 systemctl enable chronyd
 
 ## Enable Services
-systemctl enable greetd
+systemctl enable sddm
 systemctl enable --global dotfiles-setup
 
 ## Disable periodic rum metadata refresh:

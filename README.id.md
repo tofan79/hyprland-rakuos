@@ -4,7 +4,7 @@
 
 Spin kustom **Hyprland** dari [RakuOS](https://rakuos.org) — distro Linux atomik
 immutable berbasis Fedora. Repositori ini membangun gambar (image) OCI dengan
-Hyprland + uWSM, greeter Noctalia, dan perangkat (toolchain) yang disetel untuk
+Hyprland + uWSM, greeter X11 SDDM, dan perangkat (toolchain) yang disetel untuk
 laptop dengan **NVIDIA dGPU + AMD iGPU** (mis. ASUS ROG).
 
 - **Registry:** `quay.io/mindset404/hyprland-nvidia-v3`
@@ -43,7 +43,8 @@ kamu fork build-nya**.
 
 | Bagian dari repo ini | Fungsinya | Di perangkat lain |
 |---|---|---|
-| `build_files/build.sh` — stack desktop, greetd, dotfiles, peredam tmpfiles, penulisan GID, chrony | Inti gambar | ✅ biarkan |
+| `build_files/build.sh` — stack desktop, SDDM, dotfiles, peredam tmpfiles, penulisan GID, chrony | Inti gambar | ✅ biarkan |
+| `system_files/etc/sddm.conf.d/10-hyprland.conf` | greeter X11 SDDM; login pengguna tetap memulai sesi Wayland/UWSM Hyprland | ✅ biarkan |
 | `build_files/build.sh` — blok "Mask dkms" | modul sudah ditanam di gambar; dkms runtime tidak pernah dibutuhkan | ✅ biarkan pada gambar NVIDIA |
 | `build_files/build.sh` — blok "Disable fwupd" | fwupd menggantung (D-state) pada ASUS ini | ⚠️ hapus — normal di perangkat lain |
 | `build_files/build.sh` — blok "Mask mcelog" | unit kosmetik khusus AMD | ⚠️ mesin Intel: biarkan mcelog aktif |
@@ -64,16 +65,16 @@ kamu fork build-nya**.
 
 ## Yang disertakan
 
-- **Desktop:** Hyprland, uWSM, noctalia (greeter), kitty
+- **Desktop:** Hyprland, uWSM, SDDM (greeter X11), kitty
 - **Portal/media:** xdg-desktop-portal(`-hyprland`/`-gtk`), pipewire + ALSA +
   emulasi PulseAudio, wireplumber, egl-wayland, Xwayland, wl-clipboard,
   grim+slurp, pavucontrol, libnotify
 - **Keyring/auth:** gnome-keyring sengaja **tidak disertakan** (Noctalia/Hyprland
   jalan normal tanpa `org.freedesktop.secrets`; dulu menyebabkan crash ganda
-  saat login pada setup PAM greetd), fprintd-pam, libsecret client lib
+  saat login), fprintd-pam, libsecret client lib
 - **Dasar:** paket NetworkManager, power-profiles-daemon (pengganti
   tuned-ppd; tuned/tuned-ppd dari base di-mask), gvfs(+mtp/nfs/smb),
-  systemd-oomd-defaults, noctalia-greeter
+  systemd-oomd-defaults, SDDM
 - **Perkakas:** swash, tesseract (+10 langpack), zbar, hyprpicker, cliphist,
   brightnessctl, playerctl, unzip/zip/7zip/unar, bat, fzf, zoxide
 - **Tema/font:** adw-gtk3-theme, papirus-icon-theme, jetbrains-mono-nerd-fonts

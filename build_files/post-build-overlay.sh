@@ -178,7 +178,8 @@ NetworkManager-wwan
 nm-connection-editor
 power-profiles-daemon
 libnotify
-noctalia-greeter-git
+sddm
+sddm-x11
 qt6ct
 qt6-qtimageformats
 systemd-oomd-defaults
