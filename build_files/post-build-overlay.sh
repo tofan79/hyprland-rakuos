@@ -174,6 +174,8 @@ wtype
 fprintd-pam
 adw-gtk3-theme
 colloid-theme
+cpio
+nss-altfiles
 papirus-icon-theme
 bibata-cursor-theme
 jetbrainsmono-nerd-fonts
