@@ -140,27 +140,19 @@ rm -f "$STATE_FILE" "$DIRTY_FILE"
 sed -i -e '$a\' "$PACKAGES_LIST" 2>/dev/null || true
 
 cat >> /usr/share/rakuos/protected-packages.txt << 'PKGLIST'
-hyprland
-hyprland-guiutils
-kineticwe
-gloview
-noctalia-git
+kineticwe-git
 rakuos-welcome-qt
 rakuos-system-qt
-uwsm
 pipewire
 pipewire-alsa
 pipewire-pulseaudio
 wireplumber
 xdg-desktop-portal
-xdg-desktop-portal-hyprland
 xdg-desktop-portal-gtk
 xdg-user-dirs-gtk
 xorg-x11-server-Xwayland
 wl-clipboard
 egl-wayland
-grim
-slurp
 wtype
 fprintd-pam
 adw-gtk3-theme
@@ -188,7 +180,6 @@ qt6-qtsvg
 qt6ct
 qt6-qtimageformats
 systemd-oomd-defaults
-swash
 tesseract
 tesseract-langpack-eng
 tesseract-langpack-ind
@@ -200,13 +191,11 @@ tesseract-langpack-chi_sim
 tesseract-langpack-chi_sim_vert
 tesseract-langpack-chi_tra
 tesseract-langpack-chi_tra_vert
-zbar
 zsh-autosuggestions
 zsh-syntax-highlighting
 eza
 fastfetch
 starship
-hyprpicker
 cliphist
 brightnessctl
 playerctl
@@ -236,5 +225,5 @@ echo "[rakuos] Post-build seed complete."
 echo "Generating base file manifest..."
 /usr/libexec/rakuos/generate-base-manifest
 
-echo "Prebaking hyprland overlay payload..."
+echo "Prebaking KineticWE overlay payload..."
 prebake_overlay_from_installroot

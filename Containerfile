@@ -1,4 +1,4 @@
-# RakuOS Hyprland Image
+# RakuOS KineticWE Image
 ARG BASE_IMAGE_TAG="${BASE_IMAGE_TAG:-staging}"
 ARG BASE_IMAGE_REPO="quay.io/rakuos/rakuos-base-nvidia-v3"
 ARG RAKUOS_STAGING="0"
@@ -10,7 +10,7 @@ ENV RAKUOS_STAGING=${RAKUOS_STAGING}
 COPY build_files /
 COPY system_files /
 
-# Cache-bust: refresh -git packages (noctalia-git, hyprland-guiutils) on every
+# Cache-bust: refresh KineticWE and related packages on every
 # build even when no repo files changed. Set via workflow BUILD_DATE arg.
 ARG BUILD_DATE=""
 ENV BUILD_DATE=${BUILD_DATE}

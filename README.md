@@ -1,10 +1,10 @@
-# RakuOS Hyprland + KineticWE Test Image
+# RakuOS KineticWE Test Image
 
 > **Languages:** [English](README.md) · [Bahasa Indonesia](README.id.md)
 
-Custom **Hyprland** spin of [RakuOS](https://rakuos.org) — a hybrid atomic,
+Custom **KineticWE** spin of [RakuOS](https://rakuos.org) — a hybrid atomic,
 immutable Linux distro built on Fedora. This repository builds an OCI image
-with Hyprland + uWSM, the SDDM X11 greeter, and a tuned toolchain for laptops
+with KineticWE + its Noctalia shell, the SDDM X11 greeter, and a tuned toolchain for laptops
 with an **NVIDIA dGPU + AMD iGPU** (e.g. ASUS ROG).
 
 - **Registry:** `quay.io/mindset404/rakuos-kineticwe-nvidia-v3`
@@ -43,38 +43,36 @@ specific to that hardware and should be **removed when you fork the build**.
 | Part of this repo | What it is | On another device |
 |---|---|---|
 | `build_files/build.sh` — desktop stack, SDDM, dotfiles, tmpfiles quieting, GID baking, chrony | Core image | ✅ keep |
-| `system_files/etc/sddm.conf.d/10-hyprland.conf` | SDDM X11 greeter; user login still starts the Hyprland Wayland/UWSM session | ✅ keep |
+| `system_files/etc/sddm.conf.d/10-kineticwe.conf` | SDDM X11 greeter; user login starts the KineticWE Wayland session | ✅ keep |
 | `build_files/build.sh` — "Mask dkms" block | modules pre-baked; runtime dkms never needed | ✅ keep on NVIDIA images |
 | `build_files/build.sh` — "Disable fwupd" block | fwupd hangs in D-state on this ASUS | ⚠️ remove — works fine elsewhere |
 | `build_files/build.sh` — "Mask mcelog" block | AMD-only cosmetic unit | ⚠️ Intel machines: keep mcelog |
-| `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` | `tsc=reliable` (TSC watchdog false alarm) | ⚠️ remove unless same symptom |
+| `system_files/usr/lib/bootc/kargs.d/11-kineticwe-tsc.toml` | `tsc=reliable` (TSC watchdog false alarm) | ⚠️ remove unless same symptom |
 | `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` | masks a ThinkPad battery rule | ⚠️ remove on ThinkPad/non-ASUS |
 | `system_files/var/usrlocal/bin/fwupdmgr` | shim; only needed because fwupd is masked | ⚠️ remove |
 | `system_files/usr/lib/systemd/system/nvidia-persistenced.service.d/override.conf` | wait-for-node bootstrap | ✅ keep on NVIDIA; irrelevant otherwise |
 | `system_files/usr/lib/systemd/system/nvidia-powerd.service.d/override.conf` | same wait-for-node bootstrap so dynamic boost actually runs | ✅ keep on NVIDIA; irrelevant otherwise |
-| `system_files/etc/skel/.config/hypr/config/monitors.lua` | `eDP-1 1920x1080@144` layout | ⚠️ edit to your panel/resolution |
-| `system_files/etc/skel/.config/hypr/config/lid.lua` | laptop lid → lock + suspend | ✅ keep (works on any laptop) |
 | `asusctl` package (see "Not included") | ASUS ROG fan/light control | ⚠️ ASUS hardware only |
 
 **To build this image for another machine:** fork the repo, remove the rows
 marked ⚠️ (either `git rm` the files or delete the blocks in `build.sh`), and
-adapt `monitors.lua`. Everything else is a standard Hyprland/RakuOS desktop.
+Everything else is a standard KineticWE/RakuOS desktop.
 
 ---
 
 ## Included
 
-- **Desktop:** Hyprland (default), uWSM, SDDM (X11 greeter), kitty, optional KineticWE session
-- **Portal/media:** xdg-desktop-portal(`-hyprland`/`-gtk`), pipewire + ALSA +
+- **Desktop:** KineticWE (default), its Noctalia KWE shell, SDDM (X11 greeter), kitty
+- **Portal/media:** xdg-desktop-portal(`-kwe`/`-gtk`), pipewire + ALSA +
   PulseAudio emulation, wireplumber, egl-wayland, Xwayland, wl-clipboard,
-  grim+slurp, pavucontrol, libnotify
-- **Keyring/auth:** gnome-keyring intentionally **excluded** (Noctalia/Hyprland
+  pavucontrol, libnotify
+- **Keyring/auth:** gnome-keyring intentionally **excluded** (Noctalia/KineticWE
   work fine without `org.freedesktop.secrets` and it previously caused
   dual-daemon crashes at login), fprintd-pam, libsecret client lib
 - **Base duties:** NetworkManager suite, power-profiles-daemon (replaces
   tuned-ppd; base's tuned/tuned-ppd services are masked), gvfs(+mtp/nfs/smb),
   systemd-oomd-defaults, SDDM
-- **Tools:** swash, tesseract (+10 langpacks), zbar, hyprpicker, cliphist,
+- **Tools:** tesseract (+10 langpacks), cliphist,
   brightnessctl, playerctl, unzip/zip/7zip/unar, bat, fzf, zoxide
 - **Theme/fonts:** colloid-theme (GTK + icons), papirus-icon-theme (fallback), jetbrains-mono-nerd-fonts
 - **Terra** (vendor repo, enabled at build: `bibata-cursor-theme`,
@@ -98,7 +96,7 @@ sudo rum install <package>     # overlay (survives image upgrades)
 sudo dnf5 install <package>    # base image layer (dev-only, not atomic)
 ```
 
-Hyprland keybinds (`variables.lua`) already point at them:
+KineticWE's default keybinds already point at them:
 
 - **editor** `zeditor`, **calculator** `gnome-calculator`, **video/audio
   player** `mpv`
@@ -121,7 +119,7 @@ Hyprland keybinds (`variables.lua`) already point at them:
 
 1. `docker buildx build --provenance=false` — single-manifest, so Quay shows
    the real image size.
-2. Base = RakuOS `rakuos-base-nvidia-v3:staging` (COPR Hyprland +
+2. Base = RakuOS `rakuos-base-nvidia-v3:staging` (COPR
    `mindset/Mindset-Apps`, Terra/RPM-Fusion repos tuned).
 3. Bakes canonical system GIDs into `/etc/group` (audio/video/input/kvm/utmp
    etc. — the `bootc-minimal` base lacks the `altfiles` NSS module, so
@@ -141,7 +139,7 @@ Hyprland keybinds (`variables.lua`) already point at them:
 ### Manual trigger
 
 ```bash
-gh workflow run "Build RakuOS Hyprland Image" --repo tofan79/hyprland-rakuos
+gh workflow run "Build RakuOS KineticWE Image" --repo tofan79/hyprland-rakuos
 ```
 
 Workflow inputs: `base_image_tag` (default `staging`) and `rakuos_staging`
@@ -235,7 +233,7 @@ Device-specific — remove when building for other hardware:
   (lower timekeeping performance). CPU here has an invariant TSC
   (`constant_tsc` + `nonstop_tsc`), so the TSC is reliable and the HPET is the
   drifting one. Fixed with karg `tsc=reliable`, baked via
-  `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` (merged by bootc
+  `system_files/usr/lib/bootc/kargs.d/11-kineticwe-tsc.toml` (merged by bootc
   over the base's `10-rakuos.toml`, applied on next `bootc upgrade`).
 - **`nvidia-powerd` silently dead:** base enables the service, but cond's stock
   `ConditionPathExistsGlob=/dev/nvidia*` is evaluated before the dGPU module
@@ -249,7 +247,7 @@ Device-specific — remove when building for other hardware:
 > **To remove these on another device** (each is also listed in the
 > Compatibility section):
 >
-> - `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` — `tsc=reliable`
+> - `system_files/usr/lib/bootc/kargs.d/11-kineticwe-tsc.toml` — `tsc=reliable`
 >   (keep only if your CPU shows the same `clocksource: unstable TSC` at boot)
 > - `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` — masks a
 >   ThinkPad rule (ASUS battery driver lacks those charge attrs)
@@ -260,8 +258,6 @@ Device-specific — remove when building for other hardware:
 >   working firmware updates
 > - the "Mask mcelog" block in `build_files/build.sh` — AMD only (Intel keeps
 >   mcelog)
-> - `system_files/etc/skel/.config/hypr/config/monitors.lua` — replace the
->   `eDP-1 1920x1080@144` layout with your own panel/resolution
 
 ---
 
@@ -272,7 +268,7 @@ Licensed under the [Apache License 2.0](LICENSE).
 This project builds on **[RakuOS](https://rakuos.org)** — atomic image-based
 Linux on Fedora. RakuOS projects are Apache 2.0 as well
 (see [gitlab.com/rakuos](https://gitlab.com/rakuos), e.g. `rakuos-base`).
-Hyprland is GPL-3.0; uWSM, Noctalia and included packages retain their own
+KineticWE and included packages retain their own
 licenses.
 
 > **Disclaimer:** this is an **unofficial, community-built image**. It is not

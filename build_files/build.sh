@@ -2,27 +2,19 @@
 
 set -ouex pipefail
 
-# Enable COPR for Hyprland and Noctalia
-dnf -y copr enable lionheartp/Hyprland
+# Enable COPR for KineticWE and its Noctalia shell
 dnf -y copr enable mindset/Mindset-Apps
 
 # Pin COPRs at priority=20: below RakuOS repos (v4=5, v3=10), above defaults.
 # Matches RakuOS base's convention of editing repo files directly with sed.
 # Remove any pre-existing priority line (e.g. baked in by copr enable) first.
-for _copr_repo in "mindset:Mindset-Apps" "lionheartp:Hyprland"; do
-    _copr_id="${_copr_repo%%:*}"            # mindset / lionheartp
-    _copr_name="${_copr_repo#*:}"           # Mindset-Apps / Hyprland
+for _copr_repo in "mindset:Mindset-Apps"; do
+    _copr_id="${_copr_repo%%:*}"            # mindset
+    _copr_name="${_copr_repo#*:}"           # Mindset-Apps
     _copr_file="/etc/yum.repos.d/_copr:copr.fedorainfracloud.org:${_copr_repo}.repo"
     sed -i '/^priority=/d' "$_copr_file"
     sed -i '/^\[copr:copr.fedorainfracloud.org:'"$_copr_id"':'"$_copr_name"'\]/a priority=20' "$_copr_file"
 done
-
-# NOTE: rakuos-release-hyprland package not available yet in repos
-# When available, uncomment below:
-# RAKUOS_RELEASE_PKG="rakuos-release-hyprland"
-# if [ "${RAKUOS_STAGING:-0}" = "1" ]; then
-#     RAKUOS_RELEASE_PKG="rakuos-release-hyprland-staging"
-# fi
 
 # Terra ships disabled by default (third-party repos are opt-in), so enable
 # it here in case any packages below come from Terra; post-build.sh disables
@@ -46,25 +38,17 @@ ln -sfn /usr/bin/bash /usr/bin/sh 2>/dev/null || true
 ## the module completes the chain defined in nsswitch.conf and removes the noise.
 rum install -y --refresh \
   nss-altfiles \
-  hyprland \
-  hyprland-guiutils \
-  kineticwe \
-  gloview \
-  noctalia-git \
-  uwsm \
+  kineticwe-git \
   pipewire \
   pipewire-alsa \
   pipewire-pulseaudio \
   wireplumber \
   xdg-desktop-portal \
-  xdg-desktop-portal-hyprland \
   xdg-desktop-portal-gtk \
   xdg-user-dirs-gtk \
   xorg-x11-server-Xwayland \
   wl-clipboard \
   egl-wayland \
-  grim \
-  slurp \
   wtype \
   fprintd-pam \
   adw-gtk3-theme \
@@ -92,7 +76,6 @@ rum install -y --refresh \
   qt6ct \
   qt6-qtimageformats \
   systemd-oomd-defaults \
-  swash \
   zsh-autosuggestions \
   zsh-syntax-highlighting \
   eza \
@@ -109,8 +92,6 @@ rum install -y --refresh \
   tesseract-langpack-chi_sim_vert \
   tesseract-langpack-chi_tra \
   tesseract-langpack-chi_tra_vert \
-  zbar \
-  hyprpicker \
   cliphist \
   brightnessctl \
   playerctl \
@@ -147,7 +128,7 @@ Inherits=Bibata-Modern-Ice
 EOF
 
 ## Remove superseded packages
-rum remove -y wofi 2>/dev/null || true
+rum remove -y wofi waybar swaylock alacritty fuzzel 2>/dev/null || true
 
 ## Enable NTP: chrony keeps clock synced across reboots.
 ## RTC is UTC (Windows already configured with RealTimeIsUniversal=1 in registry),

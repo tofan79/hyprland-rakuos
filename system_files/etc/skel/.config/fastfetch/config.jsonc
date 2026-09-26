@@ -98,12 +98,12 @@
     {
       "type": "command",
       "key": "{#italic_36} {#keys} WM",
-      "text": "echo \"${XDG_CURRENT_DESKTOP:-Hyprland}\""
+      "text": "echo \"${XDG_CURRENT_DESKTOP:-KineticWE}\""
     },
     {
       "type": "command",
       "key": "{#italic_36}󰉼 {#keys} DESKTOP",
-      "text": "echo \"Noctalia $(rpm -q --qf '%{VERSION}' noctalia-git 2>/dev/null || echo unknown)\""
+      "text": "echo \"Noctalia $(rpm -q --qf '%{VERSION}' kineticwe-noctalia 2>/dev/null || echo unknown)\""
     },
     {
       "type": "terminal",

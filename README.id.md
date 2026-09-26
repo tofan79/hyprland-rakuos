@@ -1,10 +1,12 @@
-# Gambar Uji RakuOS Hyprland + KineticWE
+# Gambar Uji RakuOS KineticWE
 
 > **Bahasa:** [English](README.md) · [Bahasa Indonesia](README.id.md)
 
-Spin kustom **Hyprland** dari [RakuOS](https://rakuos.org) — distro Linux atomik
-immutable berbasis Fedora. Repositori ini membangun gambar (image) OCI dengan
-Hyprland + uWSM, greeter X11 SDDM, dan perangkat (toolchain) yang disetel untuk
+Spin kustom **KineticWE** dari [RakuOS](https://rakuos.org) — distro Linux atomik
+immutable hybrid berbasis Fedora. Repo ini membangun image OCI dengan
+KineticWE + shell Noctalia miliknya, greeter X11 SDDM, dan perangkat (toolchain)
+yang disetel untuk
+
 laptop dengan **NVIDIA dGPU + AMD iGPU** (mis. ASUS ROG).
 
 - **Registry:** `quay.io/mindset404/rakuos-kineticwe-nvidia-v3`
@@ -44,38 +46,36 @@ kamu fork build-nya**.
 | Bagian dari repo ini | Fungsinya | Di perangkat lain |
 |---|---|---|
 | `build_files/build.sh` — stack desktop, SDDM, dotfiles, peredam tmpfiles, penulisan GID, chrony | Inti gambar | ✅ biarkan |
-| `system_files/etc/sddm.conf.d/10-hyprland.conf` | greeter X11 SDDM; login pengguna tetap memulai sesi Wayland/UWSM Hyprland | ✅ biarkan |
+| `system_files/etc/sddm.conf.d/10-kineticwe.conf` | greeter X11 SDDM; login pengguna memulai sesi Wayland KineticWE | ✅ biarkan |
 | `build_files/build.sh` — blok "Mask dkms" | modul sudah ditanam di gambar; dkms runtime tidak pernah dibutuhkan | ✅ biarkan pada gambar NVIDIA |
 | `build_files/build.sh` — blok "Disable fwupd" | fwupd menggantung (D-state) pada ASUS ini | ⚠️ hapus — normal di perangkat lain |
 | `build_files/build.sh` — blok "Mask mcelog" | unit kosmetik khusus AMD | ⚠️ mesin Intel: biarkan mcelog aktif |
-| `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` | `tsc=reliable` (TSC salah deteksi oleh watchdog) | ⚠️ hapus kecuali gejala yang sama |
+| `system_files/usr/lib/bootc/kargs.d/11-kineticwe-tsc.toml` | `tsc=reliable` (TSC salah deteksi oleh watchdog) | ⚠️ hapus kecuali gejala yang sama |
 | `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` | mematikan aturan baterai ThinkPad | ⚠️ hapus di ThinkPad/non-ASUS |
 | `system_files/var/usrlocal/bin/fwupdmgr` | shim; hanya butuh karena fwupd di-mask | ⚠️ hapus |
 | `system_files/usr/lib/systemd/system/nvidia-persistenced.service.d/override.conf` | bootstrap tunggu-node | ✅ biarkan di NVIDIA; tidak relevan selain itu |
 | `system_files/usr/lib/systemd/system/nvidia-powerd.service.d/override.conf` | bootstrap tunggu-node yang sama agar dynamic boost benar-benar jalan | ✅ biarkan di NVIDIA; tidak relevan selain itu |
-| `system_files/etc/skel/.config/hypr/config/monitors.lua` | tata letak `eDP-1 1920x1080@144` | ⚠️ sesuaikan ke layar/resolusi kamu |
-| `system_files/etc/skel/.config/hypr/config/lid.lua` | lid laptop → kunci + suspend | ✅ biarkan (jalan di laptop mana pun) |
 | paket `asusctl` (lihat "Tidak disertakan") | kontrol kipas/lampu ASUS ROG | ⚠️ khusus hardware ASUS |
 
 **Untuk membangun gambar ini di mesin lain:** fork repo, hapus baris bertanda ⚠️
 (bisa `git rm` file-nya atau hapus bloknya di `build.sh`), lalu sesuaikan
-`monitors.lua`. Selebihnya adalah desktop Hyprland/RakuOS standar.
+Selebihnya adalah desktop KineticWE/RakuOS standar.
 
 ---
 
 ## Yang disertakan
 
-- **Desktop:** Hyprland (default), uWSM, SDDM (greeter X11), kitty, sesi KineticWE opsional
-- **Portal/media:** xdg-desktop-portal(`-hyprland`/`-gtk`), pipewire + ALSA +
+- **Desktop:** KineticWE (default), shell Noctalia KWE, SDDM (greeter X11), kitty
+- **Portal/media:** xdg-desktop-portal(`-kwe`/`-gtk`), pipewire + ALSA +
   emulasi PulseAudio, wireplumber, egl-wayland, Xwayland, wl-clipboard,
-  grim+slurp, pavucontrol, libnotify
-- **Keyring/auth:** gnome-keyring sengaja **tidak disertakan** (Noctalia/Hyprland
+  pavucontrol, libnotify
+- **Keyring/auth:** gnome-keyring sengaja **tidak disertakan** (Noctalia/KineticWE
   jalan normal tanpa `org.freedesktop.secrets`; dulu menyebabkan crash ganda
   saat login), fprintd-pam, libsecret client lib
 - **Dasar:** paket NetworkManager, power-profiles-daemon (pengganti
   tuned-ppd; tuned/tuned-ppd dari base di-mask), gvfs(+mtp/nfs/smb),
   systemd-oomd-defaults, SDDM
-- **Perkakas:** swash, tesseract (+10 langpack), zbar, hyprpicker, cliphist,
+- **Perkakas:** tesseract (+10 langpack), cliphist,
   brightnessctl, playerctl, unzip/zip/7zip/unar, bat, fzf, zoxide
 - **Tema/font:** colloid-theme (GTK + ikon), papirus-icon-theme (fallback), jetbrains-mono-nerd-fonts
 - **Terra** (repo vendor, diaktifkan saat build: `bibata-cursor-theme`,
@@ -101,7 +101,7 @@ sudo rum install <package>     # overlay (tahan image upgrade)
 sudo dnf5 install <package>    # lapisan base image (dev-only, tidak atomik)
 ```
 
-Keybind Hyprland (`variables.lua`) sudah mengarah ke semuanya:
+Keybind KineticWE sudah mengarah ke semuanya:
 
 - **editor** `zeditor`, **kalkulator** `gnome-calculator`, **pemutar video/audio**
   `mpv`
@@ -124,7 +124,7 @@ Keybind Hyprland (`variables.lua`) sudah mengarah ke semuanya:
 
 1. `docker buildx build --provenance=false` — manifest tunggal, sehingga Quay
    menampilkan ukuran gambar yang sebenarnya.
-2. Base = RakuOS `rakuos-base-nvidia-v3:staging` (COPR Hyprland +
+2. Base = RakuOS `rakuos-base-nvidia-v3:staging` (COPR
    `mindset/Mindset-Apps`, repo Terra/RPM-Fusion disesuaikan).
 3. Menulis GID sistem kanonik ke `/etc/group` (audio/video/input/kvm/utmp
    dst. — base `bootc-minimal` tidak punya modul NSS `altfiles`, jadi
@@ -144,7 +144,7 @@ Keybind Hyprland (`variables.lua`) sudah mengarah ke semuanya:
 ### Pemicu manual
 
 ```bash
-gh workflow run "Build RakuOS Hyprland Image" --repo tofan79/hyprland-rakuos
+gh workflow run "Build RakuOS KineticWE Image" --repo tofan79/hyprland-rakuos
 ```
 
 Input workflow: `base_image_tag` (default `staging`) dan `rakuos_staging`
@@ -243,7 +243,7 @@ Khusus perangkat — hapus saat membangun untuk hardware lain:
   (performa pencatatan waktu lebih rendah). CPU di sini punya TSC invariant
   (`constant_tsc` + `nonstop_tsc`), jadi TSC andal dan yang melenceng adalah
   HPET. Diperbaiki dengan karg `tsc=reliable`, ditanam via
-  `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` (digabung bootc
+  `system_files/usr/lib/bootc/kargs.d/11-kineticwe-tsc.toml` (digabung bootc
   di atas `10-rakuos.toml` base, berlaku pada `bootc upgrade` berikutnya).
 - **`nvidia-powerd` mati diam-diam:** base mengaktifkan service, tetapi
   `ConditionPathExistsGlob=/dev/nvidia*` bawaan dievaluasi sebelum modul dGPU
@@ -257,7 +257,7 @@ Khusus perangkat — hapus saat membangun untuk hardware lain:
 > **Untuk menghapus ini di perangkat lain** (masing-masing juga tercantum di
 > bagian Kompatibilitas):
 >
-> - `system_files/usr/lib/bootc/kargs.d/11-hyprland-tsc.toml` — `tsc=reliable`
+> - `system_files/usr/lib/bootc/kargs.d/11-kineticwe-tsc.toml` — `tsc=reliable`
 >   (biarkan hanya jika CPU kamu menampilkan `clocksource: unstable TSC` yang sama)
 > - `system_files/etc/udev/rules.d/99-thinkpad-thresholds-udev.rules` — mematikan
 >   aturan ThinkPad (driver baterai ASUS tidak punya atribut charge itu)
@@ -268,8 +268,6 @@ Khusus perangkat — hapus saat membangun untuk hardware lain:
 >   biasanya punya update firmware yang berfungsi
 > - blok "Mask mcelog" di `build_files/build.sh` — khusus AMD (Intel
 >   membiarkan mcelog aktif)
-> - `system_files/etc/skel/.config/hypr/config/monitors.lua` — ganti tata
->   letak `eDP-1 1920x1080@144` dengan layar/resolusi kamu sendiri
 
 ---
 
@@ -280,8 +278,7 @@ Dilisensikan di bawah [Apache License 2.0](LICENSE).
 Proyek ini dibangun di atas **[RakuOS](https://rakuos.org)** — Linux berbasis
 gambar atomik di Fedora. Proyek RakuOS juga Apache 2.0
 (lihat [gitlab.com/rakuos](https://gitlab.com/rakuos), mis. `rakuos-base`).
-Hyprland berlisensi GPL-3.0; uWSM, Noctalia, dan paket lain tetap dengan
-lisensinya masing-masing.
+KineticWE, Noctalia, dan paket lain tetap dengan lisensinya masing-masing.
 
 > **Pernyataan:** ini adalah **gambar tak resmi buatan komunitas**. Tidak
 > berafiliasi dengan, mendapat dukungan dari, atau merupakan produk proyek

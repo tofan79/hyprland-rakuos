@@ -1,4 +1,4 @@
-name: Build RakuOS Hyprland Image
+name: Build RakuOS KineticWE Image
 
 on:
   workflow_dispatch:
@@ -69,7 +69,7 @@ jobs:
             --label 'org.opencontainers.image.revision=${{ github.sha }}' \
             --label "org.rakuos.base-digest=${{ steps.base_digest.outputs.digest }}" \
             --label 'org.opencontainers.image.vendor=RakuOS' \
-            --label 'org.opencontainers.image.description=RakuOS Hyprland' \
+            --label 'org.opencontainers.image.description=RakuOS KineticWE' \
             -t ${{ env.IMAGE_NAME }}:latest \
             -t ${{ env.IMAGE_NAME }}:$(date -u +%Y%m%d) \
             --push \

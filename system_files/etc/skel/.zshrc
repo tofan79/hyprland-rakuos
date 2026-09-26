@@ -9,7 +9,7 @@ fastfetch() {
 }
 fastfetch
 
-# RakuOS Hyprland zsh config - fish-like experience
+# RakuOS KineticWE zsh config - fish-like experience
 # Auto-suggestions, syntax highlighting, starship prompt, fzf, zoxide, bat.
 
 # --- History ---
