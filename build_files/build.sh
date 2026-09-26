@@ -17,8 +17,9 @@ for _copr_repo in "mindset:Mindset-Apps"; do
 done
 
 # Terra ships disabled by default (third-party repos are opt-in), so enable
-# it here in case any packages below come from Terra; post-build.sh disables
-# it again before the image is finalized.
+# it here in case any packages below come from Terra. It stays enabled for the
+# whole build stage — the overlay prebake in post-build-overlay.sh resolves
+# packages.list too — and is disabled again at the end of that script.
 rum config-manager --set-enabled terra
 
 ## Ensure rpm scriptlets can find a /bin/sh interpreter in this baseless OCI image
@@ -39,6 +40,7 @@ ln -sfn /usr/bin/bash /usr/bin/sh 2>/dev/null || true
 rum install -y --refresh \
   nss-altfiles \
   kineticwe-git \
+  kitty \
   pipewire \
   pipewire-alsa \
   pipewire-pulseaudio \

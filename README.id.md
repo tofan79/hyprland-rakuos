@@ -9,7 +9,7 @@ yang disetel untuk
 
 laptop dengan **NVIDIA dGPU + AMD iGPU** (mis. ASUS ROG).
 
-- **Registry:** `quay.io/mindset404/rakuos-kineticwe-nvidia-v3`
+- **Registry:** `quay.io/mindset404/kineticwe-nvidia-v3`
 - **Base image:** `quay.io/rakuos/rakuos-base-nvidia-v3:staging`
 - **Arsitektur:** `linux/amd64`
 - **Tag:** `latest`, `<YYYYMMDD>` (tag tanggal, 5 terbaru disimpan)
@@ -22,7 +22,7 @@ laptop dengan **NVIDIA dGPU + AMD iGPU** (mis. ASUS ROG).
 > gimana kamu sendiri.
 
 ```bash
-sudo bootc switch quay.io/mindset404/rakuos-kineticwe-nvidia-v3:latest
+sudo bootc switch quay.io/mindset404/kineticwe-nvidia-v3:latest
 sudo reboot
 ```
 
@@ -134,7 +134,7 @@ Keybind KineticWE sudah mengarah ke semuanya:
 4. Menonaktifkan `rum-makecache.timer` — refresh metadata repo `rum makecache`
    berkala tidak diperlukan di gambar immutable; `rum` mengambil metadata
    on-demand saat install.
-5. Push `latest` + tag tanggal ke `quay.io/mindset404/rakuos-kineticwe-nvidia-v3`.
+5. Push `latest` + tag tanggal ke `quay.io/mindset404/kineticwe-nvidia-v3`.
 6. **Retensi:** menghapus tag tanggal yang lebih lama dari 5 terbaru (menjaga
    penyimpanan tetap dalam kuota gratis Quay).
 7. Pemulihan otomatis kunci tanda tangan Terra (refresh `key.asc` dari Fyralabs,
@@ -154,7 +154,7 @@ Input workflow: `base_image_tag` (default `staging`) dan `rakuos_staging`
 
 ## Menjaga sistem tetap ter-update
 
-Tag baru dipush ke `quay.io/mindset404/rakuos-kineticwe-nvidia-v3:latest`; menarik
+Tag baru dipush ke `quay.io/mindset404/kineticwe-nvidia-v3:latest`; menarik
 referensi itu adalah semua yang dibutuhkan `bootc upgrade` untuk mendeteksi
 build baru. `rakuos-updater.service` + `.timer` (harian 03:00 UTC) juga
 memeriksa update gambar dan overlay secara otomatis.
