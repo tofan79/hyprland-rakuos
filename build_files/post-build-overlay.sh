@@ -60,11 +60,21 @@ prebake_overlay_from_installroot() {
     # still redirects package files under $installroot/usr and creates a
     # fresh, disposable overlay rpmdb at $installroot/var/lib/rakuos/rum-rpmdb,
     # applying --nodeps/tsflags=noscripts automatically.
-    rum install --installroot "$installroot" -y --refresh "${prebake_packages[@]}"
+    ## rum defaults to --best=false, so with no arch pinning it happily resolves
+    ## packages.list to a source RPM (e.g. zen-browser-1.22.2b.src.rpm) when that
+    ## ties on version with the binary build. A source RPM has no /usr payload,
+    ## which then breaks the copy below. Pin both: newest version, host arch.
+    rum install --installroot "$installroot" -y --refresh \
+        --best --forcearch="$(rpm -E '%{_arch}')" "${prebake_packages[@]}"
 
     rm -f "$installroot/usr/share/icons/default/index.theme"
 
     echo "[rakuos] Copying prebaked /usr payload into overlay upper..."
+    if [[ ! -d "$installroot/usr" ]]; then
+        echo "[rakuos] ERROR: prebake produced no /usr payload in $installroot" >&2
+        find "$installroot" -maxdepth 2 -mindepth 1 >&2 || true
+        exit 1
+    fi
     rm -rf "$UPPER_DIR" "$WORK_DIR"
     mkdir -p "$UPPER_DIR" "$WORK_DIR"
     cp -a "$installroot/usr/." "$UPPER_DIR/"
@@ -237,3 +247,8 @@ echo "Generating base file manifest..."
 
 echo "Prebaking hyprland overlay payload..."
 prebake_overlay_from_installroot
+
+# Disable Terra again — build.sh only enabled it for the install steps above
+# (main package set + overlay prebake); third-party repos ship disabled by
+# default, so the finalized image must go back to that state.
+rum config-manager --set-disabled terra
