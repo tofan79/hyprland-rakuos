@@ -86,6 +86,7 @@ rum install -y --refresh \
   libnotify \
   sddm \
   sddm-x11 \
+  xorg-x11-drv-nvidia \
   qt6-qtdeclarative \
   qt6-qt5compat \
   qt6-qtsvg \
