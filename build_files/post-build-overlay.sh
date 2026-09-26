@@ -142,7 +142,7 @@ sed -i -e '$a\' "$PACKAGES_LIST" 2>/dev/null || true
 cat >> /usr/share/rakuos/protected-packages.txt << 'PKGLIST'
 hyprland
 hyprland-guiutils
-gloview
+gloview-git
 noctalia-git
 rakuos-welcome-qt
 rakuos-system-qt
