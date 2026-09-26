@@ -191,7 +191,7 @@ power-profiles-daemon
 libnotify
 sddm
 sddm-x11
-xorg-x11-drv-nvidia
+xorg-x11-drv-nvidia-xorg-libs
 qt6-qtdeclarative
 qt6-qt5compat
 qt6-qtsvg
