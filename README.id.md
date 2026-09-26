@@ -67,7 +67,7 @@ Selebihnya adalah desktop KineticWE/RakuOS standar.
 
 - **Desktop:** KineticWE (default), shell Noctalia KWE, SDDM (greeter X11), kitty
 - **Portal/media:** xdg-desktop-portal(`-kwe`/`-gtk`), pipewire + ALSA +
-  emulasi PulseAudio, wireplumber, egl-wayland, Xwayland, wl-clipboard,
+  emulasi PulseAudio, wireplumber, egl-wayland, Xwayland,
   pavucontrol, libnotify
 - **Keyring/auth:** gnome-keyring sengaja **tidak disertakan** (Noctalia/KineticWE
   jalan normal tanpa `org.freedesktop.secrets`; dulu menyebabkan crash ganda
@@ -75,8 +75,8 @@ Selebihnya adalah desktop KineticWE/RakuOS standar.
 - **Dasar:** paket NetworkManager, power-profiles-daemon (pengganti
   tuned-ppd; tuned/tuned-ppd dari base di-mask), gvfs(+mtp/nfs/smb),
   systemd-oomd-defaults, SDDM
-- **Perkakas:** tesseract (+10 langpack), cliphist,
-  brightnessctl, playerctl, unzip/zip/7zip/unar, bat, fzf, zoxide
+- **Perkakas:** tesseract (+10 langpack),
+  unzip/zip/7zip/unar, bat, fzf, zoxide, wl-clipboard
 - **Tema/font:** colloid-theme (GTK + ikon), papirus-icon-theme (fallback), jetbrains-mono-nerd-fonts
 - **Terra** (repo vendor, diaktifkan saat build: `bibata-cursor-theme`,
   `jetbrainsmono-nerd-fonts`, plus deps dasar `dysk`/`fresh`/`surge`/`termflix`/`wlctl`)

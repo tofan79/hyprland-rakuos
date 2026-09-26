@@ -47,9 +47,7 @@ rum install -y --refresh \
   xdg-desktop-portal-gtk \
   xdg-user-dirs-gtk \
   xorg-x11-server-Xwayland \
-  wl-clipboard \
   egl-wayland \
-  wtype \
   fprintd-pam \
   adw-gtk3-theme \
   colloid-theme \
@@ -92,9 +90,7 @@ rum install -y --refresh \
   tesseract-langpack-chi_sim_vert \
   tesseract-langpack-chi_tra \
   tesseract-langpack-chi_tra_vert \
-  cliphist \
-  brightnessctl \
-  playerctl \
+  wl-clipboard \
   dolphin \
   nomacs \
   unzip \

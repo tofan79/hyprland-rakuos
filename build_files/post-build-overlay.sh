@@ -151,9 +151,7 @@ xdg-desktop-portal
 xdg-desktop-portal-gtk
 xdg-user-dirs-gtk
 xorg-x11-server-Xwayland
-wl-clipboard
 egl-wayland
-wtype
 fprintd-pam
 adw-gtk3-theme
 colloid-theme
@@ -195,10 +193,8 @@ zsh-autosuggestions
 zsh-syntax-highlighting
 eza
 fastfetch
+wl-clipboard
 starship
-cliphist
-brightnessctl
-playerctl
 dolphin
 nomacs
 unzip

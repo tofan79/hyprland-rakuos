@@ -64,7 +64,7 @@ Everything else is a standard KineticWE/RakuOS desktop.
 
 - **Desktop:** KineticWE (default), its Noctalia KWE shell, SDDM (X11 greeter), kitty
 - **Portal/media:** xdg-desktop-portal(`-kwe`/`-gtk`), pipewire + ALSA +
-  PulseAudio emulation, wireplumber, egl-wayland, Xwayland, wl-clipboard,
+  PulseAudio emulation, wireplumber, egl-wayland, Xwayland,
   pavucontrol, libnotify
 - **Keyring/auth:** gnome-keyring intentionally **excluded** (Noctalia/KineticWE
   work fine without `org.freedesktop.secrets` and it previously caused
@@ -72,8 +72,8 @@ Everything else is a standard KineticWE/RakuOS desktop.
 - **Base duties:** NetworkManager suite, power-profiles-daemon (replaces
   tuned-ppd; base's tuned/tuned-ppd services are masked), gvfs(+mtp/nfs/smb),
   systemd-oomd-defaults, SDDM
-- **Tools:** tesseract (+10 langpacks), cliphist,
-  brightnessctl, playerctl, unzip/zip/7zip/unar, bat, fzf, zoxide
+- **Tools:** tesseract (+10 langpacks),
+  unzip/zip/7zip/unar, bat, fzf, zoxide, wl-clipboard
 - **Theme/fonts:** colloid-theme (GTK + icons), papirus-icon-theme (fallback), jetbrains-mono-nerd-fonts
 - **Terra** (vendor repo, enabled at build: `bibata-cursor-theme`,
   `jetbrainsmono-nerd-fonts`, plus base deps `dysk`/`fresh`/`surge`/`termflix`/`wlctl`)
