@@ -40,6 +40,7 @@ ln -sfn /usr/bin/bash /usr/bin/sh 2>/dev/null || true
 ## ...) and log ~45 "Failed to resolve group" warnings every boot. Installing
 ## the module completes the chain defined in nsswitch.conf and removes the noise.
 rum install -y --refresh \
+  cpio \
   nss-altfiles \
   kineticwe-git \
   kitty \
@@ -72,7 +73,6 @@ rum install -y --refresh \
   libnotify \
   sddm \
   sddm-x11 \
-  xorg-x11-drv-nvidia-xorg-libs \
   qt6-qtdeclarative \
   qt6-qt5compat \
   qt6-qtsvg \
@@ -108,6 +108,48 @@ rum install -y --refresh \
   rakuos-welcome-qt \
   rakuos-system-qt \
   rakuos-software-qt
+
+## NVIDIA X.Org driver for the SDDM X11 greeter
+## RPM Fusion 615 ships the X.Org driver only in a package variant whose files
+## collide with the full nvidia-driver stack already baked into the base image
+## (firmware blobs, /usr/lib/nvidia/alternate-install-present, the nvidia-powerd
+## unit and the wine nvngx libs). Its "xorg-libs" subpackage hard-Requires that
+## conflicting parent, so no installable package set can provide nvidia_drv.so
+## next to the full stack. The X11 greeter only needs the two Xorg module files,
+## so extract them from the RPM that owns them and leave the full stack alone.
+## These files end up unowned by rpm, which is fine: dnf never touches unowned
+## files, and they live in the immutable /usr of the image, not the live overlay.
+nvidia_xorg_files=(
+  /usr/lib64/xorg/modules/drivers/nvidia_drv.so
+  /usr/lib64/xorg/modules/extensions/libglxserver_nvidia.so
+)
+# Pin to the same version as the pre-baked nvidia-driver stack, otherwise the
+# X.Org module and the userspace libraries disagree and the greeter goes black.
+nvidia_version=$(rpm -q --qf '%{VERSION}' nvidia-driver-libs)
+nvidia_xorg_pkg="xorg-x11-drv-nvidia-xorg-libs"
+nvidia_xorg_rpm=$(rum repoquery --location "$nvidia_xorg_pkg" -q 2>/dev/null | grep -m1 -- "-${nvidia_version}-")
+if [ -z "$nvidia_xorg_rpm" ]; then
+  nvidia_xorg_rpm=$(dnf repoquery --location "$nvidia_xorg_pkg" -q 2>/dev/null | grep -m1 -- "-${nvidia_version}-")
+fi
+if [ -z "$nvidia_xorg_rpm" ]; then
+  echo "ERROR: no ${nvidia_version} download URL found for ${nvidia_xorg_pkg}" >&2
+  exit 1
+fi
+echo "Extracting the X.Org NVIDIA driver from ${nvidia_xorg_rpm}"
+curl -fsSL --retry 3 -o /tmp/nvidia-xorg.rpm "$nvidia_xorg_rpm"
+nvidia_xorg_relpaths=()
+for nvidia_xorg_file in "${nvidia_xorg_files[@]}"; do
+  nvidia_xorg_relpaths+=(".${nvidia_xorg_file}")
+done
+(cd / && rpm2cpio /tmp/nvidia-xorg.rpm | cpio -idm --quiet "${nvidia_xorg_relpaths[@]}")
+rm -f /tmp/nvidia-xorg.rpm
+for nvidia_xorg_file in "${nvidia_xorg_files[@]}"; do
+  if [ ! -f "$nvidia_xorg_file" ]; then
+    echo "ERROR: ${nvidia_xorg_file} missing after extracting ${nvidia_xorg_pkg}" >&2
+    exit 1
+  fi
+  echo "  ok ${nvidia_xorg_file}"
+done
 
 ## Populate skeleton wallpaper folder with the OFFICIAL base RakuOS wallpaper
 ## set. Noctalia's wallpaper picker points at ~/Pictures/Wallpaper so users get
